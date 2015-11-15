@@ -60,13 +60,14 @@ class IndexController extends Controller
         $gmailUser = $service->users->getProfile('me');
 
         // don't let them sign up twice
-        $existingUser = User::where('email',$gmailUser->emailAddress)->get();
+        $existingUser = User::where('email',$gmailUser->emailAddress)->first();
 
         // if this is a duplicate, just sign them in (don't sign them up again)
         if($existingUser != '[]')
         {
             // log the user in and send them to the home page
-            var_dump($existingUser);
+            $success = Auth::loginUsingId($existingUser->id);
+            return redirect('/home');
         }
         else
         {
