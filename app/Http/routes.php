@@ -11,6 +11,17 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', 'IndexController@showIndex');
+
+// auth stuff
+Route::get('/signup', 'IndexController@showSignup');
+Route::post('/signup', 'IndexController@sendToGoogleAuth');
+Route::get('/auth', 'IndexController@doAddUser');
+Route::get('/logout', function(){
+	Auth::logout();
+	return redirect('/');
 });
+
+// pages
+Route::get('/home', 'PagesController@showHome');
+

@@ -16,9 +16,10 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('password', 60);
             $table->rememberToken();
-            $table->timestamps();
+            $table->string('gmail_token');
+            $table->integer('created_at');
+            $table->integer('updated_at')->nullable();
         });
     }
 
