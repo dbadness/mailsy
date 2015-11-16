@@ -21,7 +21,13 @@ class PagesController extends Controller
     public function showHome()
     {
         $user = Auth::user();
-
         return view('pages.home', ['user' => $user]);
+    }
+
+    // the email creation page
+    public function showNewEmail()
+    {
+        $user = Auth::user();
+        return view('pages.newemail', ['user' => $user]);
     }
 }

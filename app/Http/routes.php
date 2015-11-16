@@ -14,9 +14,9 @@
 Route::get('/', 'IndexController@showIndex');
 
 // auth stuff
-Route::get('/signup', 'IndexController@showSignup');
-Route::post('/signup', 'IndexController@sendToGoogleAuth');
-Route::get('/auth', 'IndexController@doAddUser');
+Route::get('/auth', 'IndexController@showSignup');
+Route::post('/auth', 'IndexController@sendToGoogleAuth');
+Route::get('/signup', 'IndexController@doAddUser');
 Route::get('/logout', function(){
 	Auth::logout();
 	return redirect('/');
@@ -24,4 +24,7 @@ Route::get('/logout', function(){
 
 // pages
 Route::get('/home', 'PagesController@showHome');
+Route::get('/newEmail', 'PagesController@showNewEmail');
 
+// ajax actions
+Route::post('/addContacts', 'ActionController@returnFields');

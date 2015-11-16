@@ -30,7 +30,7 @@ class IndexController extends Controller
         $client = new \Google_Client();
         $client->setDeveloperKey(env('GOOGLE_KEY'));
         $client->setClientID(env('GOOGLE_CLIENT_ID'));
-        $client->setRedirectURI('http://newco.dev/auth');        
+        $client->setRedirectURI('http://newco.dev/signup');        
         $client->setScopes('https://www.googleapis.com/auth/gmail.modify');
         $client->setAccessType('offline');
 
@@ -46,7 +46,7 @@ class IndexController extends Controller
         $client = new \Google_Client();
         $client->setDeveloperKey(env('GOOGLE_KEY'));
         $client->setClientID(env('GOOGLE_CLIENT_ID'));
-        $client->setRedirectURI('http://newco.dev/auth');
+        $client->setRedirectURI('http://newco.dev/signup');
         $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
 
         // $accessToken = $client->authenticate(urldecode($request->code));

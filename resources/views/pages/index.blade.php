@@ -3,9 +3,9 @@
 @section('content')
 
 	<p>Here is the home page.</p>
-	{!! Form::open(array('url' => '/signup')) !!}
+	{!! Form::open(['url' => '/auth']) !!}
 
-		{!! Form::submit('Signup with Gmail') !!}
+		{!! Form::submit('Signup/Login with Gmail') !!}
 
 	{!! Form::close() !!}
 
