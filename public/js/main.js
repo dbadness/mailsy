@@ -7,7 +7,7 @@ $(document).ready(function(){
 			url: '/addContacts',
 			data: 
 			{
-				'template' : $('#template').html(),
+				'email' : $('#email').val(),
 				'_token' : $('input[name=_token]').val()
 			},
 			error: function()
@@ -18,9 +18,14 @@ $(document).ready(function(){
 				$('#loading').show();
 			},
 			success: function(response) {
+				var data = $.parseJSON(response);
+				var count = 0;
+				$.each(data, function(){
+					$('#fields').append('<label for="'+this.fieldName+count+'">'+this.fieldLabel+'</label><input name="'+this.fieldName+count+'">');
+					count++;
+				});
 				$('#loading').hide();
-				$('#results').html(response);
-			},
+			}
 		});
 	});
 	

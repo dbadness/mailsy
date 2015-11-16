@@ -4,11 +4,11 @@
 
 	<p>Make a new email to send out:</p>
 	{!! Form::token() !!}
-	<textarea id='template' style="resize:none;width:500px;height:100px;"></textarea>
+	<textarea id='email' style='resize:none;width:500px;height:200px;'></textarea>
 	<br>
 	<button id='addContacts'>Add Contacts</button>
 	<br><br>
 	<span id='loading' style='display:none;'>Loading...</span>
-	<div id='results'></div>
+	<div id='fields'></div>
 
 @endsection
