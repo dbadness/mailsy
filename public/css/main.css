@@ -1,0 +1,33 @@
+.clear
+{
+	clear:both;
+}
+
+#headers
+{
+	border:solid 1px black;
+}
+
+#recipients
+{
+	border:solid 1px black;
+}
+
+.recipientRow
+{
+	
+}
+
+.header
+{
+	float:left;
+	width:150px;
+	border:solid 1px black;
+}
+
+.field
+{
+	float:left;
+	width:150px;
+	border:solid 1px black;
+}

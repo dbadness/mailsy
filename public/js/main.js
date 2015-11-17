@@ -18,13 +18,14 @@ $(document).ready(function(){
 				$('#loading').show();
 			},
 			success: function(response) {
+				$('#loading').hide();
 				var data = $.parseJSON(response);
 				var count = 0;
-				$.each(data, function(){
-					$('#fields').append('<label for="'+this.fieldName+count+'">'+this.fieldLabel+'</label><input name="'+this.fieldName+count+'">');
-					count++;
+				$.each(data,function(k,v)
+				{
+					$('#headers').append('<div class=\'header\'>'+v+'</div>');
 				});
-				$('#loading').hide();
+				$('#headers').append('<div class=\'clear\'></div>');
 			}
 		});
 	});

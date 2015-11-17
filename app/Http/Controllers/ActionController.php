@@ -24,7 +24,7 @@ class ActionController extends Controller
                 {
                     // shave the delimiters
                     $field = trim($match,'@@');
-                    $fields[] = ['fieldLabel' => ucfirst(strtolower($field)), 'fieldName' => strtolower($field)];
+                    $fields[] = strtolower($field);
                 }
             }
             return json_encode($fields);
