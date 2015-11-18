@@ -3,6 +3,37 @@
 	clear:both;
 }
 
+.button
+{
+	padding:10px;
+	border-radius:3px;
+	background:lightgray;
+	width:120px;
+	text-align:center;
+}
+
+#loading
+{
+	display:none;
+}
+
+#subject
+{
+	width:500px;
+}
+
+#emailTemplate
+{
+	resize:none;
+	width:500px;
+	height:200px;
+}
+
+#emailTemplateHolder
+{
+	display:none;
+}
+
 #addRecipient
 {
 	display:none;
@@ -41,4 +72,9 @@
 	float:left;
 	width:150px;
 	border:solid 1px black;
+}
+
+#viewPreviews
+{
+	display:none;
 }

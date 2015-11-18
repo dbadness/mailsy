@@ -1,5 +1,11 @@
 $(document).ready(function(){
 
+	// take the content from the template form the user and process them into the form to be submitted
+	$('#emailTemplate').keyup(function()
+	{
+		$('#emailTemplateHolder').val($('#emailTemplate').val());
+	});
+
 	// return the list of input fields for this template
 	$('#addContacts').click(function(){
 		$.ajax({
@@ -7,7 +13,7 @@ $(document).ready(function(){
 			url: '/addContacts',
 			data: 
 			{
-				'email' : $('#email').val(),
+				'_content' : $('#subject').val()+' '+$('#emailTemplate').val(),
 				'_token' : $('input[name=_token]').val()
 			},
 			error: function()
@@ -28,12 +34,15 @@ $(document).ready(function(){
 				$('#headers').append('<div class=\'clear\'></div>');
 				$.each(data,function(k,v)
 				{
-					$('.recipientRow').append('<div class=\'field\'><input class=\'fieldInput\' name='+v+'></div>');
+					$('.recipientRow').append('<div class=\'field\'><input class=\'fieldInput\' name='+v+'[]></div>');
 				});
 				$('.recipientRow').append('<div id=\'recipientRowClear\' class=\'clear\'></div>');
 				$('#recipients').show();
 				$('#fields').show();
 				$('#addRecipient').show();
+				$('#viewPreviews').show();
+				// make a global variable to duplicate the rows later
+				row = $('#recipients').html();
 			}
 		});
 	});
@@ -41,7 +50,6 @@ $(document).ready(function(){
 	// add another row of recipients to the list
 	$('#addRecipient').click(function()
 	{
-		var row = $('#recipients:first-child');
 		$('#recipients').append(row);
 	});
 	

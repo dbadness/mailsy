@@ -26,5 +26,6 @@ Route::get('/logout', function(){
 Route::get('/home', 'PagesController@showHome');
 Route::get('/newEmail', 'PagesController@showNewEmail');
 
-// ajax actions
+// actions
 Route::post('/addContacts', 'ActionController@returnFields');
+Route::post('/makePreviews', 'ActionController@makePreviews');

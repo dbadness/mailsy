@@ -13,7 +13,7 @@ class ActionController extends Controller
     public function returnFields(Request $request)
     {
         // find the variables in the email and return them to the view        
-        preg_match_all('/@@[a-zA-Z0-9]*/',$request->email,$matches);
+        preg_match_all('/@@[a-zA-Z0-9]*/',$request->_content,$matches);
 
         if($matches)
         {
@@ -33,5 +33,11 @@ class ActionController extends Controller
         {
             return 'No matches found.';
         }
+    }
+
+    // take the template's contents and the recipients list and generate previews for the user
+    public function makePreviews(Request $request)
+    {
+        return var_dump($_POST);
     }
 }
