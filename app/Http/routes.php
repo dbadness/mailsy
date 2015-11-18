@@ -17,6 +17,7 @@ Route::get('/', 'IndexController@showIndex');
 Route::get('/auth', 'IndexController@showSignup');
 Route::post('/auth', 'IndexController@sendToGoogleAuth');
 Route::get('/signup', 'IndexController@doAddUser');
+Route::get('/login', 'IndexController@showLogin');
 Route::get('/logout', function(){
 	Auth::logout();
 	return redirect('/');

@@ -7,6 +7,12 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use App\Email;
+use App\Message;
+use App\Recipient;
+use App\Field;
+
+
 class ActionController extends Controller
 {
     // return the fields to the new email view from the ajax call with template

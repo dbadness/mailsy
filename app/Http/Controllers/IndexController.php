@@ -24,13 +24,19 @@ class IndexController extends Controller
         return view('pages.signup');
     }
 
+    // display a login page
+    public function showLogin()
+    {
+        return view('pages.login');
+    }
+
     // send the user through oauth2 process for the Gmail API
     public function sendToGoogleAuth()
     {
         $client = new \Google_Client();
         $client->setDeveloperKey(env('GOOGLE_KEY'));
         $client->setClientID(env('GOOGLE_CLIENT_ID'));
-        $client->setRedirectURI('http://newco.dev/signup');        
+        $client->setRedirectURI('http://mailsy.dev/signup');        
         $client->setScopes('https://www.googleapis.com/auth/gmail.modify');
         $client->setAccessType('offline');
 
@@ -46,7 +52,7 @@ class IndexController extends Controller
         $client = new \Google_Client();
         $client->setDeveloperKey(env('GOOGLE_KEY'));
         $client->setClientID(env('GOOGLE_CLIENT_ID'));
-        $client->setRedirectURI('http://newco.dev/signup');
+        $client->setRedirectURI('http://mailsy.dev/signup');
         $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
 
         // $accessToken = $client->authenticate(urldecode($request->code));
@@ -63,7 +69,7 @@ class IndexController extends Controller
         $existingUser = User::where('email',$gmailUser->emailAddress)->first();
 
         // if this is a duplicate, just sign them in (don't sign them up again)
-        if($existingUser != '[]')
+        if($existingUser)
         {
             // log the user in and send them to the home page
             $success = Auth::loginUsingId($existingUser->id);
