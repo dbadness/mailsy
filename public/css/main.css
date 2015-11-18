@@ -3,6 +3,16 @@
 	clear:both;
 }
 
+#addRecipient
+{
+	display:none;
+}
+
+#fields
+{
+	display:none;
+}
+
 #headers
 {
 	border:solid 1px black;
@@ -11,6 +21,7 @@
 #recipients
 {
 	border:solid 1px black;
+	display:none;
 }
 
 .recipientRow

@@ -8,6 +8,8 @@
 	<br>
 	<button id='addContacts'>Add Contacts</button>
 	<br><br>
+	<button id='addRecipient'>Add Another Recipient</button>
+	<br><br>
 	<span id='loading' style='display:none;'>Loading...</span>
 	<div id='fields'>
 		<div id='headers'>
@@ -18,33 +20,8 @@
 		<div id='recipients'>
 			<div class='recipientRow'>
 				<div class='field'>
-					<input class='fieldInput'>
+					<input name='email' class='fieldInput'>
 				</div>
-				<div class='field'>
-					<input class='fieldInput'>
-				</div>
-				<div class='field'>
-					<input class='fieldInput'>
-				</div>
-				<div class='field'>
-					<input class='fieldInput'>
-				</div>
-				<div class='clear'></div>
-			</div>
-			<div class='recipientRow'>
-				<div class='field'>
-					<input class='fieldInput'>
-				</div>
-				<div class='field'>
-					<input class='fieldInput'>
-				</div>
-				<div class='field'>
-					<input class='fieldInput'>
-				</div>
-				<div class='field'>
-					<input class='fieldInput'>
-				</div>
-				<div class='clear'></div>
 			</div>
 		</div>
 	</div>
