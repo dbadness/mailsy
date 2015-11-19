@@ -17,6 +17,7 @@ class CreateEmailsTable extends Migration
             $table->integer('user_id');
             $table->string('subject');
             $table->text('template');
+            $table->text('temp_recipients_list');
             $table->integer('created_at');
             $table->integer('updated_at')->nullable();
             $table->integer('deleted_at')->nullable();
@@ -31,6 +32,6 @@ class CreateEmailsTable extends Migration
     public function down()
     {
         // drop the table
-        Schema::crop('emails');
+        Schema::drop('emails');
     }
 }

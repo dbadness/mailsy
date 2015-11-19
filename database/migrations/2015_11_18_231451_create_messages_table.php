@@ -16,7 +16,9 @@ class CreateMessagesTable extends Migration
             $table->increments('id');
             $table->string('google_message_id');
             $table->integer('user_id');
+            $table->integer('email_id');
             $table->string('recipient');
+            $table->string('subject');
             $table->text('message');
             $table->integer('created_at');
             $table->integer('updated_at')->nullable();
@@ -33,6 +35,6 @@ class CreateMessagesTable extends Migration
     public function down()
     {
         // drop the table
-        Schema::crop('messages');
+        Schema::drop('messages');
     }
 }
