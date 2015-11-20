@@ -106,6 +106,6 @@ class ActionController extends Controller
         $email->temp_recipients_list = json_encode($tempRecipientsList);
         $email->save();
 
-        return var_dump($email);
+        return redirect('/preview/'.base64_encode($email->id));
     }
 }

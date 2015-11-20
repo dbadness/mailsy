@@ -26,6 +26,8 @@ Route::get('/logout', function(){
 // pages
 Route::get('/home', 'PagesController@showHome');
 Route::get('/newEmail', 'PagesController@showNewEmail');
+Route::get('/edit/{eid}','PagesController@showEdit');
+Route::get('/preview/{eid}','PagesController@showPreview');
 
 // actions
 Route::post('/addContacts', 'ActionController@returnFields');
