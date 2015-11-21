@@ -5,6 +5,8 @@
 	<p>Make a new email to send out:</p>
 	{!! Form::token() !!}
 	<form method='post' action='/makePreviews'>
+		<label for='_name'>Name:</label>
+		<input name='_name'><br><br>
 		<input name='_subject' id='subject'><br><br>
 		<textarea id='emailTemplate'></textarea>
 		<br>
