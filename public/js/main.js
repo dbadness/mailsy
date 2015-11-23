@@ -5,6 +5,11 @@ $(document).ready(function(){
 	{
 		$('#emailTemplateHolder').val($('#emailTemplate').val());
 	});
+	$('#updatePreviews').click(function()
+	{
+		$('#emailTemplateHolder').val($('#emailTemplate').val());
+	});
+	// for the edit page since it's already populated
 
 	// return the list of input fields for this template
 	$('#addContacts').click(function(){
@@ -51,6 +56,31 @@ $(document).ready(function(){
 	$('#addRecipient').click(function()
 	{
 		$('#recipients').append(row);
+	});
+
+	// save the users settings
+	$('#saveSettings').click(function()
+	{
+		$.ajax({
+			method: "POST",
+			url: '/saveSettings',
+			data: 
+			{
+				'_token' : $('input[name=_token').val(),
+				'sf_address' : $('#sf_address').val(),
+				'signature' : $('#signature').val()
+			},
+			error: function()
+			{
+				alert('Something went wrong.');
+			},
+			success: function(response) {
+				if(response == 'success')
+				{
+					$('#settingsSaved').show();
+				}
+			}
+		});
 	});
 	
 }); // end doc ready

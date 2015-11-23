@@ -50,7 +50,7 @@
 		<textarea name='_email_template' id='emailTemplateHolder'></textarea>
 		{!! Form::token() !!}
 		<br>
-		<input id='viewPreviews' style='display:block;' type='submit' value='Save and View Previews'>
+		<input id='updatePreviews' style='display:block;' type='submit' value='Save and View Previews'>
 	</form>
 
 @endsection

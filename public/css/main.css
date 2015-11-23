@@ -3,6 +3,13 @@
 	clear:both;
 }
 
+.textarea
+{
+	width:500px;
+	height:200px;
+	resize:none;
+}
+
 /* ----------- Home Page CSS ------------- */
 
 .email

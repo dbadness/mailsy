@@ -10,6 +10,12 @@
 		<input name='_subject' id='subject'><br><br>
 		<textarea id='emailTemplate'></textarea>
 		<br>
+		Send to Salesforce:
+		<input type='checkbox' name='_send_to_salesforce'>
+		<br>
+		Include Signature:
+		<input type='checkbox' name='_signature'>
+		<br>
 		<div class='button' id='addContacts'>Add Contacts</div>
 		<br><br>
 		<div class='button' id='addRecipient'>Add Another Recipient</div>

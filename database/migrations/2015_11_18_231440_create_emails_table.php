@@ -19,7 +19,6 @@ class CreateEmailsTable extends Migration
             $table->string('subject');
             $table->text('template');
             $table->text('temp_recipients_list');
-            $table->string('status');
             $table->integer('created_at');
             $table->integer('updated_at')->nullable();
             $table->integer('deleted_at')->nullable();

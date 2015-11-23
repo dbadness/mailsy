@@ -36,6 +36,7 @@ class IndexController extends Controller
         $client = new \Google_Client();
         $client->setDeveloperKey(env('GOOGLE_KEY'));
         $client->setClientID(env('GOOGLE_CLIENT_ID'));
+        $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
         $client->setRedirectURI('http://mailsy.dev/signup');        
         $client->setScopes('https://www.googleapis.com/auth/gmail.modify');
         $client->setAccessType('offline');
@@ -55,8 +56,6 @@ class IndexController extends Controller
         $client->setRedirectURI('http://mailsy.dev/signup');
         $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
 
-        // $accessToken = $client->authenticate(urldecode($request->code));
-
         $accessToken = $client->authenticate($_GET['code']);
 
         $client->setAccessToken($accessToken);
@@ -73,6 +72,9 @@ class IndexController extends Controller
         {
             // log the user in and send them to the home page
             $success = Auth::loginUsingId($existingUser->id);
+            // update the user's google_token
+            $existingUser->gmail_token = $accessToken;
+            $existingUser->save();
             return redirect('/home');
         }
         else

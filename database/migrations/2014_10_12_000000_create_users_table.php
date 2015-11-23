@@ -18,6 +18,8 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->rememberToken();
             $table->string('gmail_token');
+            $table->string('sf_address');
+            $table->text('signature');
             $table->integer('created_at');
             $table->integer('updated_at')->nullable();
         });

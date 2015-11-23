@@ -32,7 +32,10 @@ class User extends Model implements AuthenticatableContract,
      */
     protected $visible = ['id','email'];
 
-    // don't automitically add timestamps to new/updated records
+    // allow the app to fill the fields in the DB
+    protected $fillable = ['sf_address', 'signature'];
+
+    // don't automatically add timestamps to new/updated records
     public $timestamps = false;
 
     /** filter the page for this specific user.
@@ -55,5 +58,20 @@ class User extends Model implements AuthenticatableContract,
         {
             return $email;
         }
+    }
+
+    // build the Google Client for API calls
+    public static function googleClient() {
+
+        $user = Auth::user();
+
+        $client = new \Google_Client();
+        $client->setApplicationName(env('GOOGLE_APP_NAME'));
+        $client->setDeveloperKey(env('GOOGLE_KEY'));
+        $client->setClientID(env('GOOGLE_CLIENT_ID'));
+        $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
+        $client->setAccessToken($user->gmail_token);
+
+        return $client;
     }
 }

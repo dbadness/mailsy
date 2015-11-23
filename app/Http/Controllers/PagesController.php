@@ -47,7 +47,7 @@ class PagesController extends Controller
     {
         $email = User::verifyUser($eid);
         // retrieve the messages that aren't deleted or sent for this email
-        $messages = Message::where('email_id',$email->id)->whereNotNull('deleted_at')->whereNull('status')->get();
+        $messages = Message::where('email_id',$email->id)->whereNull('deleted_at')->whereNull('status')->get();
 
         // if all is good to go, return the view with the previews
         return view('pages.preview', ['email' => $email, 'messages' => $messages]);
@@ -75,5 +75,12 @@ class PagesController extends Controller
         $data = ['email' => $email, 'messages' => $messages];
 
         return view('pages.email', ['data' => $data]);
+    }
+
+    // the settings page
+    public function showSettings()
+    {
+        $user = Auth::user();
+        return view('pages.settings', ['user' => $user]);
     }
 }

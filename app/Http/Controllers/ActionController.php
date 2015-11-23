@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Auth;
+use App\User;
 use App\Email;
 use App\Message;
 use App\Recipient;
@@ -92,7 +93,17 @@ class ActionController extends Controller
             $message->email_id = $email->id;
             $message->recipient = $recipientEmail;
             $message->subject = $subjectText;
-            $message->message = $messageText;
+            if($request->_signature == 'on')
+            {
+                $message->message = $messageText.'<br><br>'.$user->signature;
+            }else
+            {
+                $message->message = $messageText;
+            }
+            if($request->_send_to_salesforce == 'on')
+            {
+                $message->send_to_salesforce = 'yes';
+            }
             $message->created_at = time();
             $message->save();
 
@@ -121,7 +132,7 @@ class ActionController extends Controller
         $email = Email::find($request->_email_id);
 
         // first delete all the messages previous unsent in this email (since the user is updating them)
-        Message::where('email_id',$email->id)->update(['deleted_at' => time()]);
+        Message::where('email_id',$email->id)->whereNull('deleted_at')->update(['deleted_at' => time()]);
 
         // build the recipient list and assign the fields to them
         $messages = [];
@@ -176,5 +187,20 @@ class ActionController extends Controller
 
         // send to the preview page
         return redirect('/preview/'.base64_encode($email->id));
+    }
+
+    // send the emails
+    public function sendEmails(Request $request)
+    {
+
+    }
+
+    // save the settings page
+    public function saveSettings(Request $request)
+    {
+        $user = Auth::user();
+        // update the values in the DB
+        User::find($user->id)->update(['sf_address' => $request->sf_address, 'signature' => $request->signature]);
+        return 'success';
     }
 }
