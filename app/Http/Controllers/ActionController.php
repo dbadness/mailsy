@@ -192,7 +192,44 @@ class ActionController extends Controller
     // send the emails
     public function sendEmails(Request $request)
     {
+        // get the user info
+        $user = Auth::user();
 
+        // get up a gmail client connection
+        $client = User::googleClient();
+
+        // get the gmail service
+        $gmail = new \Google_Service_Gmail($client);
+
+        // send out the emails
+        foreach($request->messages as $id)
+        {
+            $message = Message::find($id);
+
+            // create the msg (in RFC 2822 format) so we can base64 encode it for sending through the Gmail API
+            // http://stackoverflow.com/questions/24940984/send-email-using-gmail-api-and-google-api-php-client
+            $email = new \PHPMailer(true); // notice the \  you have to use root namespace here
+            $email->isSMTP(); // tell to use smtp
+            $email->CharSet = 'utf-8'; // set charset to utf8
+            $email->Subject = $message->subject;
+            $email->MsgHTML($message->message);
+            $email->addAddress($message->recipient);
+            if($message->send_to_salesforce == 'yes')
+            {
+                // if they selected the 'send to salesforce' button for the email...
+                $email->addBCC($user->sf_address);
+            }
+            $email->preSend();
+            $mime = $email->getSentMIMEMessage();
+            $m = new \Google_Service_Gmail_Message();
+            $data = base64_encode($mime);
+            $data = str_replace(array('+','/','='),array('-','_',''),$data); // url safe
+            $m->setRaw($data);
+
+            $gmail->users_messages->send('me', $m);
+        }
+
+        return redirect('/home');
     }
 
     // save the settings page
