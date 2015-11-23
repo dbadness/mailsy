@@ -81,4 +81,10 @@ class PagesController extends Controller
         $user = Auth::user();
         return view('pages.settings', ['user' => $user]);
     }
+
+    // show the upgrade page
+    public function showUpgrade()
+    {
+        return view('pages.upgrade');
+    }
 }

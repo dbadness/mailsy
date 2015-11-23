@@ -102,3 +102,33 @@
 {
 	display:none;
 }
+
+/* ---------------- Upgrade Page CSS -------------*/
+
+#ccDetails
+{
+	margin:50px 0 0 0;
+}
+
+#addUser
+{
+	display:none;
+	cursor:pointer;
+}
+
+#addUsers
+{
+	padding:5px;
+	background:lightgray;
+	width:200px;
+	text-align:center;
+	border-radius:3px;
+	border:solid 1px black;
+}
+
+.removeUser
+{
+	cursor:pointer;
+	color:blue;
+	text-decoration:underline;
+}

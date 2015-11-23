@@ -253,4 +253,61 @@ class ActionController extends Controller
         User::find($user->id)->update(['sf_address' => $request->sf_address, 'signature' => $request->signature]);
         return 'success';
     }
+
+    // upgrade the user to a paid account (and send out invites to users if need be)
+    public function doUpgrade(Request $request)
+    {
+        // auth the user
+        $user = Auth::user();
+
+        // get the count of users that are being charged for their accounts
+        $userCount = 0;
+
+        if($request->myself == 'on')
+        {
+            $userCount++;
+            $user->paid = 'yes';
+            $user->save();
+        }
+
+        if($request->newusers)
+        {
+            $count = count($request->newusers);
+            $userCount = $userCount + $count;
+        }
+
+        // attempt to charge their card via stripe
+        // Set your secret key: remember to change this to your live secret key in production
+        // See your keys here https://dashboard.stripe.com/account/apikeys
+        \Stripe\Stripe::setApiKey(env('STRIPE_TOKEN'));
+
+        // Get the credit card details submitted by the form
+        $token = $request->stripeToken;
+
+        $customer = \Stripe\Customer::create(array(
+            'source' => $token,
+            'plan' => 'paid',
+            'email' => $user->email,
+            'quantity' => $userCount
+        ));
+        
+        // if there are multiple users, sign them up and mark them as paid users
+        if($request->newusers)
+        {
+            foreach($request->newusers as $newuser)
+            {
+                // create the new user
+                $newuserObject = new User;
+                $newuserObject->email = $newuser;
+                $newuserObject->paid = 'yes';
+                $newuserObject->belongs_to = $user->id;
+                $newuserObject->created = time();
+                $newuserObject->save();
+
+                // send the user an email and let them know they've been signed up
+            }
+        }
+
+        return 'Successfully subscribed.';
+    }
 }

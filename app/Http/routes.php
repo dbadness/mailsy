@@ -30,6 +30,7 @@ Route::get('/edit/{eid}','PagesController@showEdit');
 Route::get('/preview/{eid}','PagesController@showPreview');
 Route::get('/email/{eid}','PagesController@showEmail');
 Route::get('/settings','PagesController@showSettings');
+Route::get('/upgrade', 'PagesController@showUpgrade');
 
 // actions
 Route::post('/addContacts', 'ActionController@returnFields');
@@ -37,4 +38,4 @@ Route::post('/makePreviews', 'ActionController@makePreviews');
 Route::post('/updatePreviews', 'ActionController@updatePreviews');
 Route::post('/sendEmails', 'ActionController@sendEmails');
 Route::post('/saveSettings', 'ActionController@saveSettings');
-
+Route::post('/upgrade', 'ActionController@doUpgrade');
