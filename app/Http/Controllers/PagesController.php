@@ -68,9 +68,7 @@ class PagesController extends Controller
         $email = User::verifyUser($eid);
 
         // go through the messages and set the statuses of the messages
-
-
-        $messages = Message::where('email_id',$email->id)->get();
+        $messages = Message::where('email_id',$email->id)->whereNull('deleted_at')->get();
 
         $data = ['email' => $email, 'messages' => $messages];
 

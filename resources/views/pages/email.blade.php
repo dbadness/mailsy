@@ -1,6 +1,12 @@
 @extends('layouts.master')
 
 @section('content')
+
+	@if($_GET)
+		@if($_GET['message'] == 'success')
+			<p style='color:green;'>Emails successfully sent.</p>
+		@endif
+	@endif
 	
 	Template:<br>
 	<textarea name='template' disabled style='width:500px;height:200px;resize:none;'>{!! $data['email']->template !!}
@@ -33,7 +39,7 @@
 						{!! substr($message->message,0,50) !!}...
 					</div>
 					<div class='field'>
-						Status
+						{!! ucfirst($message->status) !!}
 					</div>
 					<div class='clear'></div>
 				</div>

@@ -34,7 +34,7 @@ $(document).ready(function(){
 				var count = 0;
 				$.each(data,function(k,v)
 				{
-					$('#headers').append('<div class=\'header\'>'+v+'</div>');
+					$('#headers').append('<div class=\'field\'>'+v+'</div>');
 				});
 				$('#headers').append('<div class=\'clear\'></div>');
 				$.each(data,function(k,v)

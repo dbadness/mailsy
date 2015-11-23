@@ -195,6 +195,11 @@ class ActionController extends Controller
         // get the user info
         $user = Auth::user();
 
+        // find the email object and delete and temo_recipients_list
+        $email = Email::find($request->messages[0]);
+        $email->temp_recipients_list = null;
+        $email->save();
+
         // get up a gmail client connection
         $client = User::googleClient();
 
@@ -226,10 +231,18 @@ class ActionController extends Controller
             $data = str_replace(array('+','/','='),array('-','_',''),$data); // url safe
             $m->setRaw($data);
 
-            $gmail->users_messages->send('me', $m);
+            $gmailMessage = $gmail->users_messages->send('me', $m);
+
+            // insert the returned google message id into the DB and mark it as sent
+            $message->google_message_id = $gmailMessage->id;
+            $message->status = 'sent';
+            $message->save();
+
+            // insert into the test array
+            $gmailMessages[] = $gmailMessage;
         }
 
-        return redirect('/home');
+        return redirect('/email/'.base64_encode($email->id).'?message=success');
     }
 
     // save the settings page
