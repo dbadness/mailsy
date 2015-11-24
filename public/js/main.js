@@ -5,26 +5,25 @@ $(document).ready(function(){
 	* Create/edit email pages
 	*
 	*/
-	// take the content from the template form the user and process them into the form to be submitted
-	$('#emailTemplate').keyup(function()
-	{
-		$('#emailTemplateHolder').val($('#emailTemplate').val());
-	});
 
 	// for the edit page since it's already populated
 	$('#updatePreviews').click(function()
 	{
-		$('#emailTemplateHolder').val($('#emailTemplate').val());
+		$('#emailTemplateHolder').val($('#emailTemplate').code());
 	});
 
 	// return the list of input fields for this template
 	$('#addContacts').click(function(){
+
+		// take the markup from the email and put it into the hidden textarea
+		$('#emailTemplateHolder').val($('#emailTemplate').code());
+
 		$.ajax({
 			method: 'POST',
 			url: '/addContacts',
 			data: 
 			{
-				'_content' : $('#subject').val()+' '+$('#emailTemplate').val(),
+				'_content' : $('#subject').val()+' '+$('#emailTemplateHolder').val(),
 				'_token' : $('input[name=_token]').val()
 			},
 			error: function()
