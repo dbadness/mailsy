@@ -13,25 +13,25 @@
 
 	<div class="page-header">
 		<h1>Create a new email template</h1>
-		<p>Use a single word starting with two '@' symbols to denote a piece of information that you want to individualize the in the emails.</p>
+		<p>Use a single word starting with two '@' symbols to denote a piece of information that you want to individualize the in the emails. (Yes, you can use punctuation!)</p>
 		<p>Try something like:</p>
 		<ul>
 			<li>Hello @@name!</li>
-			<li>I've read a lot about @@company lately</li>
-			<li>I ran into you at @@meetingPlace and I'd like to continue that conversation</li>
+			<li>I noticed that you purchased @@product and I was hoping...</li>
+			<li>We had a conversation about @@topic at the event last night...</li>
 		</ul>
 		<p>Check out the <a href='/faq'>quick start guide</a> if you'd like to see an example!</p>
 	</div>
 	<form method='post' action='/makePreviews'>
 		{!! Form::token() !!}
 		<div class="input-group">
-			<span class="input-group-addon" id="basic-addon3">Template Name (so you can use it later):</span>
+			<span class="input-group-addon" id="basic-addon3">Template Name:</span>
 			<input type='text' name='_name' class="form-control" aria-describedby="basic-addon3">
 		</div>
 		<br>
 		<div class="input-group">
 			<span class="input-group-addon" id="basic-addon4">Subject</span>
-			<input type="text" name='_subject' class="form-control" aria-describedby="basic-addon4">
+			<input type="text" name='_subject' id='subject' class="form-control" aria-describedby="basic-addon4">
 		</div>
 		<br>
 		<div id="emailTemplate"></div>
@@ -58,16 +58,16 @@
 				</tr>
 				<tr id='recipient'>
 					<td class='field'>
-						<input type="text" name='_email' class="form-control">
+						<input type="text" name='_email[]' class="form-control">
 					</td>
 				</tr>
 			</table>
 			<div class="btn btn-info" id='addRecipient' role="button">
 				<span class="glyphicon glyphicon-plus-sign"></span> Add Another Recipient
 			</div>
-			<div class="btn btn-primary" id='viewPreviews' role="button">
+			<button class="btn btn-primary" id='viewPreviews' role="button">
 				Save and View Previews
-			</div>
+			</button>
 		</div>
 		<textarea name='_email_template' id='emailTemplateHolder'></textarea>
 	</form>

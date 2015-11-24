@@ -16,6 +16,7 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->integer('belongs_to')->nullable();
             $table->string('email')->unique();
+            $table->string('name')->nullable();
             $table->rememberToken();
             $table->string('gmail_token');
             $table->string('sf_address');

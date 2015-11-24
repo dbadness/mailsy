@@ -43,7 +43,7 @@ $(document).ready(function(){
 				});
 				$.each(data,function(k,v)
 				{
-					$('#recipient').append('<td class=\'field\'><input type="text" name='+v+' class="form-control"></td>');
+					$('#recipient').append('<td class=\'field\'><input type="text" name="'+v+'[]" class="form-control"></td>');
 				});
 				$('#fields').show();
 				// make a global variable to duplicate the rows later
@@ -62,7 +62,7 @@ $(document).ready(function(){
 	// initialise the editor
 	$('#emailTemplate').summernote(
 	{
-		height: 300,                 // set editor height
+		height: 300, // set editor height
 	});
 
 	/**

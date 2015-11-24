@@ -56,9 +56,10 @@ class PagesController extends Controller
     // show an edit page for the email that has been created
     public function showEdit($eid)
     {
+        $user = Auth::user();
 
         $email = User::verifyUser($eid);
-        return view('pages.edit', ['email' => $email]);
+        return view('pages.edit', ['email' => $email, 'user' => $user]);
 
     }
 
