@@ -37,7 +37,7 @@ class IndexController extends Controller
         $client->setDeveloperKey(env('GOOGLE_KEY'));
         $client->setClientID(env('GOOGLE_CLIENT_ID'));
         $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
-        $client->setRedirectURI('http://mailsy.dev/signup');        
+        $client->setRedirectURI(env('GOOGLE_URI_REDIRECT'));        
         $client->setScopes('https://www.googleapis.com/auth/gmail.modify');
         $client->setAccessType('offline');
 
@@ -53,7 +53,7 @@ class IndexController extends Controller
         $client = new \Google_Client();
         $client->setDeveloperKey(env('GOOGLE_KEY'));
         $client->setClientID(env('GOOGLE_CLIENT_ID'));
-        $client->setRedirectURI('http://mailsy.dev/signup');
+        $client->setRedirectURI(env('GOOGLE_URI_REDIRECT'));
         $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
 
         $accessToken = $client->authenticate($_GET['code']);

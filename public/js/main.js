@@ -1,16 +1,21 @@
 $(document).ready(function(){
 
+	/**
+	*
+	* Create/edit email pages
+	*
+	*/
 	// take the content from the template form the user and process them into the form to be submitted
 	$('#emailTemplate').keyup(function()
 	{
 		$('#emailTemplateHolder').val($('#emailTemplate').val());
 	});
 
+	// for the edit page since it's already populated
 	$('#updatePreviews').click(function()
 	{
 		$('#emailTemplateHolder').val($('#emailTemplate').val());
 	});
-	// for the edit page since it's already populated
 
 	// return the list of input fields for this template
 	$('#addContacts').click(function(){
@@ -58,6 +63,18 @@ $(document).ready(function(){
 	{
 		$('#recipients').append(row);
 	});
+
+	// initialise the editor
+	$('#emailTemplate').summernote(
+	{
+		height: 300,                 // set editor height
+	});
+
+	/**
+	*
+	*	Settings Page
+	*
+	*/
 
 	// save the users settings
 	$('#saveSettings').click(function()

@@ -14,9 +14,9 @@
 Route::get('/', 'IndexController@showIndex');
 
 // auth stuff
-Route::get('/auth', 'IndexController@showSignup');
+Route::get('/signup', 'IndexController@showSignup');
 Route::post('/auth', 'IndexController@sendToGoogleAuth');
-Route::get('/signup', 'IndexController@doAddUser');
+Route::get('/gmail', 'IndexController@doAddUser');
 Route::get('/login', 'IndexController@showLogin');
 Route::get('/logout', function(){
 	Auth::logout();

@@ -18,6 +18,11 @@
 	border-bottom:solid 1px black;
 }
 
+.emailListRight
+{
+	text-align:right;
+}
+
 /* ----------- Email View CSS ------------ */
 
 #messages
@@ -26,6 +31,11 @@
 }
 
 /* ----------- New Email Page CSS -------- */
+
+#emailTemplateHolder
+{
+	display:none;
+}
 .button
 {
 	padding:10px;
