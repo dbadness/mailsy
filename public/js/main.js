@@ -31,28 +31,24 @@ $(document).ready(function(){
 				alert('Something went wrong.');
 			},
 			beforeSend: function() {
-				$('#loading').show();
+				$('#addContacts').html('Loading.........');
 			},
 			success: function(response) {
-				$('#loading').hide();
+				$('#addContacts').html('Add Contacts');
 				var data = $.parseJSON(response);
 				var count = 0;
 				$.each(data,function(k,v)
 				{
-					$('#headers').append('<div class=\'field\'>'+v+'</div>');
+					$('#headers').append('<td class=\'field\'><b>'+v+'</b></td>');
 				});
-				$('#headers').append('<div class=\'clear\'></div>');
 				$.each(data,function(k,v)
 				{
-					$('.recipientRow').append('<div class=\'field\'><input class=\'fieldInput\' name='+v+'[]></div>');
+					$('#recipient').append('<td class=\'field\'><input type="text" name='+v+' class="form-control"></td>');
 				});
-				$('.recipientRow').append('<div id=\'recipientRowClear\' class=\'clear\'></div>');
-				$('#recipients').show();
 				$('#fields').show();
-				$('#addRecipient').show();
-				$('#viewPreviews').show();
 				// make a global variable to duplicate the rows later
-				row = $('#recipients').html();
+				row = $('#recipient').wrap('<p/>').parent().html();
+				$('#recipient').unwrap();
 			}
 		});
 	});
@@ -60,7 +56,7 @@ $(document).ready(function(){
 	// add another row of recipients to the list
 	$('#addRecipient').click(function()
 	{
-		$('#recipients').append(row);
+		$('#recipientList').append(row);
 	});
 
 	// initialise the editor

@@ -57,40 +57,13 @@
 	margin:0 30px 0 30px;
 }
 
-.button
-{
-	padding:10px;
-	border-radius:3px;
-	background:lightgray;
-	width:120px;
-	text-align:center;
-}
-
-#loading
-{
-	display:none;
-}
-
-#subject
-{
-	width:500px;
-}
-
-#emailTemplate
-{
-	resize:none;
-	width:500px;
-	height:200px;
-}
-
 #emailTemplateHolder
 {
 	display:none;
 }
 
-#addRecipient
+#recipientList
 {
-	display:none;
 }
 
 #fields
@@ -98,40 +71,17 @@
 	display:none;
 }
 
-#headers
-{
-	border:solid 1px black;
-}
-
-#recipients
-{
-	border:solid 1px black;
-	display:none;
-}
-
-.recipientRow
-{
-	
-}
-
-.header
-{
-	float:left;
-	width:150px;
-	border:solid 1px black;
-}
-
 .field
 {
-	float:left;
-	width:150px;
-	border:solid 1px black;
 	padding:10px;
+}
+
+#addRecipient
+{
 }
 
 #viewPreviews
 {
-	display:none;
 }
 
 /* ---------------- Upgrade Page CSS -------------*/

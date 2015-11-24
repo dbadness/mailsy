@@ -46,7 +46,14 @@
                             </li>
                             <div style="clear:both;"></div>
                         </ul>
-                        <p class="navbar-text" style="float:right;">Signed in as {!! $user->email !!}</p>
+                        <p class="navbar-text" style="float:right;">
+                            Signed in as {!! $user->email !!} 
+                            @if(!$user->paid)
+                               (Free Account) <a href='/upgrade'>Upgrade</a>
+                            @else
+                                (Upgraded Account!)
+                            @endif
+                        </p>
                     @else
                         <p class="navbar-text" style="float:right;"><a href="/signup">Signup/Login via Gmail</a></p>
                     @endif
@@ -61,10 +68,8 @@
         <div style="height:100px;"></div>
         <nav class="navbar navbar-default navbar-fixed-bottom">
             <div class="container"  style="text-align:center;">
-                <p class="navbar-text" style="float:none;">©2015 Mailsy Technologies, Inc. Want to say hello or give us 
-                feedback of any kind? Send us an email to <a href="mailto:hello@lucolo.com">hello@lucolo.com</a> 
-                or reach out to us on <a href="https://www.twitter.com/lucoloinc" target="_blank">Twitter</a>
-                or <a href="https://www.facebook.com/lucoloinc" target="_blank">Facebook.</a></p>
+                <p class="navbar-text" style="float:none;">©2015 Mailsy Technologies, Inc. Questions? Comments? Life advice? Send an email to <a href="mailto:hello@mailsy.co">hello@mailsy.co</a> 
+                or reach out on <a href="https://www.twitter.com/mailsyapp" target="_blank">Twitter</a>.</p>
             </div>
         </nav>
 	</body>

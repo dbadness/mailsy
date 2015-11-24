@@ -39,9 +39,12 @@
 	@if($data['emails'] == '[]')
 
 		<div class="alert alert-info" role="alert">
-			No emails to report yet... 
-			<a href='/create' class='alert-link'>Create a template</a> and send up to 10 emails per today on the free account. 
-			<a href='/upgrade' class='alert-link'>Upgrade your account</a> for just $10/mo and send unlimited emails per day!
+			No emails to report yet...
+			@if(!$data['user']->paid)
+				<a href='/create' class='alert-link'>Create a template</a> and send up to 10 emails per today on the free account.
+			@else
+				<a href='/create' class='alert-link'>Create a template</a> and send unlimited emails per day since you have an upgraded account!
+			@endif
 		</div>
 
 	@endif
