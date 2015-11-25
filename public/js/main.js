@@ -2,12 +2,22 @@ $(document).ready(function(){
 
 	/**
 	*
-	* Create/edit email pages
+	* Create/edit/use email pages
 	*
 	*/
 
+	// initialise the editor
+	$('#emailTemplate').summernote(
+	{
+		height: 300, // set editor height
+	});
+
+	// fill in the email template
+	// the variable is in the view
+	$('#emailTemplate').code(template);
+
 	// for the edit page since it's already populated
-	$('#updatePreviews').click(function()
+	$('#saveTemplate').click(function()
 	{
 		$('#emailTemplateHolder').val($('#emailTemplate').code());
 	});
@@ -19,29 +29,33 @@ $(document).ready(function(){
 		$('#emailTemplateHolder').val($('#emailTemplate').code());
 
 		$.ajax({
-			method: 'POST',
-			url: '/addContacts',
+			method: 'post',
+			url: '/returnFields',
 			data: 
 			{
-				'_content' : $('#subject').val()+' '+$('#emailTemplateHolder').val(),
-				'_token' : $('input[name=_token]').val()
+				'_email_template' : $('#emailTemplateHolder').val(),
+				'_name' : $('input[name=_name]').val(),
+				'_subject' : $('#subject').val(),
+				'_token' : $('input[name=_token]').val(),
+				'_email_id' : $('input[name=_email_id]').val(),
+				'_new' : $('input[name=_new]').val()
 			},
 			error: function()
 			{
 				alert('Something went wrong.');
 			},
 			beforeSend: function() {
-				$('#addContacts').html('Loading.........');
+				$('#addContacts').html('Loading...');
 			},
 			success: function(response) {
 				$('#addContacts').html('Add Contacts');
 				var data = $.parseJSON(response);
 				var count = 0;
-				$.each(data,function(k,v)
+				$.each(data.fields,function(k,v)
 				{
 					$('#headers').append('<td class=\'field\'><b>'+v+'</b></td>');
 				});
-				$.each(data,function(k,v)
+				$.each(data.fields,function(k,v)
 				{
 					$('#recipient').append('<td class=\'field\'><input type="text" name="'+v+'[]" class="form-control"></td>');
 				});
@@ -49,6 +63,8 @@ $(document).ready(function(){
 				// make a global variable to duplicate the rows later
 				row = $('#recipient').wrap('<p/>').parent().html();
 				$('#recipient').unwrap();
+				$('#saved').show();
+				$('#fields').append('<input type="hidden" name="_email_id" value="'+data.email+'">');
 			}
 		});
 	});
@@ -57,12 +73,6 @@ $(document).ready(function(){
 	$('#addRecipient').click(function()
 	{
 		$('#recipientList').append(row);
-	});
-
-	// initialise the editor
-	$('#emailTemplate').summernote(
-	{
-		height: 300, // set editor height
 	});
 
 	/**

@@ -20,8 +20,58 @@ class ActionController extends Controller
     // return the fields to the new email view from the ajax call with template
     public function returnFields(Request $request)
     {
+        // save the email template
+        $user = Auth::user();
+
+        // create the email object
+        $email = new Email;
+        $email->user_id = $user->id;
+        $email->name = $request->_name;
+        $email->subject = $request->_subject;
+        $email->template = $request->_email_template;
+        $email->created_at = time();
+
+        $email->save();
+
+        // combine the subject and template for regex matching
+        $content = $request->_subject.' '.$request->_email_template;
+
         // find the variables in the email and return them to the view        
-        preg_match_all('/@@[a-zA-Z0-9]*/',$request->_content,$matches);
+        preg_match_all('/@@[a-zA-Z0-9]*/',$content,$matches);
+
+        if($matches)
+        {
+            foreach($matches as $k => $v)
+            {
+                $fields = [];
+                foreach($v as $match)
+                {
+                    // shave the delimiters
+                    $field = trim($match,'@@');
+                    $fields[] = strtolower($field);
+                }
+
+                // save the fields to the DB
+                $email->fields = json_encode($fields);
+                $email->save();
+            }
+            return json_encode(['fields' => $fields, 'email' => $email->id]);
+        }
+        else
+        {
+            return json_encode(['email' => $email->id]);
+        }
+    }
+
+    // save the template if the user edits it
+    public function saveTemplate(Request $request)
+    {
+
+        // combine the subject and template for regex matching
+        $content = $request->_subject.' '.$request->_email_template;
+
+        // find the variables in the email and return them to the view        
+        preg_match_all('/@@[a-zA-Z0-9]*/',$content,$matches);
 
         if($matches)
         {
@@ -35,28 +85,25 @@ class ActionController extends Controller
                     $fields[] = strtolower($field);
                 }
             }
-            return json_encode($fields);
         }
-        else
-        {
-            return 'No matches found.';
-        }
+
+        // save the email template
+        $email = Email::find($request->_email_id);
+        $email->name = $request->_name;
+        $email->subject = $request->_subject;
+        $email->template = $request->_email_template;
+        $email->fields = json_encode($fields);
+        $email->save();
+
+        // send the user to the 'use' view
+        return redirect('/use/'.base64_encode($email->id));
     }
 
     // take the template's contents and the recipients list and generate previews for the user
     public function makePreviews(Request $request)
     {
-        $user = Auth::user();
-
-        // create the email object
-        $email = new Email;
-        $email->user_id = $user->id;
-        $email->name = $request->_name;
-        $email->subject = $request->_subject;
-        $email->template = $request->_email_template;
-        $email->created_at = time();
-
-        $email->save();
+        // find the email object
+        $email = Email::find($request->_email_id);
 
         // build the recipient list and assign the fields to them
         $messages = [];

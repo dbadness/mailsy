@@ -25,7 +25,7 @@
 	<form method='post' action='/makePreviews'>
 		{!! Form::token() !!}
 		<div class="input-group">
-			<span class="input-group-addon" id="basic-addon3">Template Name:</span>
+			<span class="input-group-addon" id="basic-addon3">Template Name</span>
 			<input type='text' name='_name' class="form-control" aria-describedby="basic-addon3">
 		</div>
 		<br>
@@ -36,7 +36,7 @@
 		<br>
 		<div id="emailTemplate"></div>
 		<div id='checkHolders'>
-			<div class="btn btn-primary" id='addContacts' role="button">Add Contacts</div>
+			<div class="btn btn-primary" id='addContacts' role="button">Save Template and Add Contacts</div>
 			<div class='checkHolder' id='sfHolder'>
 				<p>Send to Salesforce: <input type='checkbox' name='_send_to_salesforce'></p>
 			</div>
@@ -50,7 +50,9 @@
 			@endif
 			<div class='clear'></div>
 		</div>
-		<br><br>
+		<br>
+		<div class="alert alert-success" role="alert" style='display:none;' id='saved'>Template saved!</div>
+		<br>
 		<div id='fields'>
 			<table class="table" id="recipientList">
 				<tr id='headers'>
@@ -66,7 +68,7 @@
 				<span class="glyphicon glyphicon-plus-sign"></span> Add Another Recipient
 			</div>
 			<button class="btn btn-primary" id='viewPreviews' role="button">
-				Save and View Previews
+				View Previews
 			</button>
 		</div>
 		<textarea name='_email_template' id='emailTemplateHolder'></textarea>

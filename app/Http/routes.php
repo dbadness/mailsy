@@ -31,11 +31,13 @@ Route::get('/preview/{eid}','PagesController@showPreview');
 Route::get('/email/{eid}','PagesController@showEmail');
 Route::get('/settings','PagesController@showSettings');
 Route::get('/upgrade', 'PagesController@showUpgrade');
+Route::get('/use/{eid}', 'PagesController@showUseEmail');
 
 // actions
-Route::post('/addContacts', 'ActionController@returnFields');
+Route::post('/returnFields', 'ActionController@returnFields');
 Route::post('/makePreviews', 'ActionController@makePreviews');
 Route::post('/updatePreviews', 'ActionController@updatePreviews');
 Route::post('/sendEmails', 'ActionController@sendEmails');
 Route::post('/saveSettings', 'ActionController@saveSettings');
 Route::post('/upgrade', 'ActionController@doUpgrade');
+Route::post('/saveTemplate','ActionController@saveTemplate');

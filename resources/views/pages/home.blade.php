@@ -25,7 +25,7 @@
 				@foreach($data['emails'] as $email)
 
 					<tr>
-						<td><a href='/email/{!! base64_encode($email->id) !!}'>{!! $email->name !!}</td>
+						<td>{!! $email->name !!} ( <a href='/email/{!! base64_encode($email->id) !!}'>messages</a> / <a href='/use/{!! base64_encode($email->id) !!}'>use</a> / <a href='/edit/{!! base64_encode($email->id) !!}'>edit template</a> )</td>
 						<td class='emailListRight'>1</td>
 						<td class='emailListRight'>3</td>
 						<td class='emailListRight'>3</td>
