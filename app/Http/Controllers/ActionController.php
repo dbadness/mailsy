@@ -23,15 +23,23 @@ class ActionController extends Controller
         // save the email template
         $user = Auth::user();
 
-        // create the email object
-        $email = new Email;
-        $email->user_id = $user->id;
-        $email->name = $request->_name;
-        $email->subject = $request->_subject;
-        $email->template = $request->_email_template;
-        $email->created_at = time();
+        // if there's no email_id, create one. if there is, use it
+        if(!$request->_email_id)
+        {
+            // create the email object
+            $email = new Email;
+            $email->user_id = $user->id;
+            $email->name = $request->_name;
+            $email->subject = $request->_subject;
+            $email->template = $request->_email_template;
+            $email->created_at = time();
 
-        $email->save();
+            $email->save();
+        }
+        else
+        {
+            $email = Email::find($request->_email_id);
+        }
 
         // combine the subject and template for regex matching
         $content = $request->_subject.' '.$request->_email_template;
@@ -102,6 +110,9 @@ class ActionController extends Controller
     // take the template's contents and the recipients list and generate previews for the user
     public function makePreviews(Request $request)
     {
+        // auth the user
+        $user = Auth::user();
+
         // find the email object
         $email = Email::find($request->_email_id);
 

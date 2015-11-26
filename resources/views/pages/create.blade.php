@@ -37,6 +37,7 @@
 		<div id="emailTemplate"></div>
 		<div id='checkHolders'>
 			<div class="btn btn-primary" id='addContacts' role="button">Save Template and Add Contacts</div>
+			<div class="btn btn-primary" id='refreshFields' role="button">Save Template and Refresh Fields</div>
 			<div class='checkHolder' id='sfHolder'>
 				<p>Send to Salesforce: <input type='checkbox' name='_send_to_salesforce'></p>
 			</div>
@@ -51,18 +52,13 @@
 			<div class='clear'></div>
 		</div>
 		<br>
-		<div class="alert alert-success" role="alert" style='display:none;' id='saved'>Template saved!</div>
+		<div class="alert alert-success alert-dismissible" id='saved' role="alert">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<strong>Hooray!</strong> Template saved.
+		</div>
 		<br>
 		<div id='fields'>
 			<table class="table" id="recipientList">
-				<tr id='headers'>
-					<td class='field'><b>Email</b></td>
-				</tr>
-				<tr id='recipient'>
-					<td class='field'>
-						<input type="text" name='_email[]' class="form-control">
-					</td>
-				</tr>
 			</table>
 			<div class="btn btn-info" id='addRecipient' role="button">
 				<span class="glyphicon glyphicon-plus-sign"></span> Add Another Recipient

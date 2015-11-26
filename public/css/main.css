@@ -76,6 +76,16 @@
 	padding:10px;
 }
 
+#refreshFields
+{
+	display:none;
+	float:left;
+}
+
+#saved{
+	display:none;
+}
+
 #addRecipient
 {
 }

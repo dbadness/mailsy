@@ -33,9 +33,24 @@
 		</div>
 		<br>
 		<div id="emailTemplate"></div>
-		<button class="btn btn-primary" role="button" id='saveTemplate'>
-			Save Template
-		</button>
+		@if($email->temp_recipients_list)
+			<table class="table" id="recipientList">
+				<tr id='headers'>
+					<td class='field'>
+						<b>Email</b>
+					</td>
+				</tr>
+				<tr id='recipient'>
+					<td class='field'>
+						<input type="text" name='_email[]' class="form-control">
+					</td>
+				</tr>
+			</table>
+		@else
+			<button class="btn btn-primary" role="button" id='saveTemplate'>
+				Save Template
+			</button>
+		@endif
 		<textarea name='_email_template' id='emailTemplateHolder'></textarea>
 	</form>
 
