@@ -59,6 +59,10 @@ class PagesController extends Controller
         $user = Auth::user();
 
         $email = User::verifyUser($eid);
+
+        // if you're editing a template, erase the messages that haven't been sent
+        Message::where('email_id',$email->id)->update(['deleted_at' => time()]);
+        
         return view('pages.edit', ['email' => $email, 'user' => $user]);
 
     }

@@ -13,13 +13,17 @@
 
 	<script>
 		// fill in the #emailTemplate
-		var template = '{!! $email->template !!}';
+		var template = '{!! addslashes($email->template) !!}';
 	</script>
 
 	<div class="page-header">
 		<h1>Edit Template <small>{!! $email->name !!}</small></h1>
 	</div>
-	<form method='post' action='/saveTemplate'>
+	@if($email->temp_recipients_list)
+		<form method='post' action='/makePreviews'>
+	@else
+		<form method='post' action='/saveTemplate'>
+	@endif
 		{!! Form::token() !!}
 		<input type='hidden' name='_email_id' value='{!! $email->id !!}'>
 		<div class="input-group">
@@ -33,19 +37,57 @@
 		</div>
 		<br>
 		<div id="emailTemplate"></div>
+		<div id='checkHolders'>
+			<div class="btn btn-primary" id='refreshFields' style='display:inline;' role="button">Save Template and Refresh Fields</div>
+			<div class='checkHolder' id='sfHolder'>
+				<p>Send to Salesforce: <input type='checkbox' name='_send_to_salesforce'></p>
+			</div>
+			<div class='checkHolder' id='sigHolder'>
+				<p>Attach Signature: <input type='checkbox' name='_signature'></p>
+			</div>
+			@if(!$user->sf_address || !$user->signature)
+				<div class='checkHolder'>
+					<p>Head to <a href='/settings'>the settings page</a> to add your signature and Salesforce email address</p>
+				</div>
+			@endif
+			<div class='clear'></div>
+		</div>
+		<br>
 		@if($email->temp_recipients_list)
+			<?php $recipients = json_decode($email->temp_recipients_list); ?>
 			<table class="table" id="recipientList">
 				<tr id='headers'>
 					<td class='field'>
 						<b>Email</b>
 					</td>
+					@foreach(json_decode($recipients[0]->_fields) as $k => $v)
+						@foreach($v as $field => $value)
+							<td class='field'>
+								<b>{!! $field !!}</b>
+							</td>
+						@endforeach
+					@endforeach
 				</tr>
-				<tr id='recipient'>
-					<td class='field'>
-						<input type="text" name='_email[]' class="form-control">
-					</td>
-				</tr>
+				@foreach($recipients as $recipient)
+					<tr class='recipient'>
+						<td class='field'>
+							<input type="text" name='_email[]' class="form-control" value='{!! $recipient->_email !!}'>
+						</td>
+						<?php $fields = json_decode($recipient->_fields); ?>
+						@foreach($fields as $field)
+							<td class='field'>
+								<input type="text" name='{!! key((array)$field) !!}[]' class="form-control" value='{!! current((array)$field) !!}'>
+							</td>
+						@endforeach
+					</tr>
+				@endforeach
 			</table>
+			<div class="btn btn-info" id='addRecipient' role="button">
+				<span class="glyphicon glyphicon-plus-sign"></span> Add Another Recipient
+			</div>
+			<button class="btn btn-primary" role="button" id='saveTemplate'>
+				View Previews
+			</button>
 		@else
 			<button class="btn btn-primary" role="button" id='saveTemplate'>
 				Save Template
