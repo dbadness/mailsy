@@ -55,14 +55,14 @@ $(document).ready(function(){
 				var data = $.parseJSON(response);
 				var count = 0;
 				// set up the headers
-				$('#recipientList').html('<tr id=\'headers\'><td class=\'field\'><b>Email</b></td></tr><tr id=\'recipient\'><td class=\'field\'><input type="text" name=\'_email[]\' class="form-control"></td></tr>');
+				$('#recipientList').html('<tr id=\'headers\'><td style=\'width:40px;\'></td><td class=\'field\'><b>Email</b></td></tr><tr class=\'recipient\'><td class=\'removeRow\'><div style=\'height:5px;\'></div><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td><td class=\'field\'><input type="text" name=\'_email[]\' class="form-control"></td></tr>');
 				$.each(data.fields,function(k,v)
 				{
 					$('#headers').append('<td class=\'field\'><b>'+v+'</b></td>');
 				});
 				$.each(data.fields,function(k,v)
 				{
-					$('#recipient').append('<td class=\'field\'><input type="text" name="'+v+'[]" class="form-control"></td>');
+					$('.recipient').append('<td class=\'field\'><input type="text" name="'+v+'[]" class="form-control"></td>');
 				});
 				$('#fields').show();
 				// make a global variable to duplicate the rows later
@@ -104,14 +104,14 @@ $(document).ready(function(){
 				$('#saved').show();
 				$('#refreshFields').html('Save Template and Refresh Fields');
 				// refresh the fields div
-				$('#recipientList').html('<tr id=\'headers\'><td class=\'field\'><b>Email</b></td></tr><tr id=\'recipient\'><td class=\'field\'><input type="text" name=\'_email[]\' class="form-control"></td></tr>');
+				$('#recipientList').html('<tr id=\'headers\'><td style=\'width:40px;\'></td><td class=\'field\'><b>Email</b></td></tr><tr class=\'recipient\'><td class=\'removeRow\'><div style=\'height:5px;\'></div><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td><td class=\'field\'><input type="text" name=\'_email[]\' class="form-control"></td></tr>');
 				$.each(data.fields,function(k,v)
 				{
 					$('#headers').append('<td class=\'field\'><b>'+v+'</b></td>');
 				});
 				$.each(data.fields,function(k,v)
 				{
-					$('#recipient').append('<td class=\'field\'><input type="text" name="'+v+'[]" class="form-control"></td>');
+					$('.recipient').append('<td class=\'field\'><input type="text" name="'+v+'[]" class="form-control"></td>');
 				});
 			}
 		});
