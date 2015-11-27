@@ -113,9 +113,6 @@ $(document).ready(function(){
 				{
 					$('#recipient').append('<td class=\'field\'><input type="text" name="'+v+'[]" class="form-control"></td>');
 				});
-				// make a global variable to duplicate the rows later
-				row = $('#recipient').wrap('<p/>').parent().html();
-				$('#recipient').unwrap();
 			}
 		});
 	});
@@ -123,9 +120,19 @@ $(document).ready(function(){
 	// add another row of recipients to the list
 	$('#addRecipient').click(function()
 	{
+		// make a global variable to duplicate the rows later
+		row = $('.recipient:first').wrap('<p/>').parent().html();
+		$('.recipient:first').unwrap();
 		$('#recipientList').append(row);
 	});
 
+	// remove row
+	$(document).on('click', '.removeRow:not(:first)', function()
+	{
+		$(this).parent().remove();
+
+	});
+	
 	/**
 	*
 	*	Settings Page

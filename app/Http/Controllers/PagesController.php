@@ -70,9 +70,10 @@ class PagesController extends Controller
     // allow the user to use their email templates
     public function showUseEmail($eid)
     {
+        $user = Auth::user();
         $email = Email::find(base64_decode($eid));
 
-        return view('pages.use', ['email' => $email]);
+        return view('pages.use', ['user' => $user, 'email' => $email]);
     }
 
     // show the messages for an email

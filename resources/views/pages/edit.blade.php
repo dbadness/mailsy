@@ -1,14 +1,5 @@
 @extends('layouts.master')
 
-@section('pageJS')
-
-<!-- for the text editor -->
-<link href="/css/summernote.css" rel="stylesheet">
-<script src="/js/summernote.js"></script>
-<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
-
-@endsection
-
 @section('content')
 
 	<script>
@@ -37,23 +28,23 @@
 		</div>
 		<br>
 		<div id="emailTemplate"></div>
-		<div id='checkHolders'>
-			<div class="btn btn-primary" id='refreshFields' style='display:inline;' role="button">Save Template and Refresh Fields</div>
-			<div class='checkHolder' id='sfHolder'>
-				<p>Send to Salesforce: <input type='checkbox' name='_send_to_salesforce'></p>
-			</div>
-			<div class='checkHolder' id='sigHolder'>
-				<p>Attach Signature: <input type='checkbox' name='_signature'></p>
-			</div>
-			@if(!$user->sf_address || !$user->signature)
-				<div class='checkHolder'>
-					<p>Head to <a href='/settings'>the settings page</a> to add your signature and Salesforce email address</p>
-				</div>
-			@endif
-			<div class='clear'></div>
-		</div>
-		<br>
 		@if($email->temp_recipients_list)
+			<div id='checkHolders'>
+				<div class="btn btn-primary" id='refreshFields' style='display:inline;' role="button">Save Template and Refresh Fields</div>
+				<div class='checkHolder' id='sfHolder'>
+					<p>Send to Salesforce: <input type='checkbox' name='_send_to_salesforce'></p>
+				</div>
+				<div class='checkHolder' id='sigHolder'>
+					<p>Attach Signature: <input type='checkbox' name='_signature'></p>
+				</div>
+				@if(!$user->sf_address || !$user->signature)
+					<div class='checkHolder'>
+						<p>Head to <a href='/settings'>the settings page</a> to add your signature and Salesforce email address</p>
+					</div>
+				@endif
+				<div class='clear'></div>
+			</div>
+			<br>
 			<?php $recipients = json_decode($email->temp_recipients_list); ?>
 			<table class="table" id="recipientList">
 				<tr id='headers'>

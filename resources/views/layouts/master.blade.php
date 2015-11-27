@@ -14,7 +14,9 @@
 		<script src="/js/bootstrap.min.js"></script>
 		<link rel="stylesheet" href="{!! asset('/css/main.css') !!}">
 		<script src="{!! asset('/js/main.js') !!}"></script>
-		@yield('pageJS')
+        <link href="/css/summernote.css" rel="stylesheet">
+        <script src="/js/summernote.js"></script>
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
 
 		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

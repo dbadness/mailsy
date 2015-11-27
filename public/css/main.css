@@ -10,6 +10,22 @@
 	resize:none;
 }
 
+.removeRow
+{
+	width:40px;
+	font-size:21px;
+	cursor:pointer;
+	color:lightgray;
+}
+
+.removeRowFirst
+{
+	width:40px;
+	font-size:21px;
+	cursor:pointer;
+	color:lightgray;
+}
+
 /* ----------- Home Page CSS ------------- */
 
 .email
