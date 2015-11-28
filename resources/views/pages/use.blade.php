@@ -3,7 +3,8 @@
 @section('content')
 
 <form method='post' action='/makePreviews'>
-	{!! Form::token() !!}
+	{!! Form::token() !!} 
+	<input type='hidden' name='_email_id' value='{!! $email->id !!}'>
 	<div class="input-group">
 		<span class="input-group-addon" id="basic-addon3">Template Name</span>
 		<input type='text' class="form-control" aria-describedby="basic-addon3" disabled value='{!! $email->name !!}'>
@@ -50,7 +51,7 @@
 				<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
 			</td>
 			<td class='field'>
-				<input type="text" class="form-control" name='email[]'>
+				<input type="text" class="form-control" name='_email[]'>
 			</td>
 			@foreach(json_decode($email->fields) as $field)
 				<td class='field'>
