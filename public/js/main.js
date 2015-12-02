@@ -50,26 +50,36 @@ $(document).ready(function(){
 				$('#addContacts').html('Loading...');
 			},
 			success: function(response) {
-				$('#addContacts').hide();
-				$('#refreshFields').show();
-				var data = $.parseJSON(response);
-				var count = 0;
-				// set up the headers
-				$('#recipientList').html('<tr id=\'headers\'><td style=\'width:40px;\'></td><td class=\'field\'><b>Email</b></td></tr><tr class=\'recipient\'><td class=\'removeRow\'><div style=\'height:5px;\'></div><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td><td class=\'field\'><input type="text" name=\'_email[]\' class="form-control"></td></tr>');
-				$.each(data.fields,function(k,v)
+
+				// error reporting
+				if(response == 'no main content')
 				{
-					$('#headers').append('<td class=\'field\'><b>'+v+'</b></td>');
-				});
-				$.each(data.fields,function(k,v)
+					$('#noContent').show();
+					$('#addContacts').html('Save Template and Add Contacts');
+				}
+				else
 				{
-					$('.recipient').append('<td class=\'field\'><input type="text" name="'+v+'[]" class="form-control"></td>');
-				});
-				$('#fields').show();
-				// make a global variable to duplicate the rows later
-				row = $('#recipient').wrap('<p/>').parent().html();
-				$('#recipient').unwrap();
-				$('#saved').show();
-				$('#fields').append('<input type="hidden" name="_email_id" value="'+data.email+'">');
+					$('#addContacts').hide();
+					$('#refreshFields').show();
+					var data = $.parseJSON(response);
+					var count = 0;
+					// set up the headers
+					$('#recipientList').html('<tr id=\'headers\'><td style=\'width:40px;\'></td><td class=\'field\'><b>Email</b></td></tr><tr class=\'recipient\'><td class=\'removeRow\'><div style=\'height:5px;\'></div><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td><td class=\'field\'><input type="text" name=\'_email[]\' class="form-control"></td></tr>');
+					$.each(data.fields,function(k,v)
+					{
+						$('#headers').append('<td class=\'field\'><b>'+v+'</b></td>');
+					});
+					$.each(data.fields,function(k,v)
+					{
+						$('.recipient').append('<td class=\'field\'><input type="text" name="'+v+'[]" class="form-control"></td>');
+					});
+					$('#fields').show();
+					// make a global variable to duplicate the rows later
+					row = $('#recipient').wrap('<p/>').parent().html();
+					$('#recipient').unwrap();
+					$('#saved').show();
+					$('#fields').append('<input type="hidden" name="_email_id" value="'+data.email+'">');
+				}
 			}
 		});
 	});

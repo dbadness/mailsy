@@ -48,6 +48,11 @@
 
 /* ----------- New Email Page CSS -------- */
 
+#noContent
+{
+	display:none;
+}
+
 #emailTemplateHolder
 {
 	display:none;

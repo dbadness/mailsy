@@ -20,6 +20,12 @@ class ActionController extends Controller
     // return the fields to the new email view from the ajax call with template
     public function returnFields(Request $request)
     {
+        // make sure that all the fields are accounted for and are alphanumeric
+        if(!$request->_name || !$request->_subject || !$request->_email_template)
+        {
+            return 'no main content';
+        }
+
         // save the email template
         $user = Auth::user();
 
@@ -56,7 +62,7 @@ class ActionController extends Controller
                 {
                     // shave the delimiters
                     $field = trim($match,'@@');
-                    $fields[] = strtolower($field);
+                    $fields[] = $field;
                 }
 
                 // save the fields to the DB

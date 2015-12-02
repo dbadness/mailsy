@@ -1,6 +1,11 @@
 @extends('layouts.master')
 
 @section('content')
+	<!-- error reporting -->
+	<div class="alert alert-danger alert-dismissible" id='noContent' role="alert">
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		Please make sure you at least have a name, subject, and a body for this template.
+	</div>
 
 	<div class="page-header">
 		<h1>Create a new email template</h1>
