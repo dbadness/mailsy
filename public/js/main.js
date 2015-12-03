@@ -25,6 +25,24 @@ $(document).ready(function(){
 		$('#emailTemplateHolder').val($('#emailTemplate').code());
 	});
 
+	// make sure that there are values in the inputs
+	$('#makePreviews').submit(function()
+	{
+		var fields = $('#recipientList input').serializeArray();
+		for(var k in fields)
+		{
+			if(typeof fields[k] !== 'function')
+			{
+				if(fields[k].value === '')
+				{
+					alert('Please make sure all your fields are filled in!');
+					return false;
+				}
+			}
+		}
+	});
+	
+
 	// return the list of input fields for this template
 	$('#addContacts').click(function(){
 

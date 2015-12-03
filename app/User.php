@@ -11,6 +11,7 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
 use Auth;
+use App\Message;
 
 class User extends Model implements AuthenticatableContract,
                                     AuthorizableContract,
@@ -73,5 +74,33 @@ class User extends Model implements AuthenticatableContract,
         $client->setAccessToken($user->gmail_token);
 
         return $client;
+    }
+
+    // find out how many emails this user has left today if their not a paid member
+    public static function howManyEmailsLeft()
+    {
+        // auth the user
+        $user = Auth::user();
+
+        // initate the count
+        $left = 10;
+
+        // retrieve the messages from today
+        $beginOfDay = strtotime('midnight', time());
+        $endOfDay   = strtotime('tomorrow', $beginOfDay) - 1;
+        $messages = Message::where('user_id',$user->id)->whereNotNull('status')->whereNull('deleted_at')->whereBetween('updated_at',[$beginOfDay,$endOfDay])->get();
+
+        if($messages)
+        {
+            foreach($messages as $message)
+            {
+                if($left != 0 && !$user->paid)
+                {
+                    $left--; 
+                }  
+            } 
+        }
+
+        return $left;
     }
 }

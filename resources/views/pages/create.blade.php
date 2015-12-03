@@ -6,7 +6,12 @@
 		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 		Please make sure you at least have a name, subject, and a body for this template.
 	</div>
-
+	@if($errors->any())
+		<div class="alert alert-danger alert-dismissible" role="alert">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			{!! $errors->first() !!}
+		</div>
+	@endif
 	<div class="page-header">
 		<h1>Create a new email template</h1>
 		<p>Use a single word starting with two '@' symbols to denote a piece of information that you want to individualize the in the emails. (Yes, you can use punctuation!)</p>
@@ -18,7 +23,7 @@
 		</ul>
 		<p>Check out the <a href='/faq'>quick start guide</a> if you'd like to see an example!</p>
 	</div>
-	<form method='post' action='/makePreviews'>
+	<form method='post' action='/makePreviews' id='makePreviews'>
 		{!! Form::token() !!}
 		<div class="input-group">
 			<span class="input-group-addon" id="basic-addon3">Template Name</span>

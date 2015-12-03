@@ -45,12 +45,16 @@ class PagesController extends Controller
     // show the email preview page
     public function showPreview($eid)
     {
+        // auth the user
+        $user = Auth::user();
+
+        // decode the email
         $email = User::verifyUser($eid);
         // retrieve the messages that aren't deleted or sent for this email
         $messages = Message::where('email_id',$email->id)->whereNull('deleted_at')->whereNull('status')->get();
 
         // if all is good to go, return the view with the previews
-        return view('pages.preview', ['email' => $email, 'messages' => $messages]);
+        return view('pages.preview', ['user' => $user, 'email' => $email, 'messages' => $messages]);
     }
 
     // show an edit page for the email that has been created
@@ -61,7 +65,7 @@ class PagesController extends Controller
         $email = User::verifyUser($eid);
 
         // if you're editing a template, erase the messages that haven't been sent
-        Message::where('email_id',$email->id)->update(['deleted_at' => time()]);
+        Message::where('email_id',$email->id)->whereNull('deleted_at')->whereNull('status')->update(['deleted_at' => time()]);
         
         return view('pages.edit', ['email' => $email, 'user' => $user]);
 

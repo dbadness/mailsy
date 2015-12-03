@@ -7,11 +7,20 @@
 		var template = '{!! addslashes($email->template) !!}';
 	</script>
 
+	@if($_GET)
+		@if($_GET['badEmails'])
+			<div class="alert alert-danger alert-dismissible" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				Please make sure you enter valid emails for your recipients.
+			</div>
+		@endif
+	@endif
+
 	<div class="page-header">
 		<h1>Edit Template <small>{!! $email->name !!}</small></h1>
 	</div>
 	@if($email->temp_recipients_list)
-		<form method='post' action='/makePreviews'>
+		<form method='post' action='/makePreviews' id='makePreviews'>
 	@else
 		<form method='post' action='/saveTemplate'>
 	@endif

@@ -2,7 +2,7 @@
 
 @section('content')
 
-<form method='post' action='/makePreviews'>
+<form method='post' action='/makePreviews' id='makePreviews'>
 	{!! Form::token() !!} 
 	<input type='hidden' name='_email_id' value='{!! $email->id !!}'>
 	<div class="input-group">

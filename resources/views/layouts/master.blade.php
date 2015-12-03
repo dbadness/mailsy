@@ -51,7 +51,7 @@
                         <p class="navbar-text" style="float:right;">
                             Signed in as {!! $user->email !!} 
                             @if(!$user->paid)
-                               (Free Account) <a href='/upgrade'>Upgrade</a>
+                               ({!! App\User::howManyEmailsLeft() !!} emails left today) <a href='/upgrade'>Upgrade</a>
                             @else
                                 (Upgraded Account!)
                             @endif
@@ -65,6 +65,13 @@
         </nav>
         <div style="margin:20px 0 0 0;"></div>
         <div class="container">
+            <!-- if they're out of emails... -->
+            @if($user && (App\User::howManyEmailsLeft() == 0))
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> You've reached the maximum number of emails you can send per day on a free account. If you love Mailsy, why not <a class='alert-link' href='/upgrade'>upgrade</a> so you can send unlimited emails per day?
+                </div>
+            @endif
             @yield('content')
         </div>
         <div style="height:100px;"></div>

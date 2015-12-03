@@ -13,6 +13,7 @@ use App\Email;
 use App\Message;
 use App\Recipient;
 use App\Field;
+use Redirect;
 
 
 class ActionController extends Controller
@@ -183,7 +184,18 @@ class ActionController extends Controller
         $email->temp_recipients_list = json_encode($tempRecipientsList);
         $email->save();
 
-        return redirect('/preview/'.base64_encode($email->id));
+              // make sure the emails are legit
+        foreach($request->_email as $recipientEmail)
+        {
+            if(!filter_var($recipientEmail,FILTER_VALIDATE_EMAIL))
+            {
+                return redirect('/edit/'.base64_encode($email->id).'?badEmails=true');
+            }
+            else
+            {
+                return redirect('/preview/'.base64_encode($email->id));
+            }
+        }
     }
 
     // take the template's contents and the recipients list and generate previews for the user upon updating the email
@@ -196,7 +208,8 @@ class ActionController extends Controller
         $email = Email::find($request->_email_id);
 
         // first delete all the messages previous unsent in this email (since the user is updating them)
-        Message::where('email_id',$email->id)->whereNull('deleted_at')->update(['deleted_at' => time()]);
+        // you can compare the made:sent ratios later to determine how many times users need to edit emails
+        Message::where('email_id',$email->id)->whereNull('deleted_at')->whereNull('status')->update(['deleted_at' => time()]);
 
         // build the recipient list and assign the fields to them
         $messages = [];
@@ -259,8 +272,8 @@ class ActionController extends Controller
         // get the user info
         $user = Auth::user();
 
-        // find the email object and delete and temo_recipients_list
-        $email = Email::find($request->messages[0]);
+        // find the email object and delete and temp_recipients_list
+        $email = Email::find($request->email_id);
         $email->temp_recipients_list = null;
         $email->save();
 
@@ -273,38 +286,47 @@ class ActionController extends Controller
         // send out the emails
         foreach($request->messages as $id)
         {
-            $message = Message::find($id);
 
-            // create the msg (in RFC 2822 format) so we can base64 encode it for sending through the Gmail API
-            // http://stackoverflow.com/questions/24940984/send-email-using-gmail-api-and-google-api-php-client
-            $mail = new \PHPMailer(true); // notice the \  you have to use root namespace here
-            $mail->isSMTP(); // tell to use smtp
-            $mail->CharSet = 'utf-8'; // set charset to utf8
-            $mail->Subject = $message->subject;
-            $mail->MsgHTML($message->message);
-            $mail->setFrom($user->email, $user->name); // set from attr
-            $mail->addAddress($message->recipient);
-            if($message->send_to_salesforce == 'yes')
+            // if they're not a paid user, make sure they don't send more than 10 emails per day
+            $emailsLeft = User::howManyEmailsLeft();
+            if($emailsLeft > 0)
             {
-                // if they selected the 'send to salesforce' button for the email...
-                $mail->addBCC($user->sf_address);
+                $message = Message::find($id);
+
+                // create the msg (in RFC 2822 format) so we can base64 encode it for sending through the Gmail API
+                // http://stackoverflow.com/questions/24940984/send-email-using-gmail-api-and-google-api-php-client
+                $mail = new \PHPMailer(true); // notice the \  you have to use root namespace here
+                $mail->isSMTP(); // tell to use smtp
+                $mail->CharSet = 'utf-8'; // set charset to utf8
+                $mail->Subject = $message->subject;
+                $mail->MsgHTML($message->message);
+                $mail->setFrom($user->email, $user->name); // set from attr
+                $mail->addAddress($message->recipient);
+                if($message->send_to_salesforce == 'yes')
+                {
+                    // if they selected the 'send to salesforce' button for the email...
+                    $mail->addBCC($user->sf_address);
+                }
+                $mail->preSend();
+                $mime = $mail->getSentMIMEMessage();
+                $m = new \Google_Service_Gmail_Message();
+                $data = base64_encode($mime);
+                $data = str_replace(array('+','/','='),array('-','_',''),$data); // url safe
+                $m->setRaw($data);
+
+                $gmailMessage = $gmail->users_messages->send('me', $m);
+
+                // insert the returned google message id into the DB and mark it as sent
+                $message->google_message_id = $gmailMessage->id;
+                $message->status = 'sent';
+                $message->updated_at = time();
+                $message->save();
             }
-            $mail->preSend();
-            $mime = $mail->getSentMIMEMessage();
-            $m = new \Google_Service_Gmail_Message();
-            $data = base64_encode($mime);
-            $data = str_replace(array('+','/','='),array('-','_',''),$data); // url safe
-            $m->setRaw($data);
-
-            $gmailMessage = $gmail->users_messages->send('me', $m);
-
-            // insert the returned google message id into the DB and mark it as sent
-            $message->google_message_id = $gmailMessage->id;
-            $message->status = 'sent';
-            $message->save();
-
-            // insert into the test array
-            $gmailMessages[] = $gmailMessage;
+            else
+            {
+                // delete all unsent emails (the user has been warned)
+                Message::where('id',$id)->update(['deleted_at' => time()]);
+            }
         }
 
         return redirect('/home');
