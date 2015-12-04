@@ -73,6 +73,14 @@ class User extends Model implements AuthenticatableContract,
         $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
         $client->setAccessToken($user->gmail_token);
 
+        // Refresh the token if it's expired.
+        if($client->isAccessTokenExpired()) {
+            $client->refreshToken($client->getRefreshToken());
+            $newToken = $client->getAccessToken();
+            $user->gmail_token = $newToken;
+            $user->save();
+        }
+
         return $client;
     }
 

@@ -40,6 +40,7 @@ class IndexController extends Controller
         $client->setRedirectURI(env('GOOGLE_URI_REDIRECT'));        
         $client->setScopes('https://www.googleapis.com/auth/gmail.modify');
         $client->setAccessType('offline');
+        $client->setApprovalPrompt('force'); // so we're sure to show the screen to the user (and get a refresh token)
 
         $url = $client->createAuthUrl();
 

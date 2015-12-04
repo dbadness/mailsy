@@ -52,7 +52,7 @@
                             Signed in as {!! $user->email !!} 
                             @if(!$user->paid)
                                ({!! App\User::howManyEmailsLeft() !!} emails left today) <a href='/upgrade'>Upgrade</a>
-                            @else
+                               @else
                                 (Upgraded Account!)
                             @endif
                         </p>
