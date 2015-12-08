@@ -133,7 +133,7 @@ class ActionController extends Controller
             $fields = [];
             foreach($_POST as $k => $v)
             {
-                if(substr($k,0,1) != '_')
+                if(($k != 'files') && (substr($k,0,1) != '_'))
                 {
                     $fields[] = $k;
                 }
@@ -177,7 +177,6 @@ class ActionController extends Controller
                 '_email' => $recipientEmail,
                 '_fields' => json_encode($fieldEntries)
             ];
-            
         }
 
         // save the tempRecipientsList to the email object for future use (if needed)
@@ -198,6 +197,7 @@ class ActionController extends Controller
         }
     }
 
+    /*
     // take the template's contents and the recipients list and generate previews for the user upon updating the email
     public function updatePreviews(Request $request)
     {
@@ -265,7 +265,8 @@ class ActionController extends Controller
         // send to the preview page
         return redirect('/preview/'.base64_encode($email->id));
     }
-
+    */
+    
     // send the emails
     public function sendEmails(Request $request)
     {
@@ -319,7 +320,7 @@ class ActionController extends Controller
                 // insert the returned google message id into the DB and mark it as sent
                 $message->google_message_id = $gmailMessage->id;
                 $message->status = 'sent';
-                $message->updated_at = time();
+                $message->sent_at = time();
                 $message->save();
             }
             else
@@ -397,4 +398,12 @@ class ActionController extends Controller
 
         return 'Successfully subscribed.';
     }
+
+    // requests, updates, and return the message status
+    public function doUpdateMessageStatus($id)
+    {
+        $status = Message::updateMessageStatus($id);
+        return ucfirst($status);
+    }
+
 }

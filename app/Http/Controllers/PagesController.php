@@ -87,10 +87,15 @@ class PagesController extends Controller
 
         // go through the messages and set the statuses of the messages
         $messages = Message::where('email_id',$email->id)->whereNull('deleted_at')->get();
+        if($messages)
+        {
+            foreach($messages as $message)
+            {
+                // $success = Message::updateMessageStatus($message->id);
+            }
+        }
 
-        $data = ['email' => $email, 'messages' => $messages];
-
-        return view('pages.email', ['data' => $data]);
+        return view('pages.email', ['email' => $email, 'messages' => $messages]);
     }
 
     // the settings page

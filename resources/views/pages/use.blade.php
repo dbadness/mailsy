@@ -3,7 +3,9 @@
 @section('content')
 
 <form method='post' action='/makePreviews' id='makePreviews'>
-	{!! Form::token() !!} 
+	{!! Form::token() !!}
+	{!! Form::hidden('_email_template', $email->template) !!}
+	{!! Form::hidden('_subject', $email->subject) !!}
 	<input type='hidden' name='_email_id' value='{!! $email->id !!}'>
 	<div class="input-group">
 		<span class="input-group-addon" id="basic-addon3">Template Name</span>

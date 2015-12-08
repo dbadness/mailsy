@@ -21,6 +21,7 @@ class CreateMessagesTable extends Migration
             $table->string('subject');
             $table->text('message');
             $table->integer('created_at');
+            $table->integer('sent_at')->nullable();
             $table->integer('updated_at')->nullable();
             $table->integer('deleted_at')->nullable();
             $table->string('status')->nullable();
