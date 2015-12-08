@@ -372,12 +372,48 @@ class ActionController extends Controller
         // Get the credit card details submitted by the form
         $token = $request->stripeToken;
 
-        $customer = \Stripe\Customer::create(array(
-            'source' => $token,
-            'plan' => 'paid',
-            'email' => $user->email,
-            'quantity' => $userCount
-        ));
+        try 
+        {
+            // Use Stripe's library to make requests...
+            $customer = \Stripe\Customer::create(array(
+                'source' => $token,
+                'plan' => 'paid',
+                'email' => $user->email,
+                'quantity' => $userCount
+            ));
+        }
+        catch(\Stripe\Error\Card $e) {
+            // Since it's a decline, \Stripe\Error\Card will be caught
+            $body = $e->getJsonBody();
+            $err  = $body['error'];
+
+            print('Status is:' . $e->getHttpStatus() . "\n");
+            print('Type is:' . $err['type'] . "\n");
+            print('Code is:' . $err['code'] . "\n");
+            // param is '' in this case
+            print('Param is:' . $err['param'] . "\n");
+            print('Message is:' . $err['message'] . "\n");
+        } catch (\Stripe\Error\RateLimit $e) {
+        // Too many requests made to the API too quickly
+            var_dump($e);
+        } catch (\Stripe\Error\InvalidRequest $e) {
+        // Invalid parameters were supplied to Stripe's API
+            var_dump($e);
+        } catch (\Stripe\Error\Authentication $e) {
+        // Authentication with Stripe's API failed
+        // (maybe you changed API keys recently)
+            var_dump($e);
+        } catch (\Stripe\Error\ApiConnection $e) {
+        // Network communication with Stripe failed
+            var_dump($e);
+        } catch (\Stripe\Error\Base $e) {
+        // Display a very generic error to the user, and maybe send
+        // yourself an email
+            var_dump($e);
+        } catch (Exception $e) {
+        // Something else happened, completely unrelated to Stripe
+            var_dump($e);
+        }
         
         // if there are multiple users, sign them up and mark them as paid users
         if($request->newusers)

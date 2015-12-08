@@ -108,6 +108,7 @@ class PagesController extends Controller
     // show the upgrade page
     public function showUpgrade()
     {
-        return view('pages.upgrade');
+        $user = Auth::user();
+        return view('pages.upgrade', ['user' => $user]);
     }
 }
