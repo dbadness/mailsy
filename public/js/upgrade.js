@@ -39,28 +39,27 @@ $(document).ready(function()
 		// add up the users to get the final amount
 		var totalAmount = 700*userCount;
 		var customerEmail = $('input[name=myEmail]').val();
-		var customerInfo = 'For you';
-		console.log(customerInfo);
+		var customerInfo;
 		if(myself && (userCount > 1))
 		{
 			if(userCount == 2)
 			{
-				customerInfo += ' and '+(userCount-1)+' other';
+				customerInfo = 'For you and '+(userCount-1)+' other';
 			}
 			else
 			{
-				customerInfo += ' and '+(userCount-1)+' others';
+				customerInfo = 'For you and '+(userCount-1)+' others';
 			}
 		}
 		if(!myself && (userCount > 0))
 		{
 			if(userCount == 1)
 			{
-				customerInfo += ' and '+userCount+' other';
+				customerInfo = 'For '+userCount+' other';
 			}
 			else
 			{
-				customerInfo += ' and '+userCount+' others';
+				customerInfo = 'For '+userCount+' others';
 			}
 		}
 
@@ -89,16 +88,29 @@ $(document).ready(function()
 	});
 
 	// adding more users to the customers account (so they can pay for other people)
+	// pay for oneself
+	var clicked = 0;
+	$('#myselfButton').click(function()
+	{
+		if(clicked == 0)
+		{
+			$(this).prepend('<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> ');
+			$('input[name=myself').attr('checked','checked');
+			clicked = 1;
+		}else
+		{
+			$(this).html('Pay for Myself');
+			$('input[name=myself').attr('checked',null);
+			clicked = 0;
+		}
+		
+	});
+
+	// add more users
 	$('#addUsers').click(function()
 	{
-		$('#addUser').show();
-		$('#otherUsers').html('<div class="userInput input-group">'+
-									'<span class="input-group-addon removeUser"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></span>'+
-									'<input type="text" name="newusers[]" class="form-control" placeholder="email@example.com">'+
-									'</div>');
-	});
-	$('#addUser').click(function(){
-		$('#otherUsers').append('<div class="userInput input-group">'+
+		$(this).html('Add Another Person');
+		$('#otherUsers').prepend('<div class="userInput input-group newUserField">'+
 									'<span class="input-group-addon removeUser"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></span>'+
 									'<input type="text" name="newusers[]" class="form-control" placeholder="email@example.com">'+
 									'</div>');

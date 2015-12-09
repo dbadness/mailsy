@@ -134,6 +134,11 @@
 	margin:50px 0 0 0;
 }
 
+#myselfCheckbox
+{
+	display:none;
+}
+
 #addUser
 {
 	display:none;
@@ -142,17 +147,14 @@
 
 #addUsers
 {
-	padding:5px;
-	background:lightgray;
-	width:200px;
-	text-align:center;
-	border-radius:3px;
-	border:solid 1px black;
+}
+
+.newUserField
+{
+	margin:10px 0 0 0;
 }
 
 .removeUser
 {
 	cursor:pointer;
-	color:blue;
-	text-decoration:underline;
 }
