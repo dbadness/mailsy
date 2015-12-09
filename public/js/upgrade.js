@@ -72,9 +72,16 @@ $(document).ready(function()
 				description: customerInfo,
 				amount: totalAmount,
 				email: customerEmail,
-				allowRememberMe: false
+				allowRememberMe: false,
+				token: function(token)
+				{
+					// this is the callback from the authorization
+					$('#otherUsers').append('<input type="hidden" name="stripe_token" value="'+token.id+'">');
+					$('#otherUsers').append('<input type="hidden" name="_token" value="'+$('input[name=_token]').val()+'">');
+					$('#otherUsers').append('<input type="checkbox" name="myself" id="myselfCheckbox" checked='+$('input[name=myself]').attr('checked')+'>');
+					$('#otherUsers').submit();
+				}
 			});
-			e.preventDefault();
 		}
 		else
 		{
@@ -110,7 +117,7 @@ $(document).ready(function()
 	$('#addUsers').click(function()
 	{
 		$(this).html('Add Another Person');
-		$('#otherUsers').prepend('<div class="userInput input-group newUserField">'+
+		$('#otherUsers').append('<div class="userInput input-group newUserField">'+
 									'<span class="input-group-addon removeUser"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></span>'+
 									'<input type="text" name="newusers[]" class="form-control" placeholder="email@example.com">'+
 									'</div>');
@@ -120,6 +127,6 @@ $(document).ready(function()
 	$(document).on('click', '.removeUser', function() 
 	{
 		$(this).closest('.userInput').remove();
-	});	
+	});
 	
 });

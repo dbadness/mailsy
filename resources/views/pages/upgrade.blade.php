@@ -20,21 +20,22 @@
 			You can either become an individual paid member or, if you're a leader on your team, you can sign your entire team up all at once making
 			billing and membership administration very easy. Don't worry, you can always change these settings later!</p>
 			<p>If you have any questions about billing, membership administration, or anything else, please visit the <a href='/faq'>FAQ page</a>
-			or send an email to <a href="mailto:hello@mailsy.co">hello@mailsy.co</a> and I'd be happy to answer them!</p> 
+			or send an email to <a href="mailto:hello@mailsy.co">hello@mailsy.co</a> and you'll get a speedy response.</p> 
 		</div>
 		<div class="panel-body">
 			<div id='paymentUsers'>
 				<input type='hidden' name='myEmail' value='{!! $user->email !!}'>
 				<input type='checkbox' name='myself' id='myselfCheckbox'>
+				{!! Form::token() !!}
+				<form method='post' action='/upgrade' id='otherUsers' class="input-group"></form>
 				<div class='btn btn-info' id='myselfButton'>
 					Pay for Myself
 				</div>
 				<div id='addUsers' class="btn btn-info">Pay for Others as Well</div>
+				<button id="customButton" class="btn btn-primary" role="button">Upgrade</button>
 			</div>
-			<form method='post' action='/upgrade' id='otherUsers' class="input-group"></form>
 		</div>
 	</div>
-	<button id="customButton" class="btn btn-primary" role="button">Upgrade</button>
 
 
 @endsection
