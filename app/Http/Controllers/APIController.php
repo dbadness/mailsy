@@ -31,7 +31,7 @@ class APIController extends Controller
         $data = array(
             "id" => 3,
             "to" => $user->email,
-            "attr" => array('CUSTOMER' => $user->email,'LASTFOUR' => $transaction['source']['last4'], 'TRANSID' => $transaction['id'],'DATE' => date('m-d-y g:i a',$stripe['created'], 'AMOUNT' => '$'.substr($transaction['amount'],0,-2))
+            "attr" => array('CUSTOMER' => $user->email,'LASTFOUR' => $transaction['source']['last4'], 'TRANSID' => $transaction['id'],'DATE' => date('m-d-y g:i a',$stripe['created']), 'AMOUNT' => '$'.substr($transaction['amount'],0,-2))
         );
 
         $mailin->send_transactional_template($data);
