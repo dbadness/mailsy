@@ -15,6 +15,8 @@ class APIController extends Controller
     // handle a successful payment
     public function doChargeSucceeded()
     {
+        var_dump($_POST);
+        /*
         // make the arrays that you need to access the right values
         $stripe = json_decode($_POST,true);
         $transaction = $stripe['data']['object'];
@@ -42,5 +44,6 @@ class APIController extends Controller
         $mailin->send_transactional_template($data);
 
         return 'Email sent.';
+        */
     }
 }
