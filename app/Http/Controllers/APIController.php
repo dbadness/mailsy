@@ -15,10 +15,9 @@ class APIController extends Controller
     // handle a successful payment
     public function doChargeSucceeded()
     {
-        var_dump($_POST);
-        /*
-        // make the arrays that you need to access the right values
-        $stripe = json_decode($_POST,true);
+        // Retrieve the request's body and parse it as JSON
+        $input = @file_get_contents("php://input");
+        $stripe = json_decode($input,true);
         $transaction = $stripe['data']['object'];
 
         // Set your secret key: remember to change this to your live secret key in production
