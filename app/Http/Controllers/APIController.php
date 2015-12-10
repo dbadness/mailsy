@@ -15,6 +15,10 @@ class APIController extends Controller
     // handle a successful payment
     public function doChargeSucceeded(Request $request)
     {
+        // make the arrays that you need to access the right values
+        $stripe = json_decode($_POST);
+        $transaction = $stripe['data']['object'];
+
         // Set your secret key: remember to change this to your live secret key in production
         // See your keys here https://dashboard.stripe.com/account/apikeys
         \Stripe\Stripe::setApiKey(env('STRIPE_KEY'));
@@ -26,7 +30,7 @@ class APIController extends Controller
         $data = array(
             "id" => 3,
             "to" => $user->email,
-            "attr" => array('CUSTOMER' => $user->email,'LASTFOUR' => $request->data->source->last4, 'TRANSID' => $request->data->id,'DATE' => date('m-d-y g:i a',$request->created), 'AMOUNT' => '$'.substr($request->data->amount,0,-2))
+            "attr" => array('CUSTOMER' => $user->email,'LASTFOUR' => $transaction['source']['last4'], 'TRANSID' => $transaction['id'],'DATE' => date('m-d-y g:i a',$stripe['created'], 'AMOUNT' => '$'.substr($transaction['amount'],0,-2))
         );
 
         $mailin->send_transactional_template($data);
