@@ -16,7 +16,7 @@ class APIController extends Controller
     public function doChargeSucceeded(Request $request)
     {
         // make the arrays that you need to access the right values
-        $stripe = json_decode($_POST);
+        $stripe = json_decode($_POST,true);
         $transaction = $stripe['data']['object'];
 
         // Set your secret key: remember to change this to your live secret key in production
