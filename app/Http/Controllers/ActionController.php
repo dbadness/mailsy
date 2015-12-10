@@ -15,6 +15,9 @@ use App\Recipient;
 use App\Field;
 use Redirect;
 
+// for SendinBlue
+use \Sendinblue\Mailin as Mailin;
+
 
 class ActionController extends Controller
 {
@@ -345,9 +348,6 @@ class ActionController extends Controller
     // upgrade the user to a paid account (and send out invites to users if need be)
     public function doUpgrade(Request $request)
     {
-                var_dump($_POST);
-        die;
-
         // auth the user
         $user = Auth::user();
 
@@ -390,10 +390,18 @@ class ActionController extends Controller
                 $newuserObject->email = $newuser;
                 $newuserObject->paid = 'yes';
                 $newuserObject->belongs_to = $user->id;
-                $newuserObject->created = time();
+                $newuserObject->created_at = time();
                 $newuserObject->save();
 
                 // send the user an email and let them know they've been signed up
+                $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
+                $data = array(
+                    "id" => 2,
+                    "to" => $newuser,
+                    "attr" => array("CUSTOMER"=>$newuser,"FROM"=>$user->email)
+                );
+
+                $mailin->send_transactional_template($data);
             }
         }
 

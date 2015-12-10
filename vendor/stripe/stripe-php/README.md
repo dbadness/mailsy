@@ -14,20 +14,10 @@ PHP 5.3.3 and later.
 
 ## Composer
 
-You can install the bindings via [Composer](http://getcomposer.org/). Add this to your `composer.json`:
-
-```json
-{
-  "require": {
-    "stripe/stripe-php": "3.*"
-  }
-}
-```
-
-Then install via:
+You can install the bindings via [Composer](http://getcomposer.org/). Run the following command:
 
 ```bash
-composer install
+composer require stripe/stripe-php
 ```
 
 To use the bindings, use Composer's [autoload](https://getcomposer.org/doc/00-intro.md#autoloading):
@@ -50,7 +40,7 @@ Simple usage looks like:
 
 ```php
 \Stripe\Stripe::setApiKey('d8e8fca2dc0f896fd7cb4cb0031ba249');
-$myCard = array('number' => '4242424242424242', 'exp_month' => 5, 'exp_year' => 2015);
+$myCard = array('number' => '4242424242424242', 'exp_month' => 8, 'exp_year' => 2018);
 $charge = \Stripe\Charge::create(array('card' => $myCard, 'amount' => 2000, 'currency' => 'usd'));
 echo $charge;
 ```
@@ -67,21 +57,29 @@ This legacy version may be included via `require_once("/path/to/stripe-php/lib/S
 
 ```php
 Stripe::setApiKey('d8e8fca2dc0f896fd7cb4cb0031ba249');
-$myCard = array('number' => '4242424242424242', 'exp_month' => 5, 'exp_year' => 2015);
+$myCard = array('number' => '4242424242424242', 'exp_month' => 8, 'exp_year' => 2018);
 $charge = Stripe_Charge::create(array('card' => $myCard, 'amount' => 2000, 'currency' => 'usd'));
 echo $charge;
 ```
 
-## Tests
+## Development
 
-In order to run tests first install [PHPUnit](http://packagist.org/packages/phpunit/phpunit) via [Composer](http://getcomposer.org/):
+Install dependencies:
 
-```bash
-composer update --dev
+``` bash
+composer install
 ```
 
-To run the test suite:
+## Tests
+
+Install dependencies as mentioned above (which will resolve [PHPUnit](http://packagist.org/packages/phpunit/phpunit)), then you can run the test suite:
 
 ```bash
 ./vendor/bin/phpunit
+```
+
+Or to run an individual test file:
+
+```bash
+./vendor/bin/phpunit tests/UtilTest.php
 ```
