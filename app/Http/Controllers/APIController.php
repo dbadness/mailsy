@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -13,7 +14,7 @@ use \Sendinblue\Mailin as Mailin;
 class APIController extends Controller
 {
     // handle a successful payment
-    public function doChargeSucceeded(Request $request)
+    public function doChargeSucceeded()
     {
         // make the arrays that you need to access the right values
         $stripe = json_decode($_POST,true);
@@ -35,6 +36,6 @@ class APIController extends Controller
 
         $mailin->send_transactional_template($data);
 
-        return 'Email sent.';
+        return response($content);
     }
 }
