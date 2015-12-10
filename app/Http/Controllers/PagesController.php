@@ -87,13 +87,6 @@ class PagesController extends Controller
 
         // go through the messages and set the statuses of the messages
         $messages = Message::where('email_id',$email->id)->whereNull('deleted_at')->get();
-        if($messages)
-        {
-            foreach($messages as $message)
-            {
-                // $success = Message::updateMessageStatus($message->id);
-            }
-        }
 
         return view('pages.email', ['email' => $email, 'messages' => $messages]);
     }
@@ -102,7 +95,12 @@ class PagesController extends Controller
     public function showSettings()
     {
         $user = Auth::user();
-        return view('pages.settings', ['user' => $user]);
+        if($user->has_users)
+        {
+            // get the users that this user has paid for
+            $children = User::where('belongs_to',$user->id)->whereNull('paid')->whereNull('deleted_at')->get();
+        }
+        return view('pages.settings', ['user' => $user, 'children' => $children]);
     }
 
     // show the upgrade page

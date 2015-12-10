@@ -12,6 +12,8 @@ class VerifyCsrfToken extends BaseVerifier
      * @var array
      */
     protected $except = [
-        //
+        // the API routes
+    	'/payment/chargeSucceeded',
+    	'/payment/chargeFailed'
     ];
 }

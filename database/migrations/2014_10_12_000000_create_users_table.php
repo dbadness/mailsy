@@ -15,7 +15,9 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('belongs_to')->nullable();
+            $table->string('has_users')->nullable();
             $table->string('email')->unique();
+            $table->string('stripe_id')->nullable();
             $table->string('name')->nullable();
             $table->rememberToken();
             $table->string('gmail_token');
@@ -24,6 +26,7 @@ class CreateUsersTable extends Migration
             $table->text('signature');
             $table->integer('created_at');
             $table->integer('updated_at')->nullable();
+            $table->integer('deleted_at')->nullable();
         });
     }
 

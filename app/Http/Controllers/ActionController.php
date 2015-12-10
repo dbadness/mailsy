@@ -363,6 +363,9 @@ class ActionController extends Controller
 
         if($request->newusers)
         {
+            // tell the DB that this is an admin type user
+            $user->has_users = 'yes';
+            $user->save();
             $count = count($request->newusers);
             $userCount = $userCount + $count;
         }
@@ -379,6 +382,9 @@ class ActionController extends Controller
             'email' => $user->email,
             'quantity' => $userCount
         ));
+
+        $user->stripe_id = $customer->id;
+        $user->save();
         
         // if there are multiple users, sign them up and mark them as paid users
         if($request->newusers)

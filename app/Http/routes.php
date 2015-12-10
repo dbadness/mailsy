@@ -42,3 +42,7 @@ Route::post('/saveSettings', 'ActionController@saveSettings');
 Route::post('/upgrade', 'ActionController@doUpgrade');
 Route::post('/saveTemplate','ActionController@saveTemplate');
 Route::get('/getMessageStatus/{id}','ActionController@doUpdateMessageStatus'); // ajax call
+
+// webhooks
+Route::post('/payment/chargeSucceeded','PagesController@doChargeSucceeded');
+Route::post('/payment/chargeFailed','PagesController@doChargeFailed');
