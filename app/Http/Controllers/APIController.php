@@ -43,6 +43,5 @@ class APIController extends Controller
         $mailin->send_transactional_template($data);
 
         return 'Email sent.';
-        */
     }
 }
