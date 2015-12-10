@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -42,6 +41,6 @@ class APIController extends Controller
 
         $mailin->send_transactional_template($data);
 
-        return response($content);
+        return 'Email sent.';
     }
 }
