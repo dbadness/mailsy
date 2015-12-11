@@ -91,14 +91,15 @@ class APIController extends Controller
         \Stripe\Stripe::setApiKey(env('STRIPE_KEY'));
 
         // Do something with $event_json
-        $user = User::where('stripe_id',$transaction['customer'])->first();
+        // $user = User::where('stripe_id',$transaction['customer'])->first();
+        $user = 'dave@mailsy.co';
 
         $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
         $data = array(
             "id" => 4,
-            "to" => $user->email,
+            "to" => $user,
             "attr" => array(
-                'CUSTOMER' => $user->email,
+                'CUSTOMER' => $user,
                 'LASTFOUR' => $transaction['source']['last4'], 
                 'TRANSID' => $transaction['id'],
                 'DATE' => date('m-d-Y',$stripe['created']), 
