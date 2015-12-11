@@ -28,6 +28,7 @@ class CreateUsersTable extends Migration
             $table->integer('created_at');
             $table->integer('updated_at')->nullable();
             $table->integer('deleted_at')->nullable();
+            $table->integer('expires')->nullable();
         });
     }
 

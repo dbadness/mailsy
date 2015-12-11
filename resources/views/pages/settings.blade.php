@@ -72,6 +72,20 @@
 					@endif
 				</div>
 				<div class='clear'></div>
+				<br>
+				<table style='width:100%;'>
+					<tr>
+						@if(!$user->state)
+							<td><h5>Membership Status: Active</h5></td>
+						@elseif($user->state == 'deliquent')
+							<td><h5>Membership Status: Deliquent</h5></td>
+						@endif
+						<td>
+							<div class='cancelLink'>Cancel Membership</div>
+							<div class='clear'></div>
+						</td>
+					</tr>
+				</table>
 			</div>
 		</div>
 
@@ -79,7 +93,17 @@
 			<div class="panel panel-default">
 				<div class="panel-heading"><strong>User Management</strong></div>
 				<div class="panel-body">
-					You have users.
+					<table style='width:100%;'>
+					    @foreach($children as $child)
+					    	<tr>
+					    		<td><h5>{!! $child->email !!}</h5></td>
+					    		<td>
+					    			<div class='cancelLink'>Cancel Membership</div>
+					    			<div class='clear'></div>
+					    		</td>
+					    	</tr>
+					    @endforeach
+					</table>
 				</div>
 			</div>
 		@endif

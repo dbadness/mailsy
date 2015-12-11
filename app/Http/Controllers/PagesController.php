@@ -112,7 +112,7 @@ class PagesController extends Controller
         if($user->has_users)
         {
             // get the users that this user has paid for
-            $children = User::where('belongs_to',$user->id)->whereNull('paid')->whereNull('deleted_at')->get();
+            $children = User::where('belongs_to',$user->id)->whereNull('deleted_at')->get();
         }
         else
         {
