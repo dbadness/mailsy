@@ -20,8 +20,6 @@ class APIController extends Controller
         $stripe = json_decode($input,true);
         $transaction = $stripe['data']['object'];
 
-        /*
-
         // Set your secret key: remember to change this to your live secret key in production
         // See your keys here https://dashboard.stripe.com/account/apikeys
         \Stripe\Stripe::setApiKey(env('STRIPE_KEY'));
@@ -37,15 +35,13 @@ class APIController extends Controller
                 'CUSTOMER' => $user->email,
                 'TRANSID' => $transaction['id'],
                 'DATE' => date('m-d-Y',$stripe['created']), 
-                'AMOUNT' => '$'.substr($transaction['lines']['data']['amount'],0,-2)
+                'AMOUNT' => '$'.substr($transaction['amount_due'],0,-2)
             )
         );
 
         $mailin->send_transactional_template($data);
 
         return 'invoice_successfully_paid';
-        */
-        return var_dump($transaction);
     }
 
     // handle a successful payment (the first time)
@@ -71,7 +67,7 @@ class APIController extends Controller
                 'CUSTOMER' => $user->email,
                 'TRANSID' => $transaction['id'],
                 'DATE' => date('m-d-Y',$stripe['created']), 
-                'AMOUNT' => '$'.substr($transaction['lines']['data']['amount'],0,-2)
+                'AMOUNT' => '$'.substr($transaction['amount_due'],0,-2)
             )
         );
 
