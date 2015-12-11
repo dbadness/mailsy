@@ -95,6 +95,20 @@ class PagesController extends Controller
     public function showSettings()
     {
         $user = Auth::user();
+
+        // grab the card info if it's a paid user
+        if($user->stripe_id)
+        {
+            \Stripe\Stripe::setApiKey(env('STRIPE_TOKEN'));
+
+            $stripeUser = \Stripe\Customer::retrieve($user->stripe_id);
+            $user->lastFour = $stripeUser->sources->data{0}->last4;
+            $user->exp = $stripeUser->sources->data{0}->exp_month.'/'.$stripeUser->sources->data{0}->exp_year;
+            $user->state = $stripeUser->sources->data{0}->deliquent;
+            $user->nextDue = $stripeUser->subscriptions->data{0}->current_period_end;
+        }
+
+        // if the user has paid for other users
         if($user->has_users)
         {
             // get the users that this user has paid for

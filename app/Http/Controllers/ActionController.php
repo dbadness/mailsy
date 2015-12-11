@@ -422,4 +422,43 @@ class ActionController extends Controller
         return ucfirst($status);
     }
 
+    // update a customer card
+    public function doUpdateCard(Request $request)
+    {
+        // auth the user
+        $user = Auth::user();
+
+        // create a new card object
+        \Stripe\Stripe::setApiKey(env('STRIPE_TOKEN'));
+
+        $cu = \Stripe\Customer::retrieve($user->stripe_id);
+        $card = $cu->sources->create(array("source" => $request->stripe_token));
+
+        // update the 'default_source' of the customer for future invoices
+        $cu->default_source = $card->id;
+        $cu->save();
+
+        // let the user know that they've updated their card
+        $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
+
+        // the email body
+        $body = 'Hi '.$user->email.',<br><br>Your payment method (ending in '.$card->last4.') has been successully added to your account.<br><br>';
+        $body .= 'If you have any questions, please send an email to <a href="mailto:hello@mailsy.co">hello@mailsy.com</a> and we\'d be happy to help.<br><br>';
+        $body .= 'Thank you,<br>The Mailsy Team';
+
+        $data = array(
+            "id" => 5, // blank template
+            "to" => $user->email,
+            "attr" => array(
+                "SUBJECT" => 'Payment method updated for Mailsy',
+                "TITLE" => 'Payment method successfully updated!',
+                'BODY' => $body
+            )
+        );
+
+        $mailin->send_transactional_template($data);
+
+        return json_encode($card);
+    }
+
 }

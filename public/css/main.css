@@ -158,3 +158,11 @@
 {
 	cursor:pointer;
 }
+
+/* ------------------ Settings Page CSS ------------- */
+
+.cardLeft
+{
+	float:left;
+	margin:0 20px 0 0;
+}

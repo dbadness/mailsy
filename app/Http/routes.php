@@ -42,7 +42,7 @@ Route::post('/saveSettings', 'ActionController@saveSettings');
 Route::post('/upgrade', 'ActionController@doUpgrade');
 Route::post('/saveTemplate','ActionController@saveTemplate');
 Route::get('/getMessageStatus/{id}','ActionController@doUpdateMessageStatus'); // ajax call
-
+Route::post('/updateCard','ActionController@doUpdateCard'); // ajax call
 // webhooks
 Route::post('/payment/paid','APIController@doInvoicePaid'); // successful invoice payment
 Route::post('/payment/failed','APIController@doInvoiceFailed'); // payment declined for invoice
