@@ -100,10 +100,9 @@ class APIController extends Controller
             "to" => $user,
             "attr" => array(
                 'CUSTOMER' => $user,
-                'LASTFOUR' => $transaction['source']['last4'], 
                 'TRANSID' => $transaction['id'],
                 'DATE' => date('m-d-Y',$stripe['created']), 
-                'AMOUNT' => '$'.substr($transaction['amount'],0,-2)
+                'AMOUNT' => '$'.substr($transaction['amount_due'],0,-2)
             )
         );
 
