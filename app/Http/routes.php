@@ -44,6 +44,5 @@ Route::post('/saveTemplate','ActionController@saveTemplate');
 Route::get('/getMessageStatus/{id}','ActionController@doUpdateMessageStatus'); // ajax call
 
 // webhooks
-Route::post('/payment/chargeSucceeded','APIController@doChargeSucceeded'); // first charge
-Route::post('/payment/invoicePaid','APIController@doInvoicePaid'); // successful invoice payment
-Route::post('/payment/invoiceFailed','APIController@doInvoiceFailed'); // payment declined for invoice
+Route::post('/payment/paid','APIController@doInvoicePaid'); // successful invoice payment
+Route::post('/payment/failed','APIController@doInvoiceFailed'); // payment declined for invoice

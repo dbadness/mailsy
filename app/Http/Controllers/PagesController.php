@@ -100,6 +100,10 @@ class PagesController extends Controller
             // get the users that this user has paid for
             $children = User::where('belongs_to',$user->id)->whereNull('paid')->whereNull('deleted_at')->get();
         }
+        else
+        {
+            $children = null;
+        }
         return view('pages.settings', ['user' => $user, 'children' => $children]);
     }
 

@@ -10,6 +10,10 @@
 			</div>
 		@endif
 	@endif
+
+	<div class='page-header'>
+		<h1>Settings</h1>
+	</div>
 		Salesforce Email Address:
 		<br>
 		<input style='width:500px;' id='sf_address' value='{!! $user->sf_address !!}'>

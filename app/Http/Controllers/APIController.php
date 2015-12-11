@@ -13,39 +13,6 @@ use \Sendinblue\Mailin as Mailin;
 class APIController extends Controller
 {
     // handle a successful payment (the first time)
-    public function doChargeSucceeded()
-    {
-        // Retrieve the request's body and parse it as JSON
-        $input = @file_get_contents("php://input");
-        $stripe = json_decode($input,true);
-        $transaction = $stripe['data']['object'];
-
-        // Set your secret key: remember to change this to your live secret key in production
-        // See your keys here https://dashboard.stripe.com/account/apikeys
-        \Stripe\Stripe::setApiKey(env('STRIPE_KEY'));
-
-        // Do something with $event_json
-        $user = User::where('stripe_id',$transaction['customer'])->first();
-
-        $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
-        $data = array(
-            "id" => 3,
-            "to" => $user->email,
-            "attr" => array(
-                'CUSTOMER' => $user->email,
-                'LASTFOUR' => $transaction['source']['last4'], 
-                'TRANSID' => $transaction['id'],
-                'DATE' => date('m-d-Y',$stripe['created']), 
-                'AMOUNT' => '$'.substr($transaction['amount'],0,-2)
-            )
-        );
-
-        $mailin->send_transactional_template($data);
-
-        return 'first_charge_succeeded';
-    }
-
-    // handle a successful payment (the first time)
     public function doInvoicePaid()
     {
         // Retrieve the request's body and parse it as JSON
@@ -66,10 +33,9 @@ class APIController extends Controller
             "to" => $user->email,
             "attr" => array(
                 'CUSTOMER' => $user->email,
-                'LASTFOUR' => $transaction['source']['last4'], 
                 'TRANSID' => $transaction['id'],
                 'DATE' => date('m-d-Y',$stripe['created']), 
-                'AMOUNT' => '$'.substr($transaction['amount'],0,-2)
+                'AMOUNT' => '$'.substr($transaction['lines']['data']['amount'],0,-2)
             )
         );
 
@@ -91,23 +57,22 @@ class APIController extends Controller
         \Stripe\Stripe::setApiKey(env('STRIPE_KEY'));
 
         // Do something with $event_json
-        // $user = User::where('stripe_id',$transaction['customer'])->first();
-        $user = 'dave@mailsy.co';
+        $user = User::where('stripe_id',$transaction['customer'])->first();
 
         $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
         $data = array(
-            "id" => 4,
-            "to" => $user,
+            "id" => 3,
+            "to" => $user->email,
             "attr" => array(
-                'CUSTOMER' => $user,
+                'CUSTOMER' => $user->email,
                 'TRANSID' => $transaction['id'],
                 'DATE' => date('m-d-Y',$stripe['created']), 
-                'AMOUNT' => '$'.substr($transaction['amount_due'],0,-2)
+                'AMOUNT' => '$'.substr($transaction['lines']['data']['amount'],0,-2)
             )
         );
 
         $mailin->send_transactional_template($data);
 
-        return 'invoice_unsuccessfully_paid';
+        return 'invoice_payment_failed';
     }
 }
