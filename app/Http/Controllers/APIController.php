@@ -24,8 +24,10 @@ class APIController extends Controller
         // See your keys here https://dashboard.stripe.com/account/apikeys
         \Stripe\Stripe::setApiKey(env('STRIPE_KEY'));
 
-        // Do something with $event_json
+        // find the user in the DB and update their subscription id
         $user = User::where('stripe_id',$transaction['customer'])->first();
+        $user->subscription_id = $transaction['lines']['data'][0]['id'];
+        $user->save();
 
         $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
         $data = array(
