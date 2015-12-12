@@ -32,6 +32,7 @@ Route::get('/email/{eid}','PagesController@showEmail');
 Route::get('/settings','PagesController@showSettings');
 Route::get('/upgrade', 'PagesController@showUpgrade');
 Route::get('/use/{eid}', 'PagesController@showUseEmail');
+Route::get('/membership/confirm/{member}/{master?}','PagesController@showMembershipConfirm');
 
 // actions
 Route::post('/returnFields', 'ActionController@returnFields');
@@ -41,8 +42,13 @@ Route::post('/sendEmails', 'ActionController@sendEmails');
 Route::post('/saveSettings', 'ActionController@saveSettings');
 Route::post('/upgrade', 'ActionController@doUpgrade');
 Route::post('/saveTemplate','ActionController@saveTemplate');
-Route::get('/getMessageStatus/{id}','ActionController@doUpdateMessageStatus'); // ajax call
-Route::post('/updateCard','ActionController@doUpdateCard'); // ajax call
+
+// ajax calls
+Route::get('/getMessageStatus/{id}','ActionController@doUpdateMessageStatus');
+Route::post('/updateCard','ActionController@doUpdateCard');
+Route::post('/membership/cancel/{master?}','ActionController@doCancelMembership');
+
+
 // webhooks
 Route::post('/payment/paid','APIController@doInvoicePaid'); // successful invoice payment
 Route::post('/payment/failed','APIController@doInvoiceFailed'); // payment declined for invoice

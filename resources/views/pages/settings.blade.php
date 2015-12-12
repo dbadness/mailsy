@@ -3,6 +3,7 @@
 @section('PageJS')
 
 	<script src="https://checkout.stripe.com/checkout.js"></script>
+	<script src="/js/settings.js"></script>
 
 @endsection
 
@@ -81,7 +82,7 @@
 							<td><h5>Membership Status: Deliquent</h5></td>
 						@endif
 						<td>
-							<div class='cancelLink'>Cancel Membership</div>
+							<a href='/membership/confirm/me/master' class='cancelLink'>Cancel Membership</a>
 							<div class='clear'></div>
 						</td>
 					</tr>
@@ -98,7 +99,7 @@
 					    	<tr>
 					    		<td><h5>{!! $child->email !!}</h5></td>
 					    		<td>
-					    			<div class='cancelLink'>Cancel Membership</div>
+					    			<a href='/membership/confirm/{!! base64_encode($child->id.rand(10000,99999)) !!}' class='cancelLink'>Cancel Membership</a>
 					    			<div class='clear'></div>
 					    		</td>
 					    	</tr>

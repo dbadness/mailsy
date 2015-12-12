@@ -97,7 +97,7 @@ class PagesController extends Controller
         $user = Auth::user();
 
         // grab the card info if it's a paid user
-        if($user->stripe_id)
+        if($user->stripe_id && $user->paid)
         {
             \Stripe\Stripe::setApiKey(env('STRIPE_TOKEN'));
 
@@ -126,5 +126,33 @@ class PagesController extends Controller
     {
         $user = Auth::user();
         return view('pages.upgrade', ['user' => $user]);
+    }
+
+    // show a confirmation page regarding user management
+    public function showMembershipConfirm($member, $master = null)
+    {
+        // auth the user
+        $user = Auth::user();
+
+        // get the subscription info
+        \Stripe\Stripe::setApiKey(env('STRIPE_TOKEN'));
+        $stripeUser = \Stripe\Customer::retrieve($user->stripe_id);
+
+        if($member != 'me')
+        {
+            $member = User::find(substr(base64_decode($member),0,-5));
+            $member->endDate = $stripeUser->subscriptions->data{0}->current_period_end;
+            $member->oldAmt = '$'.substr($stripeUser->subscriptions->data{0}->plan->amount*$stripeUser->subscriptions->data{0}->quantity,0,-2);
+            $member->newAmt = '$'.substr((($stripeUser->subscriptions->data{0}->plan->amount*$stripeUser->subscriptions->data{0}->quantity)-700),0,-2);
+        }
+        else
+        {
+            $user->endDate = $stripeUser->subscriptions->data{0}->current_period_end;
+            $user->oldAmt = '$'.substr($stripeUser->subscriptions->data{0}->plan->amount*$stripeUser->subscriptions->data{0}->quantity,0,-2);
+            $user->newAmt = '$'.substr((($stripeUser->subscriptions->data{0}->plan->amount*$stripeUser->subscriptions->data{0}->quantity)-700),0,-2);
+        }
+        
+
+        return view('pages.confirm', ['user' => $user, 'member' => $member, 'master' => $master]);
     }
 }

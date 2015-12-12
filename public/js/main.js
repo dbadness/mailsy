@@ -168,84 +168,55 @@ $(document).ready(function(){
 	
 	/**
 	*
-	*	Settings Page
+	*	Membership update confirmation Page
 	*
 	*/
 
-	// save the users settings
-	$('#saveSettings').click(function()
+	// cancelling a membership of someone the user is paying for
+	$('.cancelButton').click(function()
 	{
-		$.ajax({
-			method: 'POST',
-			url: '/saveSettings',
-			data: 
-			{
-				'_token' : $('input[name=_token').val(),
-				'sf_address' : $('#sf_address').val(),
-				'signature' : $('#signature').val()
-			},
-			error: function()
-			{
-				alert('Something went wrong.');
-			},
-			success: function(response) {
-				if(response == 'success')
-				{
-					$('#settingsSaved').show();
-				}
-			}
-		});
-	});
+		if(confirm('Are you sure you want to cancel this person\'s membership?'))
+		{
+			var id = $(this).attr('ref');
 
-	// build stripe button
-	var handler = StripeCheckout.configure({
-		key: 'pk_test_CIZBh7IaLuncqqScIchbbbuh',
-		image: '', // <-- make sure to put the logo here
-		locale: 'auto'
-	});
-
-	// update the users card
-	$('#updateCardButton').click(function(){
-		// Open Checkout with further options
-		handler.open({
-			name: 'Update Card Info',
-			email: $('#userEmail').html(),
-			allowRememberMe: false,
-			token: function(token)
+			if($(this).attr('id') == 'masterCancel')
 			{
-				// send the token to the server and update the card info
 				$.ajax({
-					url: '/updateCard',
+					url: '/membership/cancel/master',
 					method: 'post',
 					data: {
-						stripe_token: token.id,
-						_token: $('input[name=_token]').val()
-					},
-					beforeSend: function()
-					{
-						$('#cardState').html('<img src="/images/loader.gif">');
+						_token: $('input[name=_token]').val(),
 					},
 					success: function(response)
 					{
-						var data = $.parseJSON(response);
-						// insert the new card info into the page
-						$('#lastFour').html('Last four: '+data.last4);
-						$('#cardExp').html('Exp: '+data.exp_month+'/'+data.exp_year);
-						$('#cardState').html('<span style="color:green;">Card details updated!</span>');
+						alert(response);
 					},
 					error: function()
 					{
-						alert('Something went wrong. Please contact hello@mailsy.co to update your information');
+						alert('Something went wrong... :(');
 					}
 				});
 			}
-		});
-	});
-			
-
-// Close Checkout on page navigation
-	$(window).on('popstate', function() {
-		handler.close();
+			else
+			{
+				$.ajax({
+					url: '/membership/cancel',
+					method: 'post',
+					data: {
+						_token: $('input[name=_token]').val(),
+						ref: $(this).attr('ref')
+					},
+					success: function(response)
+					{
+						alert(response);
+					},
+					error: function()
+					{
+						alert('Something went wrong... :(');
+					}
+				});
+			}
+		}
 	});
 
 	

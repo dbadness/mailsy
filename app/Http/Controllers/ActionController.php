@@ -391,13 +391,25 @@ class ActionController extends Controller
         {
             foreach($request->newusers as $newuser)
             {
-                // create the new user
-                $newuserObject = new User;
-                $newuserObject->email = $newuser;
-                $newuserObject->paid = 'yes';
-                $newuserObject->belongs_to = $user->id;
-                $newuserObject->created_at = time();
-                $newuserObject->save();
+                if(!User::where('email',$newuser))
+                {
+                    // create the new user
+                    $newuserObject = new User;
+                    $newuserObject->email = $newuser;
+                    $newuserObject->paid = 'yes';
+                    $newuserObject->belongs_to = $user->id;
+                    $newuserObject->created_at = time();
+                    $newuserObject->save(); 
+                }
+                else
+                {
+                    // get the existing member
+                    $existingUser = User::where('email',$newuser)->first();
+                    $existingUser->paid = 'yes';
+                    $existingUser->belongs_to = $user->id;
+                    $existingUser->save(); 
+                }
+                
 
                 // send the user an email and let them know they've been signed up
                 $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
@@ -459,6 +471,67 @@ class ActionController extends Controller
         $mailin->send_transactional_template($data);
 
         return json_encode($card);
+    }
+
+    // update/cancel memberships
+    public function doCancelMembership(Request $request, $master = null)
+    {
+        // set the stripe token
+        \Stripe\Stripe::setApiKey(env('STRIPE_TOKEN'));
+
+        // auth the user
+        $user = Auth::user();
+
+        // if this is an admin cancelling a members subscription
+        if($request->ref)
+        {
+            $member = User::find(substr(base64_decode($request->ref),0,-5));
+        }
+
+        // retrieve the subscription info
+        $customer = \Stripe\Customer::retrieve($user->stripe_id);
+        $subscription = $customer->subscriptions->retrieve($customer->subscriptions->data{0}->id);
+
+        if($master)
+        {
+            if($user->has_users)
+            {
+                // get the users that are associated with this admin user
+                $children = User::where('belongs_to',$user->id)->whereNull('deleted_at')->get();
+                // make everyone a free user at the end of the subscription period
+                foreach($children as $child)
+                {   
+                    // update this users expiration date and remove the relationship to this admin
+                    $success = User::where('id',$child->id)->update(['expires' => $subscription->current_period_end, 'belongs_to' => NULL]);
+
+                    // send the child an email letting them know that their admin cancelled their subscription
+                } 
+            }
+
+            // cancel the subscription
+            $canceledSubscription = $subscription->cancel();
+            $user->paid = null;
+            $user->has_users = null;
+            $user->save();
+
+            // send an email to the admin letting them know they're unsubscribed
+
+            // success message
+            return 'This subscription was canceled at '.$canceledSubscription->canceled_at;
+        }
+        else
+        {
+            // decrement the subscription quantity
+            $subscription->quantity = $subscription->quantity - 1;
+            $subscription->save();
+
+            // send an email to the admin letting them know that the update has been successful
+
+            // send an email to the user letting them know their account has been downgraded
+
+            // success message
+            return 'Subscription quantity is now '.$subscription->quantity;
+        }
     }
 
 }
