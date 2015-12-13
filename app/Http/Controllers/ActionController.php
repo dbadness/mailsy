@@ -346,7 +346,7 @@ class ActionController extends Controller
     }
 
     // upgrade the user to a paid account (and send out invites to users if need be)
-    public function doUpgrade(Request $request)
+    public function doUpgrade(Request $request, $add = null)
     {
         // auth the user
         $user = Auth::user();
@@ -373,27 +373,86 @@ class ActionController extends Controller
         // See your keys here https://dashboard.stripe.com/account/apikeys
         \Stripe\Stripe::setApiKey(env('STRIPE_TOKEN'));
 
-        // make a new customer if this is their first time upgrading
-        if(!$user->stripe_id)
+        // for the emails
+        $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
+
+        // if this a new subscription...
+        if(!$add)
         {
-            // Use Stripe's library to make requests...
-            $customer = \Stripe\Customer::create(array(
-                'source' => $request->stripe_token,
-                'plan' => 'paid',
-                'email' => $user->email,
-                'quantity' => $userCount
+            // make a new customer if this is their first time upgrading
+            if(!$user->stripe_id)
+            {
+                // Use Stripe's library to make requests...
+                $customer = \Stripe\Customer::create(array(
+                    'source' => $request->stripe_token,
+                    'plan' => 'paid',
+                    'email' => $user->email,
+                    'quantity' => $userCount
+                ));
+
+                $user->stripe_id = $customer->id;
+            }
+            else
+            {
+                // if they're an existing user, just create a new subscription for  them
+                $customer = \Stripe\Customer::retrieve($user->stripe_id);
+                $customer->subscriptions->create(array("plan" => "paid"));
+            }
+            
+            $user->status = 'paying';
+            $user->expires = null; // in case they reupgrade before their subscription exprires
+
+            // the email will be sent by the stripe webhook
+        }
+        else // if they're adding to a pre-existing subscription
+        {
+            // add the user new count to the quantity of the subscription
+            $stripeUser = \Stripe\Customer::retrieve($user->stripe_id);
+            $quantity = (int) $stripeUser->subscriptions->data{0}->quantity;
+            $subscription = $stripeUser->subscriptions->retrieve($stripeUser->subscriptions->data{0}->id);
+            $subscription->quantity = $quantity + $userCount;
+            $subscription->save();
+
+            // create an invoice on this subsription with the new users at the prorated rate
+            $stripeUser = \Stripe\Customer::retrieve($user->stripe_id);
+            $invoice = \Stripe\Invoice::create(array(
+                'customer' => $user->stripe_id,
+                'subscription' => $stripeUser->subscriptions->data{0}->id
             ));
 
-            $user->stripe_id = $customer->id;
+            // pay that invoice with the card that's on file
+            $invoice = \Stripe\Invoice::retrieve($invoice->id);
+            $invoice->pay();
+
+            // send this user an email to confirm the upgrade
+            // let the user know that they've updated their card
+            // the email body
+            if($userCount == 1)
+            {
+                $descriptor = 'person';
+            }
+            else
+            {
+                $descriptor = 'people';
+            }
+            $body = 'Hi '.$user->email.',<br><br>You\'ve successully added '.$userCount.' new '.$descriptor.' to your Mailsy subscription.<br><br>';
+            $body .= 'If you have any questions, please send an email to <a href="mailto:hello@mailsy.co">hello@mailsy.com</a> and we\'d be happy to help.<br><br>';
+            $body .= 'Thank you,<br>The Mailsy Team';
+
+            $data = array(
+                "id" => 5, // blank template
+                "to" => $user->email,
+                "attr" => array(
+                    "SUBJECT" => 'You\'ve added '.$userCount.' '.$descriptor.' to your Mailsy subscription',
+                    "TITLE" => 'You\'ve successfully added '.$descriptor.' to your Mailsy subscription!',
+                    'BODY' => $body
+                )
+            );
+
+            $mailin->send_transactional_template($data);
         }
-        else
-        {
-            $customer = \Stripe\Customer::retrieve($user->stripe_id);
-            $customer->subscriptions->create(array("plan" => "paid"));
-        }
-        
-        $user->status = 'paying';
-        $user->expires = null; // in case they reupgrade before their subscription exprires
+
+        // save the user's attributes
         $user->save();
         
         // if there are multiple users, sign them up and mark them as paid users
@@ -422,7 +481,6 @@ class ActionController extends Controller
                 
 
                 // send the user an email and let them know they've been signed up
-                $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
                 $data = array(
                     "id" => 2,
                     "to" => $newuser,

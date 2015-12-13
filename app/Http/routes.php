@@ -33,6 +33,7 @@ Route::get('/settings','PagesController@showSettings');
 Route::get('/upgrade', 'PagesController@showUpgrade');
 Route::get('/use/{eid}', 'PagesController@showUseEmail');
 Route::get('/membership/confirm/{member}/{master?}','PagesController@showMembershipConfirm');
+Route::get('/membership/add','PagesController@showAddUsers');
 
 // actions
 Route::post('/returnFields', 'ActionController@returnFields');
@@ -40,7 +41,7 @@ Route::post('/makePreviews', 'ActionController@makePreviews');
 Route::post('/updatePreviews', 'ActionController@updatePreviews');
 Route::post('/sendEmails', 'ActionController@sendEmails');
 Route::post('/saveSettings', 'ActionController@saveSettings');
-Route::post('/upgrade', 'ActionController@doUpgrade');
+Route::post('/upgrade/{add?}', 'ActionController@doUpgrade');
 Route::post('/saveTemplate','ActionController@saveTemplate');
 
 // ajax calls

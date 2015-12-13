@@ -104,10 +104,28 @@
 					    		</td>
 					    	</tr>
 					    @endforeach
+					    <tr>
+					    	<td> </td>
+					    	<td style='text-align:right;'>Want to <a href='/membership/add'>add some new people to your account?</a></td>
+					    </tr>
 					</table>
 				</div>
 			</div>
+		@else
+			<div class="panel panel-default">
+				<div class="panel-heading"><strong>User Management</strong></div>
+				<div class="panel-body">
+					<p>You're not paying for any other people. Want to <a href='/membership/add'>add some?</a></p>
+				</div>
+			</div>
 		@endif
+	@else
+		<div class="panel panel-default">
+			<div class="panel-heading"><strong>Card Settings</strong></div>
+			<div class="panel-body">
+				You don't have a card registered since you're on a free account. You can <a href='/upgrade'>upgrade</a> to make your account a paid membership, pay for others (like your team) to give them paid memberships, or both! 
+			</div>
+		</div>
 	@endif
 
 @endsection

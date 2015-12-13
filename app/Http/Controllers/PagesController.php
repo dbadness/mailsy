@@ -142,17 +142,38 @@ class PagesController extends Controller
         {
             $member = User::find(substr(base64_decode($member),0,-5));
             $member->endDate = $stripeUser->subscriptions->data{0}->current_period_end;
-            $member->oldAmt = '$'.substr($stripeUser->subscriptions->data{0}->plan->amount*$stripeUser->subscriptions->data{0}->quantity,0,-2);
-            $member->newAmt = '$'.substr((($stripeUser->subscriptions->data{0}->plan->amount*$stripeUser->subscriptions->data{0}->quantity)-700),0,-2);
+            $member->oldAmt = '$'.substr((700 * $stripeUser->subscriptions->data{0}->quantity),0,-2);
+            $member->newAmt = '$'.substr(((700 * $stripeUser->subscriptions->data{0}->quantity)-700),0,-2);
         }
         else
         {
             $user->endDate = $stripeUser->subscriptions->data{0}->current_period_end;
-            $user->oldAmt = '$'.substr($stripeUser->subscriptions->data{0}->plan->amount*$stripeUser->subscriptions->data{0}->quantity,0,-2);
-            $user->newAmt = '$'.substr((($stripeUser->subscriptions->data{0}->plan->amount*$stripeUser->subscriptions->data{0}->quantity)-700),0,-2);
+            $user->oldAmt = '$'.substr(700 * $stripeUser->subscriptions->data{0}->quantity,0,-2);
+            $user->newAmt = '$'.substr(((700 * $stripeUser->subscriptions->data{0}->quantity)-700),0,-2);
         }
         
 
         return view('pages.confirm', ['user' => $user, 'member' => $member, 'master' => $master]);
+    }
+
+    // page to add users
+    public function showAddUsers()
+    {
+        // auth the user
+        $user = Auth::user();
+
+        // get the prorated amount of a new user based on the current subscription
+        \Stripe\Stripe::setApiKey(env('STRIPE_TOKEN'));
+        $stripeUser = \Stripe\Customer::retrieve($user->stripe_id);
+        $endingTime = $stripeUser->subscriptions->data{0}->current_period_end;
+        $deltaSeconds = $endingTime - time();
+        $deltaDays = round($deltaSeconds/(60*60*24)); // turns the seconds into days
+        $increment = 7/date('t'); // date('t') return the days in the current months
+        $prorated_amount = round(($increment * $deltaDays),2);
+
+        // get the last four
+        $lastFour = $stripeUser->sources->data{0}->last4;
+
+        return view('pages.newusers',['user' => $user, 'prorated_amount' => $prorated_amount, 'lastFour' => $lastFour]);
     }
 }

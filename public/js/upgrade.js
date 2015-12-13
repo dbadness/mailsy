@@ -131,5 +131,51 @@ $(document).ready(function()
 	{
 		$(this).closest('.userInput').remove();
 	});
-	
+
+	// add users page form submission logic
+	$('#addUsersButton').click(function()
+	{
+		var userCount = 0;
+		var emails = $('#otherUsers').serializeArray();
+		$.each(emails, function(i,email)
+		{
+			if(email.value != '')
+			{
+				userCount++;
+			}
+		});
+		// add their own userCount if they're add themselves
+		if($('#myselfCheckbox').is(':checked'))
+		{
+			userCount++;
+			$('#otherUsers').append('<input type="checkbox" name="myself" checked="checked" style="display:none;">');
+		}
+
+		if(userCount > 0)
+		{
+			var proratedAmount = Number($('#proratedAmount').val());
+			var totalAmount = proratedAmount * userCount;
+			var lastFour = $('#lastFour').val();
+			if(userCount == 1)
+			{
+				var descriptor = 'person';
+			}
+			else
+			{
+				var descriptor = 'people';
+			}
+			$('#confirmPopup').html('This will add '+userCount+' '+descriptor+' to your Mailsy subscription and your card ending in '+lastFour+' will be charged $'+totalAmount+' immediately.<br><br>');
+			$('#confirmPopup').append('<button class="btn btn-primary" role="button" id="submitAdditionForm">Sounds good, let\'s do it.</button>');
+			$('#confirm').show();
+		}
+
+	});
+
+	// after the user confirm the information in the popup...
+	$(document).on('click', '#submitAdditionForm', function()
+	{
+		// append the token and submit the form
+		$('#otherUsers').append('<input type="hidden" name="_token" value="'+$('input[name=_token]').val()+'">');
+		$('#otherUsers').submit();
+	});	
 });

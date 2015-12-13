@@ -31,7 +31,7 @@
 				<div class='btn btn-info' id='myselfButton'>
 					Pay for Myself
 				</div>
-				<div id='addUsers' class="btn btn-info">Pay for Others as Well</div>
+				<div id='addUsers' class="btn btn-info">Pay for Others</div>
 				<button id="customButton" class="btn btn-primary" role="button">Upgrade</button>
 			</div>
 		</div>

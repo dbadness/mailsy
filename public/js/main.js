@@ -17,6 +17,23 @@ $(document).ready(function(){
 		height: 300, // set editor height
 	});
 
+	// Summernote, edit enter key
+	$.summernote.addPlugin({
+	    name : 'myenter',
+	    events : {
+	      // redefine insertParagraph 
+	      'insertParagraph' : function(event, editor, layoutInfo) {
+
+	        // custom enter key
+	        var newLine = '<br />';
+	        pasteHtmlAtCaret(newLine);
+
+	        // to stop default event
+	        event.preventDefault();
+	      }
+	    }
+	  });
+
 	// fill in the email template
 	// the variable is in the view
 	if(typeof template !== 'undefined')
@@ -218,3 +235,39 @@ $(document).ready(function(){
 
 	
 }); // end doc ready
+
+// https://github.com/summernote/summernote/issues/702
+function pasteHtmlAtCaret(html) {
+    var sel, range;
+    if (window.getSelection) {
+        // IE9 and non-IE
+        sel = window.getSelection();
+        if (sel.getRangeAt && sel.rangeCount) {
+            range = sel.getRangeAt(0);
+            range.deleteContents();
+
+            // Range.createContextualFragment() would be useful here but is
+            // only relatively recently standardized and is not supported in
+            // some browsers (IE9, for one)
+            var el = document.createElement("div");
+            el.innerHTML = html;
+            var frag = document.createDocumentFragment(), node, lastNode;
+            while ( (node = el.firstChild) ) {
+                lastNode = frag.appendChild(node);
+            }
+            range.insertNode(frag);
+
+            // Preserve the selection
+            if (lastNode) {
+                range = range.cloneRange();
+                range.setStartAfter(lastNode);
+                range.collapse(true);
+                sel.removeAllRanges();
+                sel.addRange(range);
+            }
+        }
+    } else if (document.selection && document.selection.type != "Control") {
+        // IE < 9
+        document.selection.createRange().pasteHTML(html);
+    }
+}

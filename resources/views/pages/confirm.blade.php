@@ -22,10 +22,10 @@
 			<p>They can still send unlimited emails through Mailsy until {!! date('M-d-Y',$member->endDate) !!} after which they'll be downgraded to a free user account (10 emails per day). Your membership
 			cost per month will drop from {!! $member->oldAmt !!} to 
 
-			@if($member->newAmt == 0)
+			@if($member->newAmt == '$0')
 				$0 (your subscription will be canceled).
 			@else
-				{!! $member->newAmt !!}
+				{!! $member->newAmt !!}.
 			@endif
 			</p>
 			<p>
@@ -36,5 +36,7 @@
 		@endif
 		{!! Form::token() !!}
 	</div>
+
+	{!! $member->newAmt !!}
 
 @endsection
