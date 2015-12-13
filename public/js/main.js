@@ -175,47 +175,44 @@ $(document).ready(function(){
 	// cancelling a membership of someone the user is paying for
 	$('.cancelButton').click(function()
 	{
-		if(confirm('Are you sure you want to cancel this person\'s membership?'))
-		{
-			var id = $(this).attr('ref');
+		var id = $(this).attr('ref');
 
-			if($(this).attr('id') == 'masterCancel')
-			{
-				$.ajax({
-					url: '/membership/cancel/master',
-					method: 'post',
-					data: {
-						_token: $('input[name=_token]').val(),
-					},
-					success: function(response)
-					{
-						alert(response);
-					},
-					error: function()
-					{
-						alert('Something went wrong... :(');
-					}
-				});
-			}
-			else
-			{
-				$.ajax({
-					url: '/membership/cancel',
-					method: 'post',
-					data: {
-						_token: $('input[name=_token]').val(),
-						ref: $(this).attr('ref')
-					},
-					success: function(response)
-					{
-						alert(response);
-					},
-					error: function()
-					{
-						alert('Something went wrong... :(');
-					}
-				});
-			}
+		if($(this).attr('id') == 'masterCancel')
+		{
+			$.ajax({
+				url: '/membership/cancel/master',
+				method: 'post',
+				data: {
+					_token: $('input[name=_token]').val(),
+				},
+				success: function(response)
+				{
+					alert(response);
+				},
+				error: function()
+				{
+					alert('Something went wrong... :(');
+				}
+			});
+		}
+		else
+		{
+			$.ajax({
+				url: '/membership/cancel',
+				method: 'post',
+				data: {
+					_token: $('input[name=_token]').val(),
+					ref: $(this).attr('ref')
+				},
+				success: function(response)
+				{
+					alert(response);
+				},
+				error: function()
+				{
+					alert('Something went wrong... :(');
+				}
+			});
 		}
 	});
 

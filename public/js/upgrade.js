@@ -78,7 +78,10 @@ $(document).ready(function()
 					// this is the callback from the authorization
 					$('#otherUsers').append('<input type="hidden" name="stripe_token" value="'+token.id+'">');
 					$('#otherUsers').append('<input type="hidden" name="_token" value="'+$('input[name=_token]').val()+'">');
-					$('#otherUsers').append('<input type="checkbox" name="myself" id="myselfCheckbox" checked='+$('input[name=myself]').attr('checked')+'>');
+					if(myself)
+					{
+						$('#otherUsers').append('<input type="checkbox" name="myself" id="myselfCheckbox" checked="checked">');
+					}
 					$('#otherUsers').submit();
 				}
 			});

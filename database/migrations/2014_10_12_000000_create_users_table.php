@@ -18,7 +18,7 @@ class CreateUsersTable extends Migration
             $table->string('has_users')->nullable();
             $table->string('email')->unique();
             $table->string('stripe_id')->nullable();
-            $table->string('subscription_id')->nullable();
+            $table->string('status')->nullable();
             $table->string('name')->nullable();
             $table->rememberToken();
             $table->string('gmail_token');

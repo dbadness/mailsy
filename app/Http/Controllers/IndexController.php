@@ -75,6 +75,14 @@ class IndexController extends Controller
             $success = Auth::loginUsingId($existingUser->id);
             // update the user's google_token
             $existingUser->gmail_token = $accessToken;
+            // update their status if they have an expiration date
+            if($existingUser->expires)
+            {
+                if($existingUser->expires < time())
+                {
+                    $existingUser->paid = null;
+                }
+            }
             $existingUser->save();
             return redirect('/home');
         }

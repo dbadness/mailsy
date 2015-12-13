@@ -358,14 +358,12 @@ class ActionController extends Controller
         {
             $userCount++;
             $user->paid = 'yes';
-            $user->save();
         }
 
         if($request->newusers)
         {
             // tell the DB that this is an admin type user
             $user->has_users = 'yes';
-            $user->save();
             $count = count($request->newusers);
             $userCount = $userCount + $count;
         }
@@ -375,15 +373,27 @@ class ActionController extends Controller
         // See your keys here https://dashboard.stripe.com/account/apikeys
         \Stripe\Stripe::setApiKey(env('STRIPE_TOKEN'));
 
-        // Use Stripe's library to make requests...
-        $customer = \Stripe\Customer::create(array(
-            'source' => $request->stripe_token,
-            'plan' => 'paid',
-            'email' => $user->email,
-            'quantity' => $userCount
-        ));
+        // make a new customer if this is their first time upgrading
+        if(!$user->stripe_id)
+        {
+            // Use Stripe's library to make requests...
+            $customer = \Stripe\Customer::create(array(
+                'source' => $request->stripe_token,
+                'plan' => 'paid',
+                'email' => $user->email,
+                'quantity' => $userCount
+            ));
 
-        $user->stripe_id = $customer->id;
+            $user->stripe_id = $customer->id;
+        }
+        else
+        {
+            $customer = \Stripe\Customer::retrieve($user->stripe_id);
+            $customer->subscriptions->create(array("plan" => "paid"));
+        }
+        
+        $user->status = 'paying';
+        $user->expires = null; // in case they reupgrade before their subscription exprires
         $user->save();
         
         // if there are multiple users, sign them up and mark them as paid users
@@ -391,7 +401,7 @@ class ActionController extends Controller
         {
             foreach($request->newusers as $newuser)
             {
-                if(!User::where('email',$newuser))
+                if(!User::where('email',$newuser)->first())
                 {
                     // create the new user
                     $newuserObject = new User;
@@ -482,12 +492,6 @@ class ActionController extends Controller
         // auth the user
         $user = Auth::user();
 
-        // if this is an admin cancelling a members subscription
-        if($request->ref)
-        {
-            $member = User::find(substr(base64_decode($request->ref),0,-5));
-        }
-
         // retrieve the subscription info
         $customer = \Stripe\Customer::retrieve($user->stripe_id);
         $subscription = $customer->subscriptions->retrieve($customer->subscriptions->data{0}->id);
@@ -509,21 +513,48 @@ class ActionController extends Controller
             }
 
             // cancel the subscription
-            $canceledSubscription = $subscription->cancel();
-            $user->paid = null;
+            $canceledSubscription = $subscription->cancel(['at_period_end' => true]);
+            $user->expires = time();
             $user->has_users = null;
+            $user->status = null;
             $user->save();
 
             // send an email to the admin letting them know they're unsubscribed
 
             // success message
-            return 'This subscription was canceled at '.$canceledSubscription->canceled_at;
+            return 'This subscription was canceled at '.$canceledSubscription->cancel_at_period_end;
         }
         else
         {
             // decrement the subscription quantity
             $subscription->quantity = $subscription->quantity - 1;
             $subscription->save();
+
+            // if this is an admin cancelling a members subscription
+            if($request->ref)
+            {
+                $member = User::find(substr(base64_decode($request->ref),0,-5));
+                // update this members attrs
+                $member->belongs_to = null;
+                $member->save();
+            }
+
+            // if this was the last member this admin manages, update their attr accordingly
+            $memberCount = User::where('belongs_to',$user->id)->count();
+            if($memberCount == 0)
+            {
+                $user->has_users = null;
+                
+                // if the admin isn't a paid user and they were just paying for someone else, cancel the subscription
+                if(!$user->paid)
+                {
+                    $canceledSubscription = $subscription->cancel(['at_period_end' => true]);
+                    $user->status = null;
+                }
+
+                // save the settings
+                $user->save();
+            }
 
             // send an email to the admin letting them know that the update has been successful
 

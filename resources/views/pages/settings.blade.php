@@ -51,7 +51,7 @@
 		</div>
 	</div>
 
-	@if($user->paid)
+	@if($user->status == 'paying')
 		<div class="panel panel-default">
 			<div class="panel-heading"><strong>Card Settings</strong></div>
 			<div class="panel-body">
