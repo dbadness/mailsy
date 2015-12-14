@@ -15,7 +15,7 @@ class IndexController extends Controller
     // show the home page
     public function showIndex()
     {
-        return view('pages.index');
+        return view('layouts.index');
     }
 
     // show the signup page
