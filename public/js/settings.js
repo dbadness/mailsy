@@ -17,7 +17,7 @@ $(document).ready(function()
 			{
 				'_token' : $('input[name=_token').val(),
 				'name': $('input[name=name').val(),
-				'sf_address' : $('#sf_address').val(),
+				'sf_address' : $('input[name=sf_address]').val(),
 				'signature' : $('#signature').code()
 			},
 			error: function()
