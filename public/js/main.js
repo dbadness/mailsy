@@ -12,7 +12,7 @@ $(document).ready(function(){
 		height: 300, // set editor height
 	});
 	// initialise the editor
-	$('#signatureField').summernote(
+	$('#signature').summernote(
 	{
 		height: 300, // set editor height
 	});
@@ -34,7 +34,7 @@ $(document).ready(function(){
 	    }
 	  });
 
-	// fill in the email template
+	// fill in the email template and sig
 	// the variable is in the view
 	if(typeof template !== 'undefined')
 	{

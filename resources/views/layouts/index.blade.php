@@ -38,7 +38,7 @@
         <div class="container topnav">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-                <a class="navbar-brand topnav" href="#">Mailsy</a>
+                <a class="navbar-brand topnav" href="/">Mailsy</a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -88,7 +88,7 @@
                         <hr class="intro-divider">
                         <ul class="list-inline intro-social-buttons">
                             <li>
-                                <a href="/auth" class="btn btn-default btn-lg"><i class="icon-gmail"></i>&nbsp&nbsp&nbsp&nbsp<span class="network-name" style='font-size:18px;'>Signup for Free Using Gmail</span></a>
+                                <a href="/auth" class="btn btn-default btn-lg"><i class="icon-gmail"></i>&nbsp&nbsp&nbsp&nbsp<span class="network-name">Signup for Free Using Gmail</span></a>
                             </li>
                         </ul>
                     </div>
@@ -299,8 +299,8 @@
                     <h2>Reach out with any questions and you'll get a speedy reply.</h2>
                 </div>
                 <div class="col-lg-6" style='text-align:right;'>
-                    <h2>hello[at]mailsy[dot]co</h2>
-                    <a href='https://twitter.com/mailsyapp' style='color:white;' target='_blank'><h2>@mailsyapp</h2></a>
+                    <span>hello[at]mailsy[dot]co</span><br>
+                    <a href='https://twitter.com/mailsyapp' style='color:white;' target='_blank'><span>@mailsyapp</span></a>
                 </div>
             </div>
 

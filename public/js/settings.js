@@ -1,5 +1,12 @@
 $(document).ready(function()
 {
+
+	// 
+	if(typeof template !== 'undefined')
+	{
+		$('#signature').code(template);
+	}
+
 	// save the users settings
 	$('#saveSettings').click(function()
 	{
@@ -9,8 +16,9 @@ $(document).ready(function()
 			data: 
 			{
 				'_token' : $('input[name=_token').val(),
+				'name': $('input[name=name').val(),
 				'sf_address' : $('#sf_address').val(),
-				'signature' : $('#signature').val()
+				'signature' : $('#signature').code()
 			},
 			error: function()
 			{

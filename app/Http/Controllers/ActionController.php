@@ -333,7 +333,7 @@ class ActionController extends Controller
             }
         }
 
-        return redirect('/home');
+        return redirect('/email/'.base64_encode($email->id));
     }
 
     // save the settings page
@@ -341,7 +341,11 @@ class ActionController extends Controller
     {
         $user = Auth::user();
         // update the values in the DB
-        User::find($user->id)->update(['sf_address' => $request->sf_address, 'signature' => $request->signature]);
+        $user->name = $request->name;
+        $user->sf_address = $request->sf_address;
+        $user->signature = $request->signature;
+        $user->save();
+
         return 'success';
     }
 

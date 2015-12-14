@@ -9,6 +9,11 @@
 
 @section('content')
 
+	<script>
+		// fill in the #emailTemplate
+		var template = '{!! addslashes($user->signature) !!}';
+	</script>
+
 	@if($_GET)
 		@if($_GET['message'])
 			<div class="alert alert-success alert-dismissible" role="alert">
@@ -35,16 +40,16 @@
 			<p>Name (to appear in the inbox of the recipient - <i>highly recommended</i>):</p>
 			<div class="input-group">
 			  	<span class="input-group-addon" id="basic-addon1">Name</span>
-			  	<input type="text" name='name' class="form-control" aria-describedby="basic-addon1">
+			  	<input type="text" name='name' class="form-control" aria-describedby="basic-addon1" value='{!! $user->name !!}'>
 			</div>
 			<br>
 			<p>Signature to be inserted at the end of your emails:</p>
-			<div id="signatureField"></div>
+			<div id="signature"></div>
 			<textarea name='_email_template' id='emailTemplateHolder'></textarea>
 			<p>Salesforce email address to log your emails in Salesforce (if you select that option when sending emails):</p>
 			<div class="input-group">
 			  	<span class="input-group-addon" id="basic-addon1">Salesforce Email</span>
-			  	<input type="text" name='sf_address' class="form-control" aria-describedby="basic-addon1">
+			  	<input type="text" name='sf_address' class="form-control" aria-describedby="basic-addon1" value='{!! $user->sf_address !!}'>
 			</div>
 			<br>
 			<button class='btn btn-primary' id='saveSettings'>Save Email Settings</button>
@@ -82,7 +87,7 @@
 							<td><h5>Membership Status: Deliquent</h5></td>
 						@endif
 						<td>
-							<a href='/membership/confirm/me/master' class='cancelLink'>Cancel Membership</a>
+							<a href='/membership/confirm/me/master' class='cancelLink'>Cancel Subscription</a>
 							<div class='clear'></div>
 						</td>
 					</tr>
@@ -106,7 +111,11 @@
 					    @endforeach
 					    <tr>
 					    	<td> </td>
-					    	<td style='text-align:right;'>Want to <a href='/membership/add'>add some new people to your account?</a></td>
+					    	@if(!$user->paid)
+					    		<td style='text-align:right;'>Want to <a href='/membership/add'>add some new people or yourself</a> to your account?</td>
+					    	@else
+					    		<td style='text-align:right;'>Want to <a href='/membership/add'>add some new people</a> to your account?</td>
+					    	@endif
 					    </tr>
 					</table>
 				</div>

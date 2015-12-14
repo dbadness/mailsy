@@ -174,3 +174,8 @@
 	text-decoration:underline;
 	cursor:pointer;
 }
+
+#settingsSaved
+{
+	display:none;
+}

@@ -53,7 +53,12 @@
                         <p class="navbar-text" style="float:right;">
                             Signed in as {!! $user->email !!} 
                             @if(!$user->paid)
-                               ({!! App\User::howManyEmailsLeft() !!} emails left today) <a href='/upgrade'>Upgrade</a>
+                               ({!! App\User::howManyEmailsLeft() !!} emails left today)
+                               @if($user->status == 'paying')
+                                    <a href='/membership/add'>Upgrade Myself</a>
+                               @else
+                                    <a href='/upgrade'>Upgrade</a>
+                                @endif
                                @else
                                 (Upgraded Account!)
                             @endif
