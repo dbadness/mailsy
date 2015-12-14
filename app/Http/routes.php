@@ -12,10 +12,11 @@
 */
 
 Route::get('/', 'IndexController@showIndex');
+Route::get('/faq', 'IndexController@showFaq');
 
 // auth stuff
 Route::get('/signup', 'IndexController@showSignup');
-Route::post('/auth', 'IndexController@sendToGoogleAuth');
+Route::get('/auth', 'IndexController@sendToGoogleAuth');
 Route::get('/gmail', 'IndexController@doAddUser');
 Route::get('/login', 'IndexController@showLogin');
 Route::get('/logout', function(){

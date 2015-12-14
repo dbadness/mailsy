@@ -18,16 +18,15 @@ class IndexController extends Controller
         return view('layouts.index');
     }
 
-    // show the signup page
-    public function showSignup()
-    {
-        return view('pages.signup');
-    }
-
     // display a login page
     public function showLogin()
     {
         return view('pages.login');
+    }
+
+    public function showFaq()
+    {
+        return view('layouts.faq');
     }
 
     // send the user through oauth2 process for the Gmail API

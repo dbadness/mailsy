@@ -88,7 +88,7 @@
                         <hr class="intro-divider">
                         <ul class="list-inline intro-social-buttons">
                             <li>
-                                <a href="/signup" class="btn btn-default btn-lg"><i class="icon-gmail"></i>&nbsp&nbsp&nbsp&nbsp<span class="network-name" style='font-size:18px;'>Signup for Free Using Gmail</span></a>
+                                <a href="/auth" class="btn btn-default btn-lg"><i class="icon-gmail"></i>&nbsp&nbsp&nbsp&nbsp<span class="network-name" style='font-size:18px;'>Signup for Free Using Gmail</span></a>
                             </li>
                         </ul>
                     </div>
@@ -342,6 +342,14 @@
                         <li class="footer-menu-divider">&sdot;</li>
                         <li>
                             <a href="/faq">FAQ</a>
+                        </li>
+                        <li class="footer-menu-divider">&sdot;</li>
+                        <li>
+                            <a href="/auth">Sign Up</a>
+                        </li>
+                        <li class="footer-menu-divider">&sdot;</li>
+                        <li>
+                            <a href="/auth">Log In</a>
                         </li>
                     </ul>
                     <p class="copyright text-muted small">Copyright &copy;<?php echo date('Y');?> Mailsy Technologies, LLC. All Rights Reserved</p>
