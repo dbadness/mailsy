@@ -77,7 +77,7 @@
                     <p class="lead">
                         First off, welcome to Mailsy!
                         <br><br>
-                        Here's a brief guide to get your familiar with the service:
+                        Here's a brief guide to get you familiar with the service:
                         <ol>
                             <li>
                                 Create your first template by clicking on the "New Email" button on the top of the page once you sign up or log in.
@@ -126,6 +126,67 @@
                     <p class="lead">
                         Nope. Since you're allowing Mailsy to access your Gmail account, the message is sent directly from your Gmail account. 
                         Don't worry, Mailsy only creates and sends messages with your Gmail account, nothing else. You'll even be able to see the messages in your "Sent" folder in Gmail (or whichever email client you use).
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- /.container -->
+    </div>
+
+    <!-- Page Content -->
+    <div class="content-section-a">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <hr class="section-heading-spacer">
+                    <div class="clearfix"></div>
+                    <h2 class="section-heading">How do the subscriptions work?</h2>
+                    <p class="lead">
+                        Mailsy uses the <a href='https://www.stripe.com' target='_blank'>Stripe</a> service to process credit cards and manage its subscriptions. Mailsy uses Stripe so we don't have to keep any credit cards on our
+                        servers which is more secure for our customers - Mailsy specializes in email stuff, not credit card stuff.
+                        <br><br>
+                        When you sign up for a subscription, we'll charge your card immediately and then again for that amount ($7 per user) every month on that date (or thereabouts). If you ever cancel a subscription
+                        (either yours or anyone that you're paying for), the paid version of Mailsy will be available to those people for the duration of that monthly billing period.
+                        <br><br>
+                        If you add anyone to your subscription plan, Mailsy will prorate the amount that's owed for the remainder of the billing period for that user (or users) and charge that amount to the card on your account immediately. 
+                        <br><br>
+                        If you your account while you're paying for other users, both you and the users you're paying for will have access to the paid version of Mailsy until the end of that billing period. At that time,
+                        everyone will be downgraded to a free plan.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- /.container -->
+    </div>
+
+    <!-- Page Content -->
+    <div class="content-section-a">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <hr class="section-heading-spacer">
+                    <div class="clearfix"></div>
+                    <h2 class="section-heading">Can I add attachments to the messages?</h2>
+                    <p class="lead">
+                        Not right now but, if you think Mailsy should have that functionality (or anything else), please reach out via email or <a href='https://www.twitter.com/mailsyapp' target='_blank'>Twitter</a>! Mailsy is constantly
+                        growing and being updated so please feel free to let us know you think.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- /.container -->
+    </div>
+
+    <!-- Page Content -->
+    <div class="content-section-a">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <hr class="section-heading-spacer">
+                    <div class="clearfix"></div>
+                    <h2 class="section-heading">What if I have a question that I can't find the answer to on the site?</h2>
+                    <p class="lead">
+                        We'd be happy to help! Please reach out via email at hello[at]mailsy[dot]co or <a href='https://www.twitter.com/mailsyapp' target='_blank'>Twitter</a> and you'll get a speedy response.
                     </p>
                 </div>
             </div>
