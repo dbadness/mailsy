@@ -83,7 +83,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="intro-message">
-                        <h1>Less time prospecting. More time building substantial relationships.</h1>
+                        <h1>Less time prospecting. More time building substantive relationships.</h1>
                         <h3>Send many individual, customized emails all at once with Mailsy.</h3>
                         <hr class="intro-divider">
                         <ul class="list-inline intro-social-buttons">
