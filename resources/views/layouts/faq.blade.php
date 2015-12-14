@@ -162,7 +162,7 @@
                         <br><br>
                         If you add anyone to your subscription plan, Mailsy will prorate the amount that's owed for the remainder of the billing period for that user (or users) and charge that amount to the card on your account immediately. 
                         <br><br>
-                        If you your account while you're paying for other users, both you and the users you're paying for will have access to the paid version of Mailsy until the end of that billing period. At that time,
+                        If you cancel your account while you're paying for other users, both you and the users you're paying for will have access to the paid version of Mailsy until the end of that billing period. At that time,
                         everyone will be downgraded to a free plan.
                     </p>
                 </div>
