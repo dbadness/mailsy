@@ -12,7 +12,7 @@
 		@endif
 	@endif
 	<div class="page-header">
-		<h1>View Messages <small>{!! $email->name !!}</small></h1>
+		<h1>View Messages <small>{!! $email->name !!}</small></h1><a href='/use/{!! base64_encode($email->id) !!}'>Send More Emails</a>
 	</div>
 	<div class="well">
 		{!! $email->template !!}

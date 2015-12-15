@@ -25,6 +25,10 @@
 				{!! Form::hidden('messages[]', $message->id) !!}
 				To: {!! $message->recipient !!}
 				<br>
+				@if($message->send_to_salesforce)
+					BCC: {!! $user->sf_address !!}
+					<br>
+				@endif
 				Subject: {!! $message->subject !!}
 				<br>
 				{!! $message->message !!}

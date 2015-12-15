@@ -22,10 +22,10 @@
 	</div>
 	<div id='checkHolders'>
 		<div class='checkHolder' id='sfHolder'>
-			<p>Send to Salesforce: <input type='checkbox' name='_send_to_salesforce'></p>
+			<p>Send to Salesforce: <input type='checkbox' name='_send_to_salesforce' @if($user->sf_address) checked="checked" @endif></p>
 		</div>
 		<div class='checkHolder' id='sigHolder'>
-			<p>Attach Signature: <input type='checkbox' name='_signature'></p>
+			<p>Attach Signature: <input type='checkbox' name='_signature' @if($user->signature) checked="checked" @endif></p>
 		</div>
 		@if(!$user->sf_address || !$user->signature)
 			<div class='checkHolder'>
