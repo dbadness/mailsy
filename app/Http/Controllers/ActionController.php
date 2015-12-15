@@ -157,7 +157,7 @@ class ActionController extends Controller
 
             // trim the <p> tags off the messageText
             $messageText = substr($messageText,0,-4);
-            $messageText = substr($messageText,-4);
+            $messageText = substr($messageText,3);
 
             // make a message to throw into the DB
             $message = new Message;
