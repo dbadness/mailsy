@@ -155,6 +155,10 @@ class ActionController extends Controller
                 $fieldEntries[] = [$field => $_POST[$field][$key]];
             }
 
+            // trim the <p> tags off the messageText
+            $messageText = substr($messageText,0,-4);
+            $messageText = substr($messageText,-4);
+
             // make a message to throw into the DB
             $message = new Message;
             $message->user_id = $user->id;
@@ -199,76 +203,6 @@ class ActionController extends Controller
             }
         }
     }
-
-    /*
-    // take the template's contents and the recipients list and generate previews for the user upon updating the email
-    public function updatePreviews(Request $request)
-    {
-        // auth the user
-        $user = Auth::user();
-
-        // fetch the email from the DB
-        $email = Email::find($request->_email_id);
-
-        // first delete all the messages previous unsent in this email (since the user is updating them)
-        // you can compare the made:sent ratios later to determine how many times users need to edit emails
-        Message::where('email_id',$email->id)->whereNull('deleted_at')->whereNull('status')->update(['deleted_at' => time()]);
-
-        // build the recipient list and assign the fields to them
-        $messages = [];
-        $tempRecipientsList = [];
-        foreach($_POST['_email'] as $key => $recipientEmail)
-        {
-
-            // return the array of the fields from the user
-            $fields = [];
-            foreach($_POST as $k => $v)
-            {
-                if(substr($k,0,1) != '_')
-                {
-                    $fields[] = $k;
-                }
-            }
-
-            // for each field provided, replace the variable in the template with the correct field input
-            // use the key we returned from figuring out with recipient entry we're currently on
-            $messageText = $request->_email_template;
-            $subjectText = $request->_subject;
-            $fieldEntries = [];
-            foreach($fields as $field)
-            {
-                $subjectText = str_replace('@@'.$field, $_POST[$field][$key], $subjectText);
-                $messageText = str_replace('@@'.$field, $_POST[$field][$key], $messageText);
-                // set up an entry for the recipients list later on
-                $fieldEntries[] = [$field => $_POST[$field][$key]];
-            }
-
-            // make a message to throw into the DB
-            $message = new Message;
-            $message->user_id = $user->id;
-            $message->email_id = $email->id;
-            $message->recipient = $recipientEmail;
-            $message->subject = $subjectText;
-            $message->message = $messageText;
-            $message->created_at = time();
-            $message->save();
-
-            // set up the data list in case the user wants to go back and make some edits
-            $tempRecipientsList[] = [
-                '_email' => $recipientEmail,
-                '_fields' => json_encode($fieldEntries)
-            ];
-
-            // save the tempRecipientsList to the email object for future use (if needed)
-            $email->temp_recipients_list = json_encode($tempRecipientsList);
-            $email->save();
-
-        }
-
-        // send to the preview page
-        return redirect('/preview/'.base64_encode($email->id));
-    }
-    */
     
     // send the emails
     public function sendEmails(Request $request)
@@ -297,27 +231,19 @@ class ActionController extends Controller
             {
                 $message = Message::find($id);
 
-                // create the msg (in RFC 2822 format) so we can base64 encode it for sending through the Gmail API
-                // http://stackoverflow.com/questions/24940984/send-email-using-gmail-api-and-google-api-php-client
-                $mail = new \PHPMailer(true); // notice the \  you have to use root namespace here
-                $mail->isSMTP(); // tell to use smtp
-                $mail->CharSet = 'utf-8'; // set charset to utf8
-                $mail->Subject = $message->subject;
-                $mail->MsgHTML($message->message);
-                $mail->setFrom($user->email, $user->name); // set from attr
-                $mail->addAddress($message->recipient);
-                if($message->send_to_salesforce == 'yes')
+                // use swift mailer to build the mime
+                $mail = new \Swift_Message;
+                $mail->setTo([$message->recipient]);
+                $mail->setBody($message->message, 'text/html');
+                $mail->setSubject($message->subject);
                 {
                     // if they selected the 'send to salesforce' button for the email...
                     $mail->addBCC($user->sf_address);
                 }
-                $mail->preSend();
-                $mime = $mail->getSentMIMEMessage();
-                $m = new \Google_Service_Gmail_Message();
-                $data = base64_encode($mime);
+                $data = base64_encode($mail->toString());
                 $data = str_replace(array('+','/','='),array('-','_',''),$data); // url safe
+                $m = new \Google_Service_Gmail_Message();
                 $m->setRaw($data);
-
                 $gmailMessage = $gmail->users_messages->send('me', $m);
 
                 // insert the returned google message id into the DB and mark it as sent
