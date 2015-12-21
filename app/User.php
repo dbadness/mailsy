@@ -87,24 +87,27 @@ class User extends Model implements AuthenticatableContract,
     // find out how many emails this user has left today if their not a paid member
     public static function howManyEmailsLeft()
     {
+        // in EST
+        date_default_timezone_set('EST');
         // auth the user
         $user = Auth::user();
 
         // initate the count
         $left = 10;
 
-        // retrieve the messages from today
-        $messages = Message::where('user_id',$user->id)->whereNotNull('status')->whereNull('deleted_at')->where('sent_at',date('M d Y'))->get();
+        $last = strtotime('today');
+        $next = strtotime('today') + (60*60*24) - 1;
 
-        if($messages)
+        // retrieve the messages from today
+        $messages = Message::where('user_id',$user->id)->whereNotNull('status')->whereNull('deleted_at')->whereBetween('sent_at',[$last,$next])->get();
+
+        if($messages && ($left != 0) && !$user->paid)
         {
-            foreach($messages as $message)
-            {
-                if($left != 0 && !$user->paid)
-                {
-                    $left--; 
-                }  
-            } 
+            $left = $left - count($messages);
+        }
+        else
+        {
+            $left = 'broken';
         }
 
         return $left;
