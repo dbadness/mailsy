@@ -28,6 +28,11 @@ class Message extends Model
     	$service = new \Google_Service_Gmail($client);
     	$gmail = $service->users_messages->get('me', $message->google_message_id);
 
+        /*
+        * This has to be fixed
+        *
+        *
+
     	// see if the message was read
     	$labels = (array)$gmail->labelIds;
 		if(!in_array('UNREAD', $labels))
@@ -36,6 +41,7 @@ class Message extends Model
     		$message->status = 'read';
     		$message->save();
     	}
+        */
 
     	return $message->status;
     }

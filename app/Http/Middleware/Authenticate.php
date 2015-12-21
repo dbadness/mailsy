@@ -38,8 +38,8 @@ class Authenticate
             if ($request->ajax()) {
                 return response('Unauthorized.', 401);
             } else {
-                // send through google process
-                return redirect()->guest('/login');
+                // send back to the index page
+                return redirect()->guest('/');
             }
         }
 
