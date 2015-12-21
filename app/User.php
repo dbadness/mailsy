@@ -94,9 +94,7 @@ class User extends Model implements AuthenticatableContract,
         $left = 10;
 
         // retrieve the messages from today
-        $beginOfDay = strtotime('midnight', time());
-        $endOfDay   = strtotime('tomorrow', $beginOfDay) - 1;
-        $messages = Message::where('user_id',$user->id)->whereNotNull('status')->whereNull('deleted_at')->whereBetween('updated_at',[$beginOfDay,$endOfDay])->get();
+        $messages = Message::where('user_id',$user->id)->whereNotNull('status')->whereNull('deleted_at')->where('sent_at',date('M d Y'))->get();
 
         if($messages)
         {
