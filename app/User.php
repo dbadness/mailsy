@@ -101,13 +101,9 @@ class User extends Model implements AuthenticatableContract,
         // retrieve the messages from today
         $messages = Message::where('user_id',$user->id)->whereNotNull('status')->whereNull('deleted_at')->whereBetween('sent_at',[$last,$next])->get();
 
-        if($messages && ($left != 0) && !$user->paid)
+        if($messages && !$user->paid)
         {
             $left = $left - count($messages);
-        }
-        else
-        {
-            $left = 'broken';
         }
 
         return $left;
