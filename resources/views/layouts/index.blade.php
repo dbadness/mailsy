@@ -115,7 +115,7 @@
                     <p class="lead">
                         Mailsy allows you to create email templates with pieces of information that you can customize for each individual message.
                         <br><br>With the template made and each recipients' individualized information ready to go in each message,
-                        send them all with a single click using your Gmail-hosted email account. Couldn't be easier.
+                        send them all with a single click using your Google-hosted email account. They also can go right into your SalesForce instance. Couldn't be easier.
                     </p>
                 </div>
                 <div class="col-lg-5 col-lg-offset-2 col-sm-6">
@@ -195,7 +195,7 @@
                     <div class="clearfix"></div>
                     <h2 class="section-heading">Free to use. No trial periods.</h2>
                     <p class="lead">
-                        You can use your Gmail credentials to sign up for Mailsy and send 10 emails per day on a free account. There are no trial periods so you can use a free account as long as you'd like.
+                        You can use your Google credentials to sign up for Mailsy and send 10 emails per day on a free account. There are no trial periods so you can use a free account as long as you'd like.
                         <br><br>
                         If you want to send unlimited emails per day, you can upgrade to a paid account for only $7 per month. If you're a team leader, you can even pay for multiple accounts all at once which makes administration
                         and billing incredibly simple. Also, you can cancel and go back down to the free account whenever you'd like - no yearly contracts or anything like that.

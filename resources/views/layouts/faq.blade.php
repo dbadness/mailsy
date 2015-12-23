@@ -119,7 +119,7 @@
                     <i><h4><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Tip:</h4></i>
                     <p class="lead">
                         Before sending your first emails, head to the Settings page to fill in your full name so recipients will see your full name as the "from" field in the email. 
-                        Also, don't forget to add a signature! (You can just copy and paste your Gmail signature.)
+                        Also, don't forget to add a signature and Salesforce email address to fully integrate Mailsy! (You can just copy and paste your Gmail signature.)
                     </p>
                 </div>
             </div>
