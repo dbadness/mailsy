@@ -115,7 +115,7 @@
                     <p class="lead">
                         Mailsy allows you to create email templates with pieces of information that you can customize for each individual message.
                         <br><br>With the template made and each recipients' individualized information ready to go in each message,
-                        send them all with a single click using your Google-hosted email account. They also can go right into your SalesForce instance. Couldn't be easier.
+                        send them all with a single click using your Google-hosted email account. They also can go right into your Salesforce instance. Couldn't be easier.
                     </p>
                 </div>
                 <div class="col-lg-5 col-lg-offset-2 col-sm-6">
