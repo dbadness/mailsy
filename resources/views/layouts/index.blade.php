@@ -29,6 +29,17 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-71709833-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
 </head>
 
 <body>
@@ -141,7 +152,7 @@
                     <p class="lead">
                         Email prospecting by sending individual emails takes a lot of time. You're willing to invest this time since relevant emails improve the chance of the recipient replying to you.
                         <br><br>
-                        By sending out emails all at once but still being able to individualize each email dramatically speeds up this process while still keeping your messages genuine and engaging.
+                        By sending out emails all at once while still being able to individualize each email dramatically speeds up this process while still keeping your emails engaging.
                         <br><br>
                         Now you can spend that time building up the relationships you prospected which helps you sell, advocate, or market far more effectively.
                     </p>
