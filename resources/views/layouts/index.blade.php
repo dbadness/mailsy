@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Mailsy - The best way to email prospect</title>
+    <title>Mailsy - Spend your time selling, not emailing</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
@@ -83,12 +83,12 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="intro-message">
-                        <h1>Less time prospecting. More time building substantive relationships.</h1>
+                        <h1>Less time prospecting. More time turning prospects into customers.</h1>
                         <h3>Send many individual, customized emails all at once with Mailsy.</h3>
                         <hr class="intro-divider">
                         <ul class="list-inline intro-social-buttons">
                             <li>
-                                <a href="/auth" class="btn btn-default btn-lg"><i class="icon-gmail"></i>&nbsp&nbsp&nbsp&nbsp<span class="network-name">Signup for Free Using Gmail</span></a>
+                                <a href="/auth" class="btn btn-default btn-lg"><i class="icon-gmail"></i>&nbsp&nbsp&nbsp&nbsp<span class="network-name">Signup for Free Using Google</span></a>
                             </li>
                         </ul>
                     </div>
