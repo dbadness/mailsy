@@ -69,7 +69,7 @@
         <div class="container topnav">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-                <a class="navbar-brand topnav" href="/">Mailsy</a>
+                <a class="navbar-brand topnav" href="/"><img src='/images/logo.png' alt='Mailsy' width='80px'></a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -150,7 +150,8 @@
                     </p>
                 </div>
                 <div class="col-lg-5 col-lg-offset-2 col-sm-6">
-                    <img class="img-responsive" src="/images/example.png" alt="">
+                    <div style='height:30px;'></div>
+                    <iframe src="https://player.vimeo.com/video/150206175" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
                 </div>
             </div>
 
