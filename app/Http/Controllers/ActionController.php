@@ -236,6 +236,7 @@ class ActionController extends Controller
                 $mail->setTo([$message->recipient]);
                 $mail->setBody($message->message, 'text/html');
                 $mail->setSubject($message->subject);
+                if($message->send_to_salesforce)
                 {
                     // if they selected the 'send to salesforce' button for the email...
                     $mail->addBCC($user->sf_address);
