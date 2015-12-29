@@ -151,7 +151,7 @@
                 </div>
                 <div class="col-lg-5 col-lg-offset-2 col-sm-6">
                     <div style='height:30px;'></div>
-                    <iframe src="https://player.vimeo.com/video/150206175" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                    <iframe src="https://player.vimeo.com/video/150206175" width="100%" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
                 </div>
             </div>
 
