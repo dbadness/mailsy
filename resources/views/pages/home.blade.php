@@ -46,8 +46,4 @@
 
 	@endif
 
-	@if(env('DEPLOYMENT_STATUS') == 'production')
-		<p>This app is in production.</p>
-	@endif
-
 @endsection
