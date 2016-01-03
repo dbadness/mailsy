@@ -44,6 +44,7 @@ Route::post('/sendEmails', 'ActionController@sendEmails');
 Route::post('/saveSettings', 'ActionController@saveSettings');
 Route::post('/upgrade/{add?}', 'ActionController@doUpgrade');
 Route::post('/saveTemplate','ActionController@saveTemplate');
+Route::post('/sendFeedback','ActionController@doSendFeedback');
 
 // ajax calls
 Route::get('/getMessageStatus/{id}','ActionController@doUpdateMessageStatus');

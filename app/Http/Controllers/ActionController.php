@@ -554,4 +554,20 @@ class ActionController extends Controller
         }
     }
 
+    // send feedback on 500 page
+    public function doSendFeedback(Request $request)
+    {
+        $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
+        $data = array( 
+            "to" => array("dave@mailsy.co"=>"David Baines"),
+            "from" => array('dave@mailsy.co','Mailsy'),
+            "subject" => '500 Error Feedback',
+            "html" => 'Feedback: '.$request->feedback
+        );
+        
+        $mailin->send_email($data);
+
+        return redirect('/home');
+    }
+
 }

@@ -8,6 +8,9 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
+// for SendinBlue
+use \Sendinblue\Mailin as Mailin;
+
 class Handler extends ExceptionHandler
 {
     /**
@@ -47,13 +50,28 @@ class Handler extends ExceptionHandler
             return response()->view('errors.404', [], 404);
         }
 
-        if($e instanceof FatalErrorException)
-        {
-            return response()->view('errors.500', [], 500); 
+        // Custom error 500 view on production
+        if (env('DEPLOYMENT_STATUS') == 'production') {
+            if($e instanceof \Symfony\Component\Debug\Exception\FatalErrorException) {
+
+                // send dave an email
+                $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
+                $data = array( 
+                    "to" => array("dave@mailsy.co"=>"David Baines"),
+                    "from" => array('dave@mailsy.co','Mailsy'),
+                    "subject" => '500 Error',
+                    "html" => '<pre>'.$e.'</pre>'
+                );
+                
+                $mailin->send_email($data);
+
+                // show the custom error page
+                return response()->view('errors.500', [], 500);
+            }
         }
         else
         {
-            return parent::render($request, $e);
+            return parent::render($request, $e);  
         }
     }
 }

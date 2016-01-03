@@ -5,13 +5,19 @@
 	<div style='height:200px;'></div>
 	<img src='/images/500-image.png' width='500px' alt='500' style='float:left;border-radius:5px;'>
 	<div class='jumbotron' style='height:500px;float:right;width:500px;'>
-		<h3>We're all torn up.</h3>
-		<p>Looks like something broke. If you wouldn't mind, send us a note letting us know what happened when Mailsy broke on you so we can fix it as soon as possible.</p>
+		<h3>We need to break out the tools.</h3>
+		<p>
+			Something broke on you... so sorry! If you wouldn't mind letting us 
+			know what happened when Mailsy broke that'd really help us fix it.
+		</p>
 		<form method='post' action='/sendFeedback'>
-			<textarea style='resize:none;'></textarea>
+			{!! Form::token() !!}
+			<textarea style='resize:none;width:100%;height:150px;' placeholder='I was trying to...' name='feedback'></textarea>
+			<br>
+			<br>
 			<button class='btn btn-primary'>Send Feedback</button>
+			<a href='/home'><div class='btn btn-primary' role='button'>Go Home</div></a>
 		</form>
-		<a href='/home'><div class='btn btn-primary' role='button'>Go Home</div></a>
 	</div>
 	<div class='clear'></div>
 
