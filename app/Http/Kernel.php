@@ -3,11 +3,12 @@
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
-
+/*
 use \Sendinblue\Mailin as Mailin;
 use App\User;
 use App\Email;
 use App\Message;
+*/
 
 class Kernel extends HttpKernel
 {
@@ -36,6 +37,7 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
     ];
 
+    /*
     protected function schedule(Schedule $schedule)
     {
         date_default_timezone_get('EST');
@@ -64,4 +66,5 @@ class Kernel extends HttpKernel
             $mailin->send_email($data);
         })->dailyAt('9:00');
     }
+    */
 }
