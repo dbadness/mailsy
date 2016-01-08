@@ -60,7 +60,7 @@ class Handler extends ExceptionHandler
                     "to" => array("dave@mailsy.co"=>"David Baines"),
                     "from" => array('dave@mailsy.co','Mailsy'),
                     "subject" => '500 Error',
-                    "html" => '<pre>'.$e.'</pre>'
+                    "html" => 'Page: '.$_SERVER['REQUEST_URI'].'<br>Browser: '.$_SERVER['HTTP_USER_AGENT'].'<br><br><pre>'.$e.'</pre>'
                 );
                 
                 $mailin->send_email($data);

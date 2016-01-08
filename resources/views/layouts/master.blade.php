@@ -115,7 +115,7 @@
         <div style="height:100px;"></div>
         <nav class="navbar navbar-default navbar-fixed-bottom">
             <div class="container"  style="text-align:center;">
-                <p class="navbar-text" style="float:none;">©2015 Mailsy Technologies, Inc. Questions? Feedback? Movie recommendations? Send an email to <a href="mailto:hello@mailsy.co">hello@mailsy.co</a> 
+                <p class="navbar-text" style="float:none;">Copyright &copy;<?php echo date('Y');?> Mailsy Technologies, LLC. Questions? Feedback? Movie recommendations? Send an email to <a href="mailto:hello@mailsy.co">hello@mailsy.co</a> 
                 or reach out on <a href="https://www.twitter.com/mailsyapp" target="_blank">Twitter</a>.</p>
             </div>
         </nav>
