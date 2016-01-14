@@ -6,7 +6,8 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+// use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Bugsnag\BugsnagLaravel\BugsnagExceptionHandler as ExceptionHandler;
 
 // for SendinBlue
 use \Sendinblue\Mailin as Mailin;
@@ -53,17 +54,6 @@ class Handler extends ExceptionHandler
         // Custom error 500 view on production
         if (env('DEPLOYMENT_STATUS') == 'production') {
             if($e instanceof \Symfony\Component\Debug\Exception\FatalErrorException) {
-
-                // send dave an email
-                $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
-                $data = array( 
-                    "to" => array("dave@mailsy.co"=>"David Baines"),
-                    "from" => array('dave@mailsy.co','Mailsy'),
-                    "subject" => '500 Error',
-                    "html" => 'Page: '.$_SERVER['REQUEST_URI'].'<br>Browser: '.$_SERVER['HTTP_USER_AGENT'].'<br><br><pre>'.$e.'</pre>'
-                );
-                
-                $mailin->send_email($data);
 
                 // show the custom error page
                 return response()->view('errors.500', [], 500);
