@@ -26,24 +26,33 @@ class APIController extends Controller
 
         // find the user in the DB and update their subscription id
         $user = User::where('stripe_id',$transaction['customer'])->first();
-        $user->subscription_id = $transaction['lines']['data'][0]['id'];
-        $user->save();
 
-        $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
-        $data = array(
-            "id" => 3,
-            "to" => $user->email,
-            "attr" => array(
-                'CUSTOMER' => $user->email,
-                'TRANSID' => $transaction['id'],
-                'DATE' => date('m-d-Y',$stripe['created']), 
-                'AMOUNT' => '$'.substr($transaction['amount_due'],0,-2)
-            )
-        );
+        if(!$user)
+        {
+            return abort(204);
+        }
+        else
+        {
+            $user->subscription_id = $transaction['lines']['data'][0]['id'];
+            $user->save();
 
-        $mailin->send_transactional_template($data);
+            $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
+            $data = array(
+                "id" => 3,
+                "to" => $user->email,
+                "attr" => array(
+                    'CUSTOMER' => $user->email,
+                    'TRANSID' => $transaction['id'],
+                    'DATE' => date('m-d-Y',$stripe['created']), 
+                    'AMOUNT' => '$'.substr($transaction['amount_due'],0,-2)
+                )
+            );
 
-        return 'invoice_successfully_paid';
+            $mailin->send_transactional_template($data);
+
+            return 'invoice_successfully_paid';
+        }
+        
     }
 
     // handle a successful payment (the first time)
@@ -61,20 +70,27 @@ class APIController extends Controller
         // Do something with $event_json
         $user = User::where('stripe_id',$transaction['customer'])->first();
 
-        $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
-        $data = array(
-            "id" => 3,
-            "to" => $user->email,
-            "attr" => array(
-                'CUSTOMER' => $user->email,
-                'TRANSID' => $transaction['id'],
-                'DATE' => date('m-d-Y',$stripe['created']), 
-                'AMOUNT' => '$'.substr($transaction['amount_due'],0,-2)
-            )
-        );
+        if(!$user)
+        {
+            return abort(204);
+        }
+        else
+        {
+            $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
+            $data = array(
+                "id" => 3,
+                "to" => $user->email,
+                "attr" => array(
+                    'CUSTOMER' => $user->email,
+                    'TRANSID' => $transaction['id'],
+                    'DATE' => date('m-d-Y',$stripe['created']), 
+                    'AMOUNT' => '$'.substr($transaction['amount_due'],0,-2)
+                )
+            );
 
-        $mailin->send_transactional_template($data);
+            $mailin->send_transactional_template($data);
 
-        return 'invoice_payment_failed';
+            return 'invoice_payment_failed';
+        }
     }
 }
