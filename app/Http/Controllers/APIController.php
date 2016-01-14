@@ -24,12 +24,6 @@ class APIController extends Controller
         // See your keys here https://dashboard.stripe.com/account/apikeys
         \Stripe\Stripe::setApiKey(env('STRIPE_KEY'));
 
-        if($transaction['customer'] == 'cus_00000000000000')
-        {
-            abort(200);
-            die;
-        }
-
         // find the user in the DB and update their subscription id
         $user = User::where('stripe_id',$transaction['customer'])->first();
 
@@ -64,12 +58,6 @@ class APIController extends Controller
         // Set your secret key: remember to change this to your live secret key in production
         // See your keys here https://dashboard.stripe.com/account/apikeys
         \Stripe\Stripe::setApiKey(env('STRIPE_KEY'));
-
-        if($transaction['customer'] == 'cus_00000000000000')
-        {
-            abort(200);
-            die;
-        }
 
         // Do something with $event_json
         $user = User::where('stripe_id',$transaction['customer'])->first();
