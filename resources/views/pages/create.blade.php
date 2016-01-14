@@ -21,6 +21,7 @@
 			<li>I noticed that you purchased @@product and I was hoping...</li>
 			<li>We had a conversation about @@topic at the event last night...</li>
 		</ul>
+		<p>*Please Note* You can't have two different fields with the same name like "Today is @@day and tomorrow is @@day".</p>
 		<p>Check out the <a href='/faq'>quick start guide</a> if you'd like to see an example!</p>
 	</div>
 	<form method='post' action='/makePreviews' id='makePreviews'>
