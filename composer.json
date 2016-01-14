@@ -10,8 +10,7 @@
         "laravelcollective/html": "5.1.*",
         "google/apiclient": "1.*",
         "stripe/stripe-php": "3.*",
-        "mailin-api/mailin-api-php": "dev-master",
-        "bugsnag/bugsnag-laravel": "1.*"
+        "mailin-api/mailin-api-php": "dev-master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
