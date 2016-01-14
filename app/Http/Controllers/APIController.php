@@ -15,6 +15,11 @@ class APIController extends Controller
     // handle a successful payment (the first time)
     public function doInvoicePaid()
     {
+        if($_SERVER['HTTP_USER_AGENT'] == 'Stripe/1.0 (+https://stripe.com/docs/webhooks)')
+        {
+            abort(200);
+            die;
+        }
         // Retrieve the request's body and parse it as JSON
         $input = @file_get_contents("php://input");
         $stripe = json_decode($input,true);
@@ -27,37 +32,34 @@ class APIController extends Controller
         // find the user in the DB and update their subscription id
         $user = User::where('stripe_id',$transaction['customer'])->first();
 
-        if(!$user)
-        {
-            return abort(204);
-        }
-        else
-        {
-            $user->subscription_id = $transaction['lines']['data'][0]['id'];
-            $user->save();
+        $user->subscription_id = $transaction['lines']['data'][0]['id'];
+        $user->save();
 
-            $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
-            $data = array(
-                "id" => 3,
-                "to" => $user->email,
-                "attr" => array(
-                    'CUSTOMER' => $user->email,
-                    'TRANSID' => $transaction['id'],
-                    'DATE' => date('m-d-Y',$stripe['created']), 
-                    'AMOUNT' => '$'.substr($transaction['amount_due'],0,-2)
-                )
-            );
+        $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
+        $data = array(
+            "id" => 3,
+            "to" => $user->email,
+            "attr" => array(
+                'CUSTOMER' => $user->email,
+                'TRANSID' => $transaction['id'],
+                'DATE' => date('m-d-Y',$stripe['created']), 
+                'AMOUNT' => '$'.substr($transaction['amount_due'],0,-2)
+            )
+        );
 
-            $mailin->send_transactional_template($data);
+        $mailin->send_transactional_template($data);
 
-            return 'invoice_successfully_paid';
-        }
-        
+        return 'invoice_successfully_paid';
     }
 
     // handle a successful payment (the first time)
     public function doInvoiceFailed()
     {
+        if($_SERVER['HTTP_USER_AGENT'] == 'Stripe/1.0 (+https://stripe.com/docs/webhooks)')
+        {
+            abort(200);
+            die;
+        }
         // Retrieve the request's body and parse it as JSON
         $input = @file_get_contents("php://input");
         $stripe = json_decode($input,true);
@@ -70,27 +72,20 @@ class APIController extends Controller
         // Do something with $event_json
         $user = User::where('stripe_id',$transaction['customer'])->first();
 
-        if(!$user)
-        {
-            return abort(204);
-        }
-        else
-        {
-            $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
-            $data = array(
-                "id" => 3,
-                "to" => $user->email,
-                "attr" => array(
-                    'CUSTOMER' => $user->email,
-                    'TRANSID' => $transaction['id'],
-                    'DATE' => date('m-d-Y',$stripe['created']), 
-                    'AMOUNT' => '$'.substr($transaction['amount_due'],0,-2)
-                )
-            );
+        $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
+        $data = array(
+            "id" => 3,
+            "to" => $user->email,
+            "attr" => array(
+                'CUSTOMER' => $user->email,
+                'TRANSID' => $transaction['id'],
+                'DATE' => date('m-d-Y',$stripe['created']), 
+                'AMOUNT' => '$'.substr($transaction['amount_due'],0,-2)
+            )
+        );
 
-            $mailin->send_transactional_template($data);
+        $mailin->send_transactional_template($data);
 
-            return 'invoice_payment_failed';
-        }
+        return 'invoice_payment_failed';
     }
 }
