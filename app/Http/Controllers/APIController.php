@@ -15,11 +15,6 @@ class APIController extends Controller
     // handle a successful payment (the first time)
     public function doInvoicePaid()
     {
-        if($_SERVER['HTTP_USER_AGENT'] == 'Stripe/1.0 (+https://stripe.com/docs/webhooks)')
-        {
-            abort(200);
-            die;
-        }
         // Retrieve the request's body and parse it as JSON
         $input = @file_get_contents("php://input");
         $stripe = json_decode($input,true);
@@ -28,6 +23,12 @@ class APIController extends Controller
         // Set your secret key: remember to change this to your live secret key in production
         // See your keys here https://dashboard.stripe.com/account/apikeys
         \Stripe\Stripe::setApiKey(env('STRIPE_KEY'));
+
+        if($transaction['customer'] == 'cus_00000000000000')
+        {
+            abort(200);
+            die;
+        }
 
         // find the user in the DB and update their subscription id
         $user = User::where('stripe_id',$transaction['customer'])->first();
@@ -55,11 +56,6 @@ class APIController extends Controller
     // handle a successful payment (the first time)
     public function doInvoiceFailed()
     {
-        if($_SERVER['HTTP_USER_AGENT'] == 'Stripe/1.0 (+https://stripe.com/docs/webhooks)')
-        {
-            abort(200);
-            die;
-        }
         // Retrieve the request's body and parse it as JSON
         $input = @file_get_contents("php://input");
         $stripe = json_decode($input,true);
@@ -68,6 +64,12 @@ class APIController extends Controller
         // Set your secret key: remember to change this to your live secret key in production
         // See your keys here https://dashboard.stripe.com/account/apikeys
         \Stripe\Stripe::setApiKey(env('STRIPE_KEY'));
+
+        if($transaction['customer'] == 'cus_00000000000000')
+        {
+            abort(200);
+            die;
+        }
 
         // Do something with $event_json
         $user = User::where('stripe_id',$transaction['customer'])->first();
