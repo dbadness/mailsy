@@ -36,7 +36,9 @@ class PagesController extends Controller
     public function showNewEmail()
     {
         $user = Auth::user();
-        return view('pages.create', ['user' => $user]);
+        // count the emails that this user has
+        $emails = Email::where('user_id',$user->id)->whereNull('deleted_at')->count();
+        return view('pages.create', ['user' => $user, 'emails' => $emails]);
     }
 
     // show the email preview page

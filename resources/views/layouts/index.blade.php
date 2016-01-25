@@ -119,7 +119,7 @@
                         <hr class="intro-divider">
                         <ul class="list-inline intro-social-buttons">
                             <li>
-                                <a href="/auth" class="btn btn-default btn-lg"><i class="icon-gmail"></i>&nbsp&nbsp&nbsp&nbsp<span class="network-name">Signup for Free Using Google</span></a>
+                                <a href="/auth" class="btn btn-info btn-lg"></i>&nbsp&nbsp&nbsp&nbsp<span class="network-name">Signup for Free Using Google</span></a>
                             </li>
                         </ul>
                     </div>

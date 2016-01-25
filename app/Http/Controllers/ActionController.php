@@ -570,4 +570,38 @@ class ActionController extends Controller
         return redirect('/home');
     }
 
+    // send the tutorial email to the user
+    public function doSendFirstEmail(Request $request)
+    {
+        $user = Auth::user();
+
+        // make the subjust and message
+        $subject = str_replace('@@company', $request->company, $subject);
+        $message = str_replace('@@name', $request->name, $message);
+        $message = str_replace('@@topic', $request->topic, $message);
+
+        // get up a gmail client connection
+        $client = User::googleClient();
+
+        // get the gmail service
+        $gmail = new \Google_Service_Gmail($client);
+
+        // use swift mailer to build the mime
+        $mail = new \Swift_Message;
+        $mail->setTo([$request->email]);
+        $mail->setBody($message, 'text/html');
+        $mail->setSubject($subject);
+        $data = base64_encode($mail->toString());
+        $data = str_replace(array('+','/','='),array('-','_',''),$data); // url safe
+        $m = new \Google_Service_Gmail_Message();
+        $m->setRaw($data);
+        $gmailMessage = $gmail->users_messages->send('me', $m);
+
+        // update the DB so we can check if this feature is used
+        $user->tutorial_email = 'yes';
+        $user->save();
+
+        return 'success';
+    }
+
 }

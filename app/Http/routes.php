@@ -50,6 +50,7 @@ Route::post('/sendFeedback','ActionController@doSendFeedback');
 Route::get('/getMessageStatus/{id}','ActionController@doUpdateMessageStatus');
 Route::post('/updateCard','ActionController@doUpdateCard');
 Route::post('/membership/cancel/{master?}','ActionController@doCancelMembership');
+Route::post('/sendFirstEmail','ActionController@doSendFirstEmail');
 
 
 // webhooks

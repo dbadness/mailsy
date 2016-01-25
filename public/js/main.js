@@ -270,4 +270,32 @@ function pasteHtmlAtCaret(html) {
         // IE < 9
         document.selection.createRange().pasteHTML(html);
     }
+
+    // send the first/tutorial email
+    $('#sendFirstEmail').click(function(){
+
+    	$.ajax({
+    		url: '/sendFirstEmail',
+    		method: 'post',
+    		data: {
+    			template: $('#emailTemplate').code(),
+    			email: $('input[name=first-email').val(),
+    			company: $('input[name=first-company').val(),
+    			name: $('input[name=first-name').val(),
+    			topic: $('input[name=first-topic').val()
+    		},
+    		error: function(){
+    			alert('Something went wrong. Please try again later. :(');
+    		},
+    		beforeSend: function(){
+    			$('#firstEmailSending').show();
+    		},
+    		success: function(response){
+    			$('#firstEmailSending').hide();
+    			$('#firstEmailSent').show();
+    		}
+    	});
+
+    });
+
 }
