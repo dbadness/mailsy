@@ -233,6 +233,55 @@ $(document).ready(function(){
 		}
 	});
 
+	// make sure the variables in the example are still there when the user submits the email request
+	$('div.note-editable.panel-body').keyup(function()
+	{
+		var message = $(this).code();
+		var subject = $('#subject').val();
+
+		if(subject.match(/@@company/) && message.match(/@@name/) && message.match(/@@topic/))
+		{
+			$('#firstEmail').show();
+		}
+		else
+		{
+			$('#firstEmail').hide();
+		}
+	});
+	
+
+	// send the first/tutorial email
+	$('#sendFirstEmail').click(function()
+	{
+		$.ajax({
+			url: '/sendFirstEmail',
+			method: 'post',
+			data: {
+				_token: $('input[name=_token]').val(),
+				template: $('#emailTemplate').code(),
+				subject: $('input[name=_subject]').val(),
+				email: $('input[name=first-email').val(),
+				company: $('input[name=first-company').val(),
+				name: $('input[name=first-name').val(),
+				topic: $('input[name=first-topic').val()
+			},
+			error: function()
+			{
+				alert('Something went wrong. Please try again later. :(');
+			},
+			beforeSend: function()
+			{
+				$('#firstEmailSending').show();
+			},
+			success: function(response)
+			{
+				$('#firstEmailSending').hide();
+				$('#firstEmailSent').show();
+			}
+		});
+
+	});
+
 	
 }); // end doc ready
 
@@ -270,32 +319,4 @@ function pasteHtmlAtCaret(html) {
         // IE < 9
         document.selection.createRange().pasteHTML(html);
     }
-
-    // send the first/tutorial email
-    $('#sendFirstEmail').click(function(){
-
-    	$.ajax({
-    		url: '/sendFirstEmail',
-    		method: 'post',
-    		data: {
-    			template: $('#emailTemplate').code(),
-    			email: $('input[name=first-email').val(),
-    			company: $('input[name=first-company').val(),
-    			name: $('input[name=first-name').val(),
-    			topic: $('input[name=first-topic').val()
-    		},
-    		error: function(){
-    			alert('Something went wrong. Please try again later. :(');
-    		},
-    		beforeSend: function(){
-    			$('#firstEmailSending').show();
-    		},
-    		success: function(response){
-    			$('#firstEmailSending').hide();
-    			$('#firstEmailSent').show();
-    		}
-    	});
-
-    });
-
 }

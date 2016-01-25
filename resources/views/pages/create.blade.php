@@ -21,7 +21,7 @@
 			<li>I noticed that you purchased @@product and I was hoping...</li>
 			<li>We had a conversation about @@topic at the event last night...</li>
 		</ul>
-		<p>*Please Note* You can't have two different fields with the same name like "Today is @@day and tomorrow is @@day".</p>
+		<p><b>*Please Note* You can't have two different fields with the same name like "Today is @@day and tomorrow is @@day".</b></p>
 		<p>Check out the <a href='/faq'>quick start guide</a> if you'd like to see an example!</p>
 	</div>
 	<form method='post' action='/makePreviews' id='makePreviews'>
@@ -57,7 +57,7 @@
 			<div id="emailTemplate">
 				Hi @@name,
 				<br><br>
-				My name is Alex and we spoke at the conference last week. After some thought, I wanted to follow up about our conversation about @@topic
+				My name is Alex and we spoke at the conference last week. After some thought, I wanted to follow up on our brief conversation about @@topic
 				and see if there was a chance that our two companies could work together.
 				<br><br>
 				Let me know if you'd like to connect this week and I'd be happy throw out some ideas about how a partnership could help us both.
@@ -102,17 +102,17 @@
 			</button>
 		</div>
 		@if($emails == 0)
-			<div id='firstEmail' class='jumbotron'>
+			<div id='firstEmail' class='jumbotron' style="background:#CCFFCC;">
 				<h3>Send an example email to yourself to see how it looks!</h3>
 				<br><br>
 				<table class="table" id="recipientList">
-					<tr id='headers'>
+					<tr id='headers' style='border-top:solid 2px #B4EEB4;'>
 						<td class='field'><b>email</b></td>
 						<td class='field'><b>company</b></td>
 						<td class='field'><b>name</b></td>
 						<td class='field'><b>topic</b></td>
 					</tr>
-					<tr>
+					<tr style='border-top:solid 2px #B4EEB4;'>
 						<td class='field'><input type="text" name="first-email" class="form-control" value='{!! $user->email !!}'></td>
 						<td class='field'><input type="text" name="first-company" class="form-control" value="Example, Inc"></td>
 						<td class='field'><input type="text" name="first-name" class="form-control" value='Steve'></td>
@@ -120,7 +120,7 @@
 					</tr>
 				</table>
 				<div class="btn btn-info" style='float:left;' id='sendFirstEmail' role="button">
-					Send Test Email to Myself
+					Send Email to Myself
 				</div>
 				<div style='float:left;margin-left:20px;display:none;' id='firstEmailSending'>
 					<img src='/images/ring.gif' width='30px' alt='Loading'>

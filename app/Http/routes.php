@@ -56,3 +56,5 @@ Route::post('/sendFirstEmail','ActionController@doSendFirstEmail');
 // webhooks
 Route::post('/payment/paid','APIController@doInvoicePaid'); // successful invoice payment
 Route::post('/payment/failed','APIController@doInvoiceFailed'); // payment declined for invoice
+
+Route::post('/addUsers','ActionController@doAddUsers');

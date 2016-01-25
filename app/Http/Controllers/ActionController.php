@@ -576,8 +576,8 @@ class ActionController extends Controller
         $user = Auth::user();
 
         // make the subjust and message
-        $subject = str_replace('@@company', $request->company, $subject);
-        $message = str_replace('@@name', $request->name, $message);
+        $subject = str_replace('@@company', $request->company, $request->subject);
+        $message = str_replace('@@name', $request->name, $request->template);
         $message = str_replace('@@topic', $request->topic, $message);
 
         // get up a gmail client connection
@@ -602,6 +602,23 @@ class ActionController extends Controller
         $user->save();
 
         return 'success';
+    }
+
+    // add the users to the marketing DB
+    public function doAddUsers()
+    {
+        $users = User::all();
+        foreach($users as $user)
+        {
+            // add them to the marketing database
+            $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
+            $data = array("id" => 2,
+              "users" => array($user->email)
+            );
+            $mailin->add_users_list($data);
+        }
+
+        return 'Success';
     }
 
 }

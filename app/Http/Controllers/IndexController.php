@@ -10,6 +10,8 @@ use App\Http\Controllers\Controller;
 use App\User;
 use Auth;
 
+use \Sendinblue\Mailin as Mailin;
+
 class IndexController extends Controller
 {
     // show the home page
@@ -96,6 +98,13 @@ class IndexController extends Controller
 
             // save it to the DB
             $user->save();
+
+            // add them to the marketing database
+            $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
+            $data = array("id" => 2,
+              "users" => array($user->email)
+            );
+            $mailin->add_users_list($data);
 
             // now logthe user in
             $user = Auth::loginUsingId($user->id);
