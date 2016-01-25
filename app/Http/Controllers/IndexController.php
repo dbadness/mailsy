@@ -111,7 +111,7 @@ class IndexController extends Controller
             $user = Auth::loginUsingId($user->id);
 
             // send them to their dashboard
-            return redirect('/home');
+            return redirect('/create');
         }
     }
 }
