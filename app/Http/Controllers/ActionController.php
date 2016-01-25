@@ -603,4 +603,23 @@ class ActionController extends Controller
 
         return 'success';
     }
+
+    // add the users to the marketing DB
+    public function doAddUsers()
+    {
+        $users = User::all();
+        foreach($users as $user)
+        {
+            // add them to the marketing database
+            $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
+            $data = array(
+              "email" => $user->email,
+              "listid" => array(2)
+            );
+            $mailin->create_update_user($data);
+        }
+
+        return 'Success';
+    }
+
 }
