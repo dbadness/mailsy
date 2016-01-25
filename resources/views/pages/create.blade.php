@@ -13,7 +13,12 @@
 		</div>
 	@endif
 	<div class="page-header">
-		<h1>Create a new email template</h1>
+		@if($emails == 0)
+			<h1>Welcome to Mailsy! Let's get started with your first email.</h1>
+		@else
+			<h1>Create a new email template</h1>
+		@endif
+		
 		<p>Use a single word starting with two '@' symbols to denote a piece of information that you want to individualize the in the emails. (Yes, you can use punctuation!)</p>
 		<p>Try something like:</p>
 		<ul>
