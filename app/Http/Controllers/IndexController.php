@@ -101,10 +101,11 @@ class IndexController extends Controller
 
             // add them to the marketing database
             $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
-            $data = array("id" => 2,
-              "users" => array($user->email)
+            $data = array(
+              "email" => $user->email,
+              "listid" => array(2)
             );
-            $mailin->add_users_list($data);
+            $mailin->create_update_user($data);
 
             // now logthe user in
             $user = Auth::loginUsingId($user->id);
