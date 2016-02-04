@@ -258,7 +258,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <strong>Aggregate Billing</strong>
+                                <strong>Pay for Other Users<br>(Simple Billing)</strong>
                             </td>
                             <td>
                                 <h3></h3>
@@ -267,7 +267,15 @@
                                 <h3><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></h3>
                             </td>
                         </tr>
-                        
+                        <tr>
+                            <td>
+                            </td>
+                            <td>
+                                <a href='/auth'><button class='btn btn-primary' role='button'>Sign Up for Free</button></a>
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
                     </table>
                 </div>
                 <div class="col-lg-5 col-sm-pull-6  col-sm-6">
