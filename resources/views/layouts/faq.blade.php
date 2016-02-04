@@ -68,16 +68,13 @@
         <div class="container topnav">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-                <a class="navbar-brand topnav" href="/">Mailsy</a>
+                <a class="navbar-brand topnav" href="/"><img src='/images/logo.png' alt='Mailsy' width='80px'></a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a href="/auth">Sign Up</a>
-                    </li>
-                    <li>
-                        <a href="/auth">Log In</a>
+                        <a href="/auth">Sign Up / Log In</a>
                     </li>
                 </ul>
             </div>
@@ -247,11 +244,7 @@
                         </li>
                         <li class="footer-menu-divider">&sdot;</li>
                         <li>
-                            <a href="/auth">Sign Up</a>
-                        </li>
-                        <li class="footer-menu-divider">&sdot;</li>
-                        <li>
-                            <a href="/auth">Log In</a>
+                            <a href="/auth">Sign Up / Log In</a>
                         </li>
                     </ul>
                     <p class="copyright text-muted small">Copyright &copy;<?php echo date('Y');?> Mailsy Technologies, LLC. All Rights Reserved</p>

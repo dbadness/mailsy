@@ -81,9 +81,6 @@
                         <a href="#why">Why Use It</a>
                     </li>
                     <li>
-                        <a href="#about">About</a>
-                    </li>
-                    <li>
                         <a href="#pricing">Pricing</a>
                     </li>
                     <li>
@@ -93,10 +90,7 @@
                         <a href="/faq">FAQ</a>
                     </li>
                     <li>
-                        <a href="/auth">Sign Up</a>
-                    </li>
-                    <li>
-                        <a href="/auth">Log In</a>
+                        <a href="/auth">Sign Up / Log In</a>
                     </li>
                 </ul>
             </div>
@@ -189,51 +183,13 @@
     </div>
     <!-- /.content-section-b -->
 
-    <a name="about"></a>
-    <div class="content-section-a">
-
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-5 col-sm-6">
-                    <hr class="section-heading-spacer">
-                    <div class="clearfix"></div>
-                    <h2 class="section-heading">Why was Mailsy built?</h2>
-                    <p class="lead">
-                        Mailsy was built by an entrepreneur in Boston that gets energy from building great relationships but hates spending time "cold" emailing people to get the conversation started.
-                        <br><br>
-                        He built the prototype of Mailsy to use himself so he could eliminate the time spent in this prospecting process so he could do what he enjoys most: working with great people to develop great projects and ideas.
-                        <br><br>
-                        Now it's available to everyone so we can all spend less time emailing and more time having conversations to change the world. :)
-                    </p>
-                </div>
-                <div class="col-lg-5 col-lg-offset-2 col-sm-6">
-                    <img class="img-responsive" src="/images/phone.png" alt="">
-                </div>
-            </div>
-
-        </div>
-        <!-- /.container -->
-
-    </div>
-    <!-- /.content-section-a -->
     <a name="pricing"></a>
-    <div class="content-section-b">
+    <div class="content-section-a">
 
         <div class="container">
 
             <div class="row">
                 <div class="col-lg-5 col-lg-offset-1 col-sm-push-6  col-sm-6">
-                    <hr class="section-heading-spacer">
-                    <div class="clearfix"></div>
-                    <h2 class="section-heading">Free to use. No trial periods.</h2>
-                    <p class="lead">
-                        You can use your Google credentials to sign up for Mailsy and send 10 emails per day on a free account. There are no trial periods so you can use a free account as long as you'd like.
-                        <br><br>
-                        If you want to send unlimited emails per day, you can upgrade to a paid account for only $7 per month. If you're a team leader, you can even pay for multiple accounts all at once which makes administration
-                        and billing incredibly simple. Also, you can cancel and go back down to the free account whenever you'd like - no yearly contracts or anything like that.
-                    </p>
-                </div>
-                <div class="col-lg-5 col-sm-pull-6  col-sm-6">
                     <table style='width:100%;text-align:center;'>
                         <tr style='color:gray;'>
                             <td> 
@@ -314,14 +270,25 @@
                         
                     </table>
                 </div>
+                <div class="col-lg-5 col-sm-pull-6  col-sm-6">
+                    <hr class="section-heading-spacer">
+                    <div class="clearfix"></div>
+                    <h2 class="section-heading">Free to use. No trial periods.</h2>
+                    <p class="lead">
+                        You can use your Google credentials to sign up for Mailsy and send 10 emails per day on a free account. There are no trial periods so you can use a free account as long as you'd like.
+                        <br><br>
+                        If you want to send unlimited emails per day, you can upgrade to a paid account for only $7 per month. If you're a team leader, you can even pay for multiple accounts all at once which makes administration
+                        and billing incredibly simple. Also, you can cancel and go back down to the free account whenever you'd like - no yearly contracts or anything like that.
+                    </p>
+                </div>
             </div>
 
         </div>
         <!-- /.container -->
 
     </div>
-
-	<a  name="contact"></a>
+    <!-- /.content-section-a -->
+	<a name="contact"></a>
     <div class="banner" style='background:lightgray;'>
 
         <div class="container">
@@ -361,10 +328,6 @@
                         </li>
                         <li class="footer-menu-divider">&sdot;</li>
                         <li>
-                            <a href="#about">About</a>
-                        </li>
-                        <li class="footer-menu-divider">&sdot;</li>
-                        <li>
                             <a href="#pricing">Pricing</a>
                         </li>
                         <li class="footer-menu-divider">&sdot;</li>
@@ -377,11 +340,7 @@
                         </li>
                         <li class="footer-menu-divider">&sdot;</li>
                         <li>
-                            <a href="/auth">Sign Up</a>
-                        </li>
-                        <li class="footer-menu-divider">&sdot;</li>
-                        <li>
-                            <a href="/auth">Log In</a>
+                            <a href="/auth">Sign Up / Log In</a>
                         </li>
                     </ul>
                     <p class="copyright text-muted small">Copyright &copy;<?php echo date('Y');?> Mailsy Technologies, LLC. All Rights Reserved</p>
