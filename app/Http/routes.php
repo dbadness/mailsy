@@ -26,6 +26,7 @@ Route::get('/logout', function(){
 
 // pages
 Route::get('/home', 'PagesController@showHome');
+Route::get('/tutorial', 'PagesController@showTutorial');
 Route::get('/create', 'PagesController@showNewEmail');
 Route::get('/edit/{eid}','PagesController@showEdit');
 Route::get('/preview/{eid}','PagesController@showPreview');

@@ -32,6 +32,14 @@ class PagesController extends Controller
         return view('pages.home', ['user' => $user, 'emails' => $emails]);
     }
 
+    // for the first time user, show them a tutorial page
+    public function showTutorial()
+    {
+        $user = Auth::user();
+
+        return view('pages.tutorial', ['user' => $user]);
+    }
+
     // the email creation page
     public function showNewEmail()
     {
