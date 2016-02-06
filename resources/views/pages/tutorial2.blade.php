@@ -3,10 +3,12 @@
 @section('content')
 
 	<div class='jumbotron'>
-		<h1>Creating email templates</h1>
+		<h2>Step 2 of 3: Creating Email Templates</h2>
 		<p>Mailsy works by creating email templates that have a message that you can use over and over again for a
 		given purpose. Take a look at the one below and notice the pieces of information that start with '@@'. Those are the 
 		pieces of information that you can change for each recipient.</p>
+		<div style='padding:10px;background:white;border-radius:3px;border:solid 1px lightgray;'>Working with @@company</div>
+		<br>
 		<textarea style='resize:none;width:100%;height:210px;padding:10px;border-radius:3px;border:solid 1px lightgray;' disabled>Hi @@name,
 
 Name is Alex and we met last night at the event and spoke briefly about @@conversationTopic. I thought we had a great conversation

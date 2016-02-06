@@ -3,7 +3,7 @@
 @section('content')
 
 	<div class='jumbotron'>
-		<h1>Welcome to Mailsy!</h1>
+		<h2>Step 1 of 3: Welcome to Mailsy!</h2>
 		<p>Mailsy allows you to send dozens of personalized emails to customers, prospects, colleagues, or whomever you decide quickly and authentically.</p>
 		<ul>
 			<li><strong>Mailsy saves time</strong> - Mailsy's templating technology allows you build a message that you can use over and over again.</li>
