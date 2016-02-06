@@ -3,14 +3,10 @@
 @section('content')
 
 	<div class='jumbotron'>
-		<h1>Welcome to Mailsy!</h1>
-		<p>Mailsy allows you to send dozens of personalized emails to customers, prospects, colleagues, or whoever you decide quickly and easily.</p>
-		<ul>
-			<li><strong>Mailsy saves time</strong> - Mailsy's templating technology allows you build a message that you can use over and over again.</li>
-			<li><strong>Mailsy is personal</strong> - Assign pieces of information in the template that you want to individualize for each recipient.</li>
-			<li><strong>Mailsy is authentic</strong> - Mailsy emails come right from your email address, not from a marketing company. They can even be seen in your sent folder.</li>
-			<li><strong>Mailsy is integrated</strong> - In the <a href='/settings'>settings page</a> you can add a signature and even a BCC email so your emails are tracking in your CRM system.</li>
-		</ul>
+		<h1>Creating email templates</h1>
+		<p>Mailsy works by creating email templates that have a message that you can use over and over again for a
+		given purpose. Take a look at the one below and notice the pieces of information that start with '@@'. Those are the 
+		pieces of information that you can change for each recipient.</p>
 		<br><br>
 		<table class="table" id="recipientList">
 			<tr id='headers'>
