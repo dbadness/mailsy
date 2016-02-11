@@ -74,7 +74,10 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a href="/auth">Sign Up / Log In</a>
+                        <a href="/auth">Sign Up</a>
+                    </li>
+                    <li>
+                        <a href="/auth">Log In</a>
                     </li>
                 </ul>
             </div>
@@ -244,7 +247,7 @@
                         </li>
                         <li class="footer-menu-divider">&sdot;</li>
                         <li>
-                            <a href="/auth">Sign Up / Log In</a>
+                            <a href="/auth">Sign Up / Log in</a>
                         </li>
                     </ul>
                     <p class="copyright text-muted small">Copyright &copy;<?php echo date('Y');?> Mailsy Technologies, LLC. All Rights Reserved</p>

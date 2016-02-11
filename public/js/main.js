@@ -255,16 +255,7 @@ $(document).ready(function(){
 	{
 		$.ajax({
 			url: '/sendFirstEmail',
-			method: 'post',
-			data: {
-				_token: $('input[name=_token]').val(),
-				template: $('#emailTemplate').code(),
-				subject: $('input[name=_subject]').val(),
-				email: $('input[name=first-email').val(),
-				company: $('input[name=first-company').val(),
-				name: $('input[name=first-name').val(),
-				topic: $('input[name=first-topic').val()
-			},
+			method: 'get',
 			error: function()
 			{
 				alert('Something went wrong. Please try again later. :(');

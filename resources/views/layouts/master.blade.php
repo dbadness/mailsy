@@ -62,22 +62,25 @@
 		<nav class="navbar navbar-default">
             <div class="container-fluid" style="width:81%;">
                 <div class="navbar-header" style="width:100%;">
-                    <a class="navbar-brand" href="/">
-                       Mailsy
-                    </a>
+                    <div class="navbar-header">
+                        <a class="navbar-brand topnav" href="/"><img src='/images/logo.png' alt='Mailsy' width='80px'></a>
+                    </div>
                     @if($user = Auth::user())
                         <ul class="nav navbar_nav" style="float:left;margin:5px 0 0 0;">
                             <li style="float:left;">
                                 <a href="/home">Dashboard</a>
                             </li>
                             <li style="float:left;">
-                                <a href="/create">New Email</a>
+                                <a href="/create">New Template</a>
                             </li>
                             <li style="float:left;">
                                 <a href="/settings">Settings</a>
                             </li>
                             <li style="float:left;">
                                 <a href="/logout">Log Out</a>
+                            </li>
+                            <li style="float:left;background:#00EE76;border-radius:5px;">
+                                <a href="/tutorial/step1" style='color:#2E8B57;'>Tutorial</a>
                             </li>
                             <div style="clear:both;"></div>
                         </ul>

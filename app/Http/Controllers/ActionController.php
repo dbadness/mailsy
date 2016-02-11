@@ -233,6 +233,7 @@ class ActionController extends Controller
 
                 // use swift mailer to build the mime
                 $mail = new \Swift_Message;
+                $mail->setFrom(array($user->email => $user->name));
                 $mail->setTo([$message->recipient]);
                 $mail->setBody($message->message, 'text/html');
                 $mail->setSubject($message->subject);
@@ -571,14 +572,16 @@ class ActionController extends Controller
     }
 
     // send the tutorial email to the user
-    public function doSendFirstEmail(Request $request)
+    public function doSendFirstEmail()
     {
         $user = Auth::user();
 
-        // make the subjust and message
-        $subject = str_replace('@@company', $request->company, $request->subject);
-        $message = str_replace('@@name', $request->name, $request->template);
-        $message = str_replace('@@topic', $request->topic, $message);
+        $subject = 'Working with Example Co, Inc';
+        $body = 'Hi Steve,<br><br>';
+        $body .= 'Name is Alex and we met last night at the event and spoke briefly about getting more users to your site. ';
+        $body .= 'I thought we had a great conversation and wanted to follow up on that. Could we set up a time to speak sometime this week?';
+        $body .= '<br><br>Thank you for your time and let me know when you\'d like to connect and I\'d be happy to block it out.';
+        $body .= '<br><br>Best,<br>Alex';
 
         // get up a gmail client connection
         $client = User::googleClient();
@@ -588,14 +591,14 @@ class ActionController extends Controller
 
         // use swift mailer to build the mime
         $mail = new \Swift_Message;
-        $mail->setTo([$request->email]);
-        $mail->setBody($message, 'text/html');
+        $mail->setTo([$user->email]);
+        $mail->setBody($body, 'text/html');
         $mail->setSubject($subject);
         $data = base64_encode($mail->toString());
         $data = str_replace(array('+','/','='),array('-','_',''),$data); // url safe
         $m = new \Google_Service_Gmail_Message();
         $m->setRaw($data);
-        $gmailMessage = $gmail->users_messages->send('me', $m);
+        // $gmailMessage = $gmail->users_messages->send('me', $m);
 
         // update the DB so we can check if this feature is used
         $user->tutorial_email = 'yes';

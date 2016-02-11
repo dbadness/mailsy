@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('status')->nullable();
             $table->string('name')->nullable();
             $table->rememberToken();
-            $table->string('gmail_token');
+            $table->text('gmail_token');
             $table->string('sf_address');
             $table->string('paid')->nullable();
             $table->text('signature');
@@ -29,6 +29,10 @@ class CreateUsersTable extends Migration
             $table->integer('updated_at')->nullable();
             $table->integer('deleted_at')->nullable();
             $table->integer('expires')->nullable();
+            $table->string('tutorial_email',3)->nullable();
+            $table->string('saw_tutorial_one',3)->nullable();
+            $table->string('saw_tutorial_two',3)->nullable();
+            $table->string('saw_tutorial_three',3)->nullable();
         });
     }
 

@@ -15,10 +15,8 @@ Route::get('/', 'IndexController@showIndex');
 Route::get('/faq', 'IndexController@showFaq');
 
 // auth stuff
-Route::get('/signup', 'IndexController@showSignup');
-Route::get('/auth', 'IndexController@sendToGoogleAuth');
+Route::get('/auth', 'IndexController@doAuth');
 Route::get('/gmail', 'IndexController@doAddUser');
-Route::get('/login', 'IndexController@showLogin');
 Route::get('/logout', function(){
 	Auth::logout();
 	return redirect('/');
@@ -53,7 +51,7 @@ Route::post('/sendFeedback','ActionController@doSendFeedback');
 Route::get('/getMessageStatus/{id}','ActionController@doUpdateMessageStatus');
 Route::post('/updateCard','ActionController@doUpdateCard');
 Route::post('/membership/cancel/{master?}','ActionController@doCancelMembership');
-Route::post('/sendFirstEmail','ActionController@doSendFirstEmail');
+Route::get('/sendFirstEmail','ActionController@doSendFirstEmail');
 
 
 // webhooks

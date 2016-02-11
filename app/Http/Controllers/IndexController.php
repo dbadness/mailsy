@@ -32,16 +32,16 @@ class IndexController extends Controller
     }
 
     // send the user through oauth2 process for the Gmail API
-    public function sendToGoogleAuth()
+    public function doAuth()
     {
         $client = new \Google_Client();
         $client->setDeveloperKey(env('GOOGLE_KEY'));
         $client->setClientID(env('GOOGLE_CLIENT_ID'));
         $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
         $client->setRedirectURI(env('GOOGLE_URI_REDIRECT'));        
-        $client->setScopes('https://www.googleapis.com/auth/gmail.modify');
+        $client->setScopes(['https://www.googleapis.com/auth/gmail.send', 'profile', 'email']);
         $client->setAccessType('offline');
-        $client->setApprovalPrompt('force'); // so we're sure to show the screen to the user (and get a refresh token)
+        // $client->setApprovalPrompt('force'); // so we're sure to show the screen to the user (and get a refresh token)
 
         $url = $client->createAuthUrl();
 
@@ -62,12 +62,12 @@ class IndexController extends Controller
 
         $client->setAccessToken($accessToken);
 
-        $service = new \Google_Service_Gmail($client);
-
-        $gmailUser = $service->users->getProfile('me');
-
+        $googlePlus = new \Google_Service_Plus($client);
+        $userProfile = $googlePlus->people->get('me');
+        $name = $userProfile->displayName;
+        $email = $userProfile->emails{0}->value;
         // don't let them sign up twice
-        $existingUser = User::where('email',$gmailUser->emailAddress)->first();
+        $existingUser = User::where('email',$email)->first();
 
         // if this is a duplicate, just sign them in (don't sign them up again)
         if($existingUser)
@@ -92,7 +92,8 @@ class IndexController extends Controller
             // create a new user
             $user = new User;
 
-            $user->email = $gmailUser->emailAddress;
+            $user->email = $email;
+            $user->name = $name;
             $user->gmail_token = $accessToken;
             $user->created_at = time();
 
@@ -111,7 +112,7 @@ class IndexController extends Controller
             $user = Auth::loginUsingId($user->id);
 
             // send them to their dashboard
-            return redirect('/create');
+            return redirect('/tutorial/step1');
         }
     }
 }

@@ -37,6 +37,10 @@ class PagesController extends Controller
     {
         $user = Auth::user();
 
+        // update the DB to show that they saw the tutorial
+        $user->saw_tutorial_one = 'yes';
+        $user->save();
+
         return view('pages.tutorial1', ['user' => $user]);
     }
 
@@ -45,6 +49,10 @@ class PagesController extends Controller
     {
         $user = Auth::user();
 
+        // update the DB to show that they saw the tutorial
+        $user->saw_tutorial_two = 'yes';
+        $user->save();
+
         return view('pages.tutorial2', ['user' => $user]);
     }
 
@@ -52,6 +60,10 @@ class PagesController extends Controller
     public function showTutorial3()
     {
         $user = Auth::user();
+
+        // update the DB to show that they saw the tutorial
+        $user->saw_tutorial_three = 'yes';
+        $user->save();
 
         return view('pages.tutorial3', ['user' => $user]);
     }
