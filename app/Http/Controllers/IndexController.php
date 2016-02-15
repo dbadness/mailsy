@@ -17,6 +17,11 @@ class IndexController extends Controller
     // show the home page
     public function showIndex()
     {
+        // set cookie to track signup referals
+        if(isset($_SERVER['HTTP_REFERER']))
+        {
+            setcookie('mailsy_referer', $_SERVER['HTTP_REFERER'], time() + (86400 * 30), '/'); // 86400 = 1 day
+        }
         return view('layouts.index');
     }
 
@@ -92,10 +97,21 @@ class IndexController extends Controller
             // create a new user
             $user = new User;
 
+            // get the referer and throw them in the DB
+            if(isset($_COOKIE['mailsy_referer']))
+            {
+                $referer = $_COOKIE['mailsy_referer'];
+            }
+            else
+            {
+                $referer = 'NA';
+            }
+
             $user->email = $email;
             $user->name = $name;
             $user->gmail_token = $accessToken;
             $user->created_at = time();
+            $user->referer = $referer;
 
             // save it to the DB
             $user->save();
