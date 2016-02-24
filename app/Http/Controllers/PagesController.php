@@ -29,7 +29,8 @@ class PagesController extends Controller
         //return their emails and it's metadata
         $emails = Email::where('user_id',$user->id)->get();
 
-        return view('pages.home', ['user' => $user, 'emails' => $emails]);
+//        return view('pages.home', ['user' => $user, 'emails' => $emails]);
+        return $emails;
     }
 
     // for the first time user, show them a tutorial page
