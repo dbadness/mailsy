@@ -33,6 +33,7 @@ class CreateUsersTable extends Migration
             $table->string('saw_tutorial_one',3)->nullable();
             $table->string('saw_tutorial_two',3)->nullable();
             $table->string('saw_tutorial_three',3)->nullable();
+            $table->string('referer')->nullable();
         });
     }
 
