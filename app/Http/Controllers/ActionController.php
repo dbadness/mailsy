@@ -231,11 +231,14 @@ class ActionController extends Controller
             {
                 $message = Message::find($id);
 
+                // prepend the read receipt callback webhook to the message
+                $full_body = '<script>xhttp.open("GET","http://dev.mailsy.co/'.base64_encode($user->id).'/'.base64_encode($message->id).'", true);</script>'.$message->message;
+
                 // use swift mailer to build the mime
                 $mail = new \Swift_Message;
                 $mail->setFrom(array($user->email => $user->name));
                 $mail->setTo([$message->recipient]);
-                $mail->setBody($message->message, 'text/html');
+                $mail->setBody($full_body, 'text/html');
                 $mail->setSubject($message->subject);
                 if($message->send_to_salesforce)
                 {
@@ -598,13 +601,47 @@ class ActionController extends Controller
         $data = str_replace(array('+','/','='),array('-','_',''),$data); // url safe
         $m = new \Google_Service_Gmail_Message();
         $m->setRaw($data);
-        // $gmailMessage = $gmail->users_messages->send('me', $m);
+        $gmailMessage = $gmail->users_messages->send('me', $m);
 
         // update the DB so we can check if this feature is used
         $user->tutorial_email = 'yes';
         $user->save();
 
         return 'success';
+    }
+
+    // webhook for emails opened by the recipients (read receipts)
+    // we'll also need the user id since this webhook is stateless
+    public function processReadReceipt($e_user_id, $e_message_id)
+    {
+        // decrypt the ids
+        $user_id = base64_decode($e_user_id);
+        $message_id = base64_decode($e_message_id);
+
+        // get the message id and make the DB update
+        $message = Message::find($message_id);
+        $message->status = 'read';
+        $message->save();
+
+        $user = Auth::loginUsingId($user_id);
+
+        // end a test email
+        $subject = $message->recipient.', opened your Mailsy email!';
+        $body = 'Hi there,<br><br>';
+        $body .= 'We\'re writing to let you that '.$message->recipient.' opened your email on '.date('M, F j, Y at g:ia',time()).'.';
+        $body .= '<br><br>Best,<br>The Mailsy Team';
+
+        $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
+        $data = array( 
+            "to" => array($user->email => $user->name),
+            "from" => array('no-reply@mailsy.co','Mailsy'),
+            "subject" => $subject,
+            "html" => $body
+        );
+        
+        $mailin->send_email($data);
+
+        return true;
     }
 
 }
