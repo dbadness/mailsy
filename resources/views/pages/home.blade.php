@@ -1,10 +1,10 @@
 @extends('layouts.master')
 
 @section('content')
+	<br>
+	<br>
 
 	@if($emails == '[]')
-	<br>
-	<br>
 		<div class="jumbotron">
 			<h2>Prospecting is lightspeed with Mailsy.</h2>
 			<p>Mailsy allows you to send multiple, individualized emails in seconds - 
