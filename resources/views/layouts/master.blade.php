@@ -14,9 +14,20 @@
 		<script src="/js/bootstrap.min.js"></script>
 		<link rel="stylesheet" href="{!! asset('/css/main.css') !!}">
 		<script src="{!! asset('/js/main.js') !!}"></script>
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+
+        <link href="/paper-kit/bootstrap3/css/bootstrap.css" rel="stylesheet" />
+        <link href="/paper-kit/assets/css/ct-paper.css" rel="stylesheet"/>
+        <link href="/paper-kit/assets/css/demo.css" rel="stylesheet" /> 
+
+        <script src="/paper-kit/assets/js/jquery-1.10.2.js" type="text/javascript"></script>
+        <script src="/paper-kit/assets/js/jquery-ui-1.10.4.custom.min.js" type="text/javascript"></script>
+
+        <script src="/paper-kit/bootstrap3/js/bootstrap.js" type="text/javascript"></script>
+
         <link href="/css/summernote.css" rel="stylesheet">
         <script src="/js/summernote.js"></script>
-        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+
 
         @yield('PageJS')
 
@@ -58,7 +69,81 @@
 
         </script>
 	</head>
-	<body>
+	<body class="section">
+
+                <nav class="navbar navbar-default navbar-fixed-top" role="navigation-demo" style="height: 75px;">
+                  <div class="container">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                      </button>
+                    <a class="navbar-brand" href="/"><img src='/images/logo.png' alt='Mailsy' width='80px'></a>
+
+                    </div>
+                
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="navigation-example-2">
+                      <ul class="nav navbar-nav">
+                            <li>
+                                <a href="/home" class="btn">Templates</a>
+                            </li>
+                            <li>
+                                <a href="/create" class="btn">New Template</a>
+                            </li>
+                            <li>
+                                <a href="/settings" class="btn">Settings</a>
+                            </li>
+<!--
+                            <li style="float:left;">
+                                <a href="/logout">Log Out</a>
+                            </li>
+                            <li style="float:left;background:#00EE76;border-radius:5px;">
+                                <a href="/tutorial/step1" style='color:#2E8B57;'>Tutorial</a>
+                            </li>
+-->
+                      </ul>
+
+                    @if($user = Auth::user())
+                        <ul class="nav navbar-nav" style="float:left;margin:5px 0 0 0;">
+                            <div style="clear:both;"></div>
+                        </ul>
+                    @else
+                        <p class="navbar-text"><a href="/signup">Signup/Login via Gmail</a></p>
+                    @endif
+
+                      <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <a>{!! $user->email !!}</a>
+                            </li>
+                            @if(!$user->paid)
+                            <li>
+                               <a>({!! App\User::howManyEmailsLeft() !!} emails left)</a>
+                            </li>
+                               @if($user->status == 'paying')
+                            <li>
+                                    <a href='/membership/add' class="btn">Upgrade</a>
+                            </li>
+                               @else
+                            <li>
+                                    <a href='/upgrade' class="btn">Upgrade</a>
+                            </li>
+                                @endif
+                               @else
+                                (Upgraded Account!)
+                            @endif
+                            <li class="pull-right">
+                                <a href="/logout" class="btn">Logout</a>
+                            </li>
+                       </ul>
+                    </div><!-- /.navbar-collapse -->
+                  </div><!-- /.container-->
+                </nav> 
+
+<!--
 		<nav class="navbar navbar-default">
             <div class="container-fluid" style="width:81%;">
                 <div class="navbar-header" style="width:100%;">
@@ -68,7 +153,7 @@
                     @if($user = Auth::user())
                         <ul class="nav navbar_nav" style="float:left;margin:5px 0 0 0;">
                             <li style="float:left;">
-                                <a href="/home">Dashboard</a>
+                                <button class="navbar-toggle"><a href="/home">Templates</a></button>
                             </li>
                             <li style="float:left;">
                                 <a href="/create">New Template</a>
@@ -104,6 +189,8 @@
                 </div>
             </div>
         </nav>
+-->
+
         <div style="margin:20px 0 0 0;"></div>
         <div class="container">
             <!-- if they're out of emails... -->
@@ -115,12 +202,41 @@
             @endif
             @yield('content')
         </div>
-        <div style="height:100px;"></div>
-        <nav class="navbar navbar-default navbar-fixed-bottom">
+        <nav class="navbar navbar-default" style="height: 75px;">
             <div class="container"  style="text-align:center;">
-                <p class="navbar-text" style="float:none;">Copyright &copy;<?php echo date('Y');?> Mailsy Technologies, LLC. Questions? Feedback? Movie recommendations? Send an email to <a href="mailto:hello@mailsy.co">hello@mailsy.co</a> 
-                or reach out on <a href="https://www.twitter.com/mailsyapp" target="_blank">Twitter</a>.</p>
+                      <ul class="nav navbar-nav">
+                        <li>
+                            <a class="btn btn-simple">Copyright &copy;<?php echo date('Y');?> Lucolo Inc</a>
+                        </li>
+                      </ul>
+                      <ul class="nav navbar-nav navbar-right">
+<!--
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-facebook-square"></i>
+                                    Facebook
+                                </a>
+                            </li>
+-->
+                            <li>
+                                <a href="https://www.twitter.com/mailsyapp">
+                                    <i class="fa fa-twitter"></i>
+                                    Twitter
+                                </a>
+                            </li>
+                            <li>
+                                <a href="mailto:hello@mailsy.co">
+                                    <i class="fa fa-envelope"></i> 
+                                    Email
+                                </a>
+                            </li>
+                       </ul>
             </div>
         </nav>
+        <br>
+        <br>
+        <br>
+        <img src="http://orig03.deviantart.net/6d9c/f/2012/205/8/f/free___mouse_lineart_by_ashleyphotographics-d58effz.png">
+        <span>The Mailsy Mouse</span>
 	</body>
 </html>

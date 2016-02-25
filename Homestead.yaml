@@ -1,0 +1,36 @@
+---
+ip: "192.168.10.10"
+memory: 2048
+cpus: 1
+hostname: mailsy
+name: mailsy
+provider: virtualbox
+
+authorize: ~/Vagrant/homesteadKey.pub
+
+keys:
+    - ~/.ssh/id_rsa
+
+folders:
+    - map: "/Users/andrewfribush/projects/php/laravel/mailsy"
+      to: "/home/vagrant/mailsy"
+
+sites:
+    - map: homestead.dev
+      to: "/home/vagrant/mailsy/public"
+
+databases:
+    - homestead
+
+# blackfire:
+#     - id: foo
+#       token: bar
+#       client-id: foo
+#       client-token: bar
+
+# ports:
+#     - send: 50000
+#       to: 5000
+#     - send: 7777
+#       to: 777
+#       protocol: udp

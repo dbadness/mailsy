@@ -22,6 +22,24 @@
     <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
 
+    <link href="/paper-kit/bootstrap3/css/bootstrap.css" rel="stylesheet" />
+    <link href="/paper-kit/assets/css/ct-paper.css" rel="stylesheet"/>
+    <link href="/paper-kit/assets/css/demo.css" rel="stylesheet" /> 
+
+    <script src="/paper-kit/assets/js/jquery-1.10.2.js" type="text/javascript"></script>
+    <script src="/paper-kit/assets/js/jquery-ui-1.10.4.custom.min.js" type="text/javascript"></script>
+
+    <script src="/paper-kit/bootstrap3/js/bootstrap.js" type="text/javascript"></script>
+
+    <!--  Plugins -->
+    <script src="/paper-kit/assets/js/ct-paper-checkbox.js"></script>
+    <script src="/paper-kit/assets/js/ct-paper-radio.js"></script>
+    <script src="/paper-kit/assets/js/bootstrap-select.js"></script>
+    <script src="/paper-kit/assets/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+
+    <script src="/paper-kit/assets/js/ct-paper.js"></script>
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -104,11 +122,11 @@
     <a name=""></a>
     <div class="intro-header">
         <div class="container">
-
+            <a href="/auth" class="pull-right">Beta Tester Log In</a>
             <div class="row">
                 <div class="col-lg-12">
                     <div class="intro-message">
-                        <h1>Less prospecting. More customers.</h1>
+                        <h1>Less prospecting. <br>More customers.</h1>
                         <h3>Send mass personalized emails in minutes with Mailsy.</h3>
                         <hr class="intro-divider">
                         <ul class="list-inline intro-social-buttons">
@@ -116,16 +134,15 @@
                                 <a href="/auth" class="btn btn-info btn-lg"></i>&nbsp&nbsp&nbsp&nbsp<span class="network-name">Apply to Beta ! >></span></a>
                             </li>
                         </ul>
+        <a href="#hiw">Learn More
+        <br>
+        VV</a>
                     </div>
                 </div>
             </div>
 
         </div>
         <!-- /.container -->
-        <br>
-        <a href="#hiw">Learn More
-        <br>
-        VV</a>
     </div>
     <!-- /.intro-header -->
 
@@ -142,7 +159,7 @@
                     <h2 class="section-heading">What is Mailsy?</h2>
                     <p class="lead">
                         Mailsy is a mass personalized emailing system. 
-                        <br><br>You make a template. You put customer information into the system. Mailsy generates and sends emails personalized for you. Right from your account. There's even salesforce integration. It couldn't be easier.
+                        <br><br>You make a template. You put customer information into the system. Mailsy generates and sends personalized emails for you. Right from your account. There's even salesforce integration. It couldn't be easier.
 <!--
                         Mailsy allows you to create email templates with pieces of information that you can customize for each individual message.
                         <br><br>With the template made and each recipients' individualized information ready to go in each message,
@@ -172,7 +189,7 @@
                     <div class="clearfix"></div>
                     <h2 class="section-heading">Why is Mailsy awesome?</h2>
                     <p class="lead">
-                        Because sales is about selling, not inbox management.
+                        Because sales is about selling, not inboxes.
                         <br><br>
                         Mailsy helps you send many more emails in dramatically less time, all without losing out on the personalization that drives engagement.
                         <br><br>
@@ -270,7 +287,17 @@
                                 <h3><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></h3>
                             </td>
                         </tr>
-                        <tr style='border-top:solid 2px lightgray;'>
+                        <tr>
+                            <td>
+                                <strong>Feed the Mailsy Mouse</strong>
+                            </td>
+                            <td>
+                                <h3 class="glyphicon glyphicon-remove-circle" aria-hidden="true"></h3>
+                            </td>
+                            <td>
+                                <h3><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></h3>
+                            </td>
+                        </tr>                        <tr style='border-top:solid 2px lightgray;'>
                             <td style='padding:15px 0 0 0;'>
                                 <strong>Monthly Cost</strong>
                             </td>
@@ -288,12 +315,13 @@
                             </td>
                         </tr>
                     </table>
+
                 </div>
                 <div class="col-lg-5 col-sm-pull-6  col-sm-6">
                     <h1 class="section-heading">Plans</h2>
                     <hr class="section-heading-spacer">
                     <div class="clearfix"></div>
-                    <h2 class="section-heading">Free is Free. Unlimited is unlimited. Forever.</h2>
+                    <h3 class="section-heading">Free is Free.<br> Unlimited is unlimited.<br> Forever.</h3>
                     <p class="lead">
                         Sign up for free and send up to ten emails per day using up to five templates. When you're ready to do more, upgrade at any time.
                         <br><br>
@@ -310,6 +338,11 @@
 
         </div>
         <!-- /.container -->
+        <div class="jumbotron">
+            <div  class="text-center">
+                <a href="/auth" class="btn btn-fill btn-info btn-lg"></i>&nbsp&nbsp&nbsp&nbsp<span class="network-name">Apply to Beta ! >></span></a>
+            </div>
+        </div>
 
     </div>
     <!-- /.content-section-a -->
