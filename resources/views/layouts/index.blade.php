@@ -297,7 +297,8 @@
                             <td>
                                 <h3><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></h3>
                             </td>
-                        </tr>                        <tr style='border-top:solid 2px lightgray;'>
+                        </tr>
+                        <tr style='border-top:solid 2px lightgray;'>
                             <td style='padding:15px 0 0 0;'>
                                 <strong>Monthly Cost</strong>
                             </td>
