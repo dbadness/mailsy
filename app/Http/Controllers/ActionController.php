@@ -232,7 +232,7 @@ class ActionController extends Controller
                 $message = Message::find($id);
 
                 // prepend the read receipt callback webhook to the message
-                $full_body = $message->message.'<img src="http://dev.mailsy.co/readReceipt/'.base64_encode($user->id).'/'.base64_decode($message->id).'">';
+                $full_body = $message->message.'<img src="http://dev.mailsy.co/track/'.base64_encode($user->id).'/'.base64_decode($message->id).'">';
 
                 // use swift mailer to build the mime
                 $mail = new \Swift_Message;
