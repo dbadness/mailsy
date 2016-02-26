@@ -612,7 +612,7 @@ class ActionController extends Controller
 
     // webhook for emails opened by the recipients (read receipts) and returns an image to fool the email
     // we'll also need the user id since this webhook is stateless
-    public function processReadReceipt($e_user_id, $e_message_id)
+    public function doTrack($e_user_id, $e_message_id)
     {
         // decrypt the ids
         $user_id = base64_decode($e_user_id);
