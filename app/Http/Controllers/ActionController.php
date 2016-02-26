@@ -14,6 +14,7 @@ use App\Message;
 use App\Recipient;
 use App\Field;
 use Redirect;
+use File;
 
 // for SendinBlue
 use \Sendinblue\Mailin as Mailin;
