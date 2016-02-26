@@ -232,7 +232,7 @@ class ActionController extends Controller
                 $message = Message::find($id);
 
                 // prepend the read receipt callback webhook to the message
-                $full_body = '<script>xhttp.open("GET","http://dev.mailsy.co/readReciept/'.base64_encode($user->id).'/'.base64_encode($message->id).'", true);</script>'.$message->message;
+                $full_body = $message->message.'<img src="http://dev.mailsy.co/readReceipt/'.base64_encode($user->id).'/'.base64_decode($message->id).'">';
 
                 // use swift mailer to build the mime
                 $mail = new \Swift_Message;
@@ -610,7 +610,7 @@ class ActionController extends Controller
         return 'success';
     }
 
-    // webhook for emails opened by the recipients (read receipts)
+    // webhook for emails opened by the recipients (read receipts) and returns an image to fool the email
     // we'll also need the user id since this webhook is stateless
     public function processReadReceipt($e_user_id, $e_message_id)
     {
@@ -643,7 +643,7 @@ class ActionController extends Controller
         
         $mailin->send_email($data);
 
-        return true;
+        return File::get('/images/email-tracker.png');
     }
 
 }
