@@ -621,28 +621,30 @@ class ActionController extends Controller
 
         // get the message id and make the DB update
         $message = Message::find($message_id);
-        $message->status = 'read';
-        $message->save();
 
-        // start staging
+        if($message->status != 'read')
+        {
+            $user = Auth::loginUsingId($user_id);
 
-        $user = Auth::loginUsingId($user_id);
+            // end a test email
+            $subject = $message->recipient.', opened your Mailsy email!';
+            $body = 'Hi there,<br><br>';
+            $body .= 'We\'re writing to let you that '.$message->recipient.' opened your email on '.date('D, F j, Y',time()).'at '.date('g i:a',time()).'.';
+            $body .= '<br><br>Best,<br>The Mailsy Team';
 
-        // end a test email
-        $subject = $message->recipient.', opened your Mailsy email!';
-        $body = 'Hi there,<br><br>';
-        $body .= 'We\'re writing to let you that '.$message->recipient.' opened your email on '.date('D, F j, Y',time()).'at '.date('g i:a',time()).'.';
-        $body .= '<br><br>Best,<br>The Mailsy Team';
+            $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
+            $data = array( 
+                "to" => array($user->email => $user->name),
+                "from" => array('no-reply@mailsy.co','Mailsy'),
+                "subject" => $subject,
+                "html" => $body
+            );
+            
+            $mailin->send_email($data);
 
-        $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
-        $data = array( 
-            "to" => array($user->email => $user->name),
-            "from" => array('no-reply@mailsy.co','Mailsy'),
-            "subject" => $subject,
-            "html" => $body
-        );
-        
-        $mailin->send_email($data);
+            $message->status = 'read';
+            $message->save();
+        }
 
         return File::get('/images/email-tracker.png');
     }
