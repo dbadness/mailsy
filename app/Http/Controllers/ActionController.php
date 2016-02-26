@@ -623,6 +623,8 @@ class ActionController extends Controller
         $message->status = 'read';
         $message->save();
 
+        // start staging
+
         $user = Auth::loginUsingId($user_id);
 
         // end a test email
