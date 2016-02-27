@@ -23,26 +23,6 @@ class Message extends Model
     	// get the message object
     	$message = Message::find($id);
 
-    	// build the gmail client
-    	$client = User::googleClient();
-    	$service = new \Google_Service_Gmail($client);
-    	$gmail = $service->users_messages->get('me', $message->google_message_id);
-
-        /*
-        * This has to be fixed
-        *
-        *
-
-    	// see if the message was read
-    	$labels = (array)$gmail->labelIds;
-		if(!in_array('UNREAD', $labels))
-    	{
-    		$message->updated_at = time();
-    		$message->status = 'read';
-    		$message->save();
-    	}
-        */
-
     	return $message->status;
     }
 }
