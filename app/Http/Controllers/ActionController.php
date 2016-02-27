@@ -649,7 +649,7 @@ class ActionController extends Controller
                 // end a test email
                 $subject = $message->recipient.', opened your Mailsy email!';
                 $body = 'Hi there,<br><br>';
-                $body .= 'We\'re writing to let you that '.$message->recipient.' opened your email on '.date('D, M d, Y', $message->read_at).' at '..date('g:ia',$message->read_at)'.';
+                $body .= 'We\'re writing to let you that '.$message->recipient.' opened your email on '.date('D, M d, Y', $message->read_at).' at '.date('g:ia',$message->read_at).'.';
                 $body .= '<br><br>Best,<br>The Mailsy Team';
 
                 $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
