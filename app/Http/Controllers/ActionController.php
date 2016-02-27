@@ -276,6 +276,15 @@ class ActionController extends Controller
         $user->name = $request->name;
         $user->sf_address = $request->sf_address;
         $user->signature = $request->signature;
+        if($request->track_email == 'yes')
+        {
+            $user->track_email = 'yes';
+        }
+        else
+        {
+            $user->track_email = NULL;
+        }
+        
         $user->save();
 
         return 'success';
@@ -628,12 +637,19 @@ class ActionController extends Controller
         {
             $user = Auth::loginUsingId($user_id);
 
+            $message->status = 'read';
+            $message->read_at = time();
+            $message->save();
+
             if($user->track_email)
             {
+                // set the timezone
+                date_default_timezone_set('EST');
+
                 // end a test email
                 $subject = $message->recipient.', opened your Mailsy email!';
                 $body = 'Hi there,<br><br>';
-                $body .= 'We\'re writing to let you that '.$message->recipient.' just opened your email.';
+                $body .= 'We\'re writing to let you that '.$message->recipient.' opened your email on '.date('D, M d, Y', $message->read_at).' at '..date('g:ia',$message->read_at)'.';
                 $body .= '<br><br>Best,<br>The Mailsy Team';
 
                 $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
@@ -646,9 +662,6 @@ class ActionController extends Controller
                 
                 $mailin->send_email($data);
             }
-
-            $message->status = 'read';
-            $message->save();
         }
 
         return File::get('/images/email-tracker.png');

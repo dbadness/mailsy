@@ -30,8 +30,9 @@
 			<tr>
 				<td><b>Recipient</b></td>
 				<td class='emailListRight'><b>Message</b></td>
-				<td class='emailListRight'><b>Date Sent</b></td>
+				<td class='emailListRight'><b>Sent</b></td>
 				<td class='emailListRight'><b>Status</b></td>
+				<td class='emailListRight'><b>Read</b></td>
 			</tr>
 			@if($messages != '[]')
 				@foreach($messages as $message)
@@ -41,6 +42,13 @@
 						<td class='emailListRight'><span class='viewMessage' messageId='{!! $message->id !!}'>View Message</span></td>
 						<td class='emailListRight'>{!! date('D, M d, Y g:ia', $message->sent_at) !!} EST</td>
 						<td class='emailListRight'><span id='status{!! $message->id !!}'></span></td>
+						<td class='emailListRight'>
+							@if($message->read_at)
+								{!! date('D, M d, Y g:ia', $message->read_at) !!} EST
+							@else
+								--
+							@endif
+						</td>
 					</tr>
 					<tr>
 						<td colspan='4' class='messageView' id='message{!! $message->id !!}'><br>{!! $message->message !!}<span class='close'>Close</span></td>
