@@ -664,7 +664,7 @@ class ActionController extends Controller
             }
         }
 
-        return File::get('/images/email-tracker.png');
+        return File::get('images/email-tracker.png');
     }
 
 }
