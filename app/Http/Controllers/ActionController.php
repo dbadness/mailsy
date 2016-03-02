@@ -339,7 +339,7 @@ class ActionController extends Controller
             }
             else
             {
-                // if they're an existing user, just create a new subscription for  them
+                // if they're an existing user, just create a new subscription for them
                 $customer = \Stripe\Customer::retrieve($user->stripe_id);
                 $customer->subscriptions->create(array("plan" => "paid"));
             }
@@ -575,8 +575,8 @@ class ActionController extends Controller
     {
         $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
         $data = array( 
-            "to" => array("dave@mailsy.co"=>"David Baines"),
-            "from" => array('dave@mailsy.co','Mailsy'),
+            "to" => array("dave@lucolo.com"=>"David Baines"),
+            "from" => array('no-reply@mamilsy.co','Mailsy'),
             "subject" => '500 Error Feedback',
             "html" => 'Feedback: '.$request->feedback
         );

@@ -87,13 +87,13 @@
                         <p class="navbar-text" style="float:right;">
                             Signed in as {!! $user->email !!} 
                             @if(!$user->paid)
-                               ({!! App\User::howManyEmailsLeft() !!} emails left today)
-                               @if($user->status == 'paying')
+                                ({!! App\User::howManyEmailsLeft() !!} emails left today)
+                                @if($user->status == 'paying')
                                     <a href='/membership/add'>Upgrade Myself</a>
-                               @else
+                                @else
                                     <a href='/upgrade'>Upgrade</a>
                                 @endif
-                               @else
+                            @else
                                 (Upgraded Account!)
                             @endif
                         </p>
@@ -118,7 +118,7 @@
         <div style="height:100px;"></div>
         <nav class="navbar navbar-default navbar-fixed-bottom">
             <div class="container"  style="text-align:center;">
-                <p class="navbar-text" style="float:none;">Copyright &copy;<?php echo date('Y');?> Mailsy Technologies, LLC. Questions? Feedback? Movie recommendations? Send an email to <a href="mailto:hello@mailsy.co">hello@mailsy.co</a> 
+                <p class="navbar-text" style="float:none;">Copyright &copy;<?php echo date('Y');?> Mailsy by Lucolo, Inc. Questions? Feedback? Movie recommendations? Send an email to <a href="mailto:hello@mailsy.co">hello@mailsy.co</a> 
                 or reach out on <a href="https://www.twitter.com/mailsyapp" target="_blank">Twitter</a>.</p>
             </div>
         </nav>

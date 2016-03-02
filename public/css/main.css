@@ -39,6 +39,12 @@
 	text-align:right;
 }
 
+.subheader
+{
+	font-size:120%;
+	color:gray;
+}
+
 /* ----------- Email View CSS ------------ */
 
 #messages
