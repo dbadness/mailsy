@@ -11,27 +11,19 @@
 		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
-<!--
-        <script src="/paper-kit/assets/js/jquery-ui-1.10.4.custom.min.js" type="text/javascript"></script>
-        <script src="/paper-kit/bootstrap3/js/bootstrap.js" type="text/javascript"></script>
--->
-
 		<!-- Bootstrap -->
 		<link href="/css/bootstrap.min.css" rel="stylesheet">
 
-        <link href="/paper-kit/bootstrap3/css/bootstrap.css" rel="stylesheet" />
-        <link href="/paper-kit/assets/css/ct-paper.css" rel="stylesheet"/>
-        <link href="/paper-kit/assets/css/demo.css" rel="stylesheet" /> 
+        <link rel="stylesheet" href="{!! asset('/css/main.css') !!}">
+        <link href="/css/paper.css" rel="stylesheet"/>
 
 		<!-- Include all compiled plugins (below), or include individual files as needed -->
 		<script src="/js/bootstrap.min.js"></script>
-		<link rel="stylesheet" href="{!! asset('/css/main.css') !!}">
 		<script src="{!! asset('/js/main.js') !!}"></script>
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
 
         <link href="/css/summernote.css" rel="stylesheet">
         <script src="/js/summernote.js"></script>
-
 
         @yield('PageJS')
 

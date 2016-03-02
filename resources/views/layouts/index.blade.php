@@ -22,23 +22,8 @@
     <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
 
-    <link href="/paper-kit/bootstrap3/css/bootstrap.css" rel="stylesheet" />
-    <link href="/paper-kit/assets/css/ct-paper.css" rel="stylesheet"/>
-    <link href="/paper-kit/assets/css/demo.css" rel="stylesheet" /> 
-
-    <script src="/paper-kit/assets/js/jquery-1.10.2.js" type="text/javascript"></script>
-    <script src="/paper-kit/assets/js/jquery-ui-1.10.4.custom.min.js" type="text/javascript"></script>
-
-    <script src="/paper-kit/bootstrap3/js/bootstrap.js" type="text/javascript"></script>
-
-    <!--  Plugins -->
-    <script src="/paper-kit/assets/js/ct-paper-checkbox.js"></script>
-    <script src="/paper-kit/assets/js/ct-paper-radio.js"></script>
-    <script src="/paper-kit/assets/js/bootstrap-select.js"></script>
-    <script src="/paper-kit/assets/js/bootstrap-datepicker.js"></script>
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
-
-    <script src="/paper-kit/assets/js/ct-paper.js"></script>
+    <link rel="stylesheet" href="{!! asset('/css/main.css') !!}">
+    <link href="/css/paper.css" rel="stylesheet"/>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

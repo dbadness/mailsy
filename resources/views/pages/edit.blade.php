@@ -1,7 +1,8 @@
 @extends('layouts.master')
 
 @section('content')
-
+	<br>
+	<br>
 	<script>
 		// fill in the #emailTemplate
 		var template = '{!! addslashes($email->template) !!}';
@@ -88,6 +89,7 @@
 			<button class="btn btn-primary" role="button" id='saveTemplate'>
 				View Previews
 			</button>
+
 		@else
 			<button class="btn btn-primary" role="button" id='saveTemplate'>
 				Save Template

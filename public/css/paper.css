@@ -1,108 +1,6 @@
-/*      light colors - used for select dropdown         */
-/*           Font Smoothing      */
-h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, p, .navbar, .brand, a, .td-name, td {
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  font-family: 'Montserrat', "Helvetica", Arial, sans-serif; }
-
-h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
-  font-weight: 400;
-  margin: 30px 0 15px; }
-
-h1, .h1 {
-  font-size: 4.5em; }
-
-h2, .h2 {
-  font-size: 3em; }
-
-h3, .h3 {
-  font-size: 1.825em;
-  line-height: 1.4;
-  margin: 20px 0 10px; }
-
-h4, .h4 {
-  font-size: 1.5em;
-  font-weight: 600;
-  line-height: 1.2em; }
-
-h5, .h5 {
-  font-size: 1.25em;
-  font-weight: 400;
-  line-height: 1.4em;
-  margin-bottom: 15px; }
-
-h6, .h6 {
-  font-size: 0.9em;
-  font-weight: 600;
-  text-transform: uppercase; }
-
-p {
-  font-size: 16px;
-  line-height: 1.4em; }
-
-h1 small, h2 small, h3 small, h4 small, h5 small, h6 small, .h1 small, .h2 small, .h3 small, .h4 small, .h5 small, .h6 small, h1 .small, h2 .small, h3 .small, h4 .small, h5 .small, h6 .small, .h1 .small, .h2 .small, .h3 .small, .h4 .small, .h5 .small, .h6 .small {
-  color: #9A9A9A;
-  font-weight: 300;
-  line-height: 1.4em; }
-
-h1 small, h2 small, h3 small, h1 .small, h2 .small, h3 .small {
-  font-size: 60%; }
-
-.title-uppercase {
-  text-transform: uppercase; }
-
-blockquote {
-  font-style: italic; }
-
-blockquote small {
-  font-style: normal; }
-
-.text-muted {
-  color: #DDDDDD; }
-
-.text-primary, .text-primary:hover {
-  color: #427C89 !important; }
-
-.text-info, .text-info:hover {
-  color: #3091B2 !important; }
-
-.text-success, .text-success:hover {
-  color: #42A084 !important; }
-
-.text-warning, .text-warning:hover {
-  color: #BB992F !important; }
-
-.text-danger, .text-danger:hover {
-  color: #B33C12 !important; }
-
-.glyphicon {
-  line-height: 1; }
-
-/*     General overwrite     */
-body {
-  color: #66615b;
-  font-size: 16px;
-  font-family: 'Montserrat', "Helvetica", Arial, sans-serif; }
-
-a {
-  color: #68B3C8;
-  -webkit-transition: all 150ms linear;
-  -moz-transition: all 150ms linear;
-  -o-transition: all 150ms linear;
-  -ms-transition: all 150ms linear;
-  transition: all 150ms linear; }
-  a:hover, a:focus {
-    color: #3091B2;
-    text-decoration: none; }
-
-hr {
-  border-color: #F1EAE0; }
-
-.icon {
-  fill: #66615b; }
-
-.fa-base {
-  font-size: 1.25em !important; }
+/*
+Paper extracts
+*/
 
 a:focus, a:active,
 button::-moz-focus-inner,
@@ -117,7 +15,6 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
 .navbar-toggle {
   outline: 0 !important; }
 
-/*           Animations              */
 .form-control,
 .input-group-addon,
 .tagsinput,
@@ -155,42 +52,6 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
 
 .margin-top {
   margin-top: 50px; }
-
-/*       CT colors          */
-.ct-blue,
-.checkbox-blue.checkbox.checked .second-icon,
-.checkbox-blue.checkbox.checked,
-.radio-blue.radio.checked .second-icon,
-.radio-blue.radio.checked {
-  color: #7A9E9F; }
-
-.ct-azure,
-.checkbox-azure.checkbox.checked .second-icon,
-.radio-azure.radio.checked .second-icon,
-.checkbox-azure.checkbox.checked,
-.radio-azure.radio.checked {
-  color: #68B3C8; }
-
-.ct-green,
-.checkbox-green.checkbox.checked .second-icon,
-.radio-green.radio.checked .second-icon,
-.checkbox-green.checkbox.checked,
-.radio-green.radio.checked {
-  color: #7AC29A; }
-
-.ct-orange,
-.checkbox-orange.checkbox.checked .second-icon,
-.radio-orange.radio.checked .second-icon,
-.checkbox-orange.checkbox.checked,
-.radio-orange.radio.checked {
-  color: #F3BB45; }
-
-.ct-red,
-.checkbox-red.checkbox.checked .second-icon,
-.radio-red.radio.checked .second-icon,
-.checkbox-red.checkbox.checked,
-.radio-red.radio.checked {
-  color: #EB5E28; }
 
 input.ct-blue + span.switch-left,
 input.ct-blue + span + label + span.switch-right {

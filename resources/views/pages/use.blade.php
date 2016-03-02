@@ -3,7 +3,7 @@
 <br>
 @section('content')
 
-<form method='post' action='/makePreviews' id='makePreviews'>
+<form method='post' action='/makePreviews' id='makePreviews' enctype="multipart/form-data">
 	{!! Form::token() !!}
 	{!! Form::hidden('_email_template', $email->template) !!}
 	{!! Form::hidden('_subject', $email->subject) !!}
@@ -66,9 +66,17 @@
 	<div class="btn btn-info" id='addRecipient' role="button">
 		<span class="glyphicon glyphicon-plus-sign"></span> Add Another Recipient
 	</div>
+
 	<button class="btn btn-primary" id='viewPreviews' role="button">
 		View Previews
 	</button>
+
+	<br>
+	<br>
+	<p><b>And/or upload a CSV</b>
+		<input type="file" name="csvFile" id="csvFileUpload" accept=".csv" value="" />
+	</p>
+
 </form>
 
 @endsection

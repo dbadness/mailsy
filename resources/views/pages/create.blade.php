@@ -1,6 +1,8 @@
 @extends('layouts.master')
 
 @section('content')
+<br>
+<br>
 	<!-- error reporting -->
 	<div class="alert alert-danger alert-dismissible" id='noContent' role="alert">
 		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -30,7 +32,7 @@
 		<p><b>*Please Note* You can't have two different fields with the same name like "Today is @@day and tomorrow is @@day".</b></p>
 		<p>Check out the <strong><a href='/faq'>quick start guide</a></strong> if you'd like to see an example!</p>
 	</div>
-	<form method='post' action='/makePreviews' id='makePreviews'>
+	<form method='post' action='/makePreviews' id='makePreviews' enctype="multipart/form-data">
 		{!! Form::token() !!}
 			
 		<div class="input-group" style="border-style: solid;">
@@ -78,8 +80,16 @@
 			<button class="btn btn-primary" id='viewPreviews' role="button">
 				View Previews
 			</button>
+
+			<br>
+			<br>
+			<p><b>And/or upload a CSV</b>
+				<input type="file" name="csvFile" id="csvFileUpload" accept=".csv" value="" />
+			</p>
+
 		</div>
 		<textarea name='_email_template' id='emailTemplateHolder'></textarea>
+
 	</form>
 
 @endsection
