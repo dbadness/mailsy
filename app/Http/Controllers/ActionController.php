@@ -184,6 +184,8 @@ class ActionController extends Controller
             $messageText = $request->_email_template;
             $subjectText = $request->_subject;
             $fieldEntries = [];
+
+            //Append csv fields to existing requests so they're processed normally
             foreach($fields as $field){
                 if($request->csvFile)
                 {
