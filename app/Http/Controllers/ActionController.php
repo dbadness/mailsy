@@ -154,8 +154,6 @@ class ActionController extends Controller
             }
         }
 
-       // Log::info($csv['Email']);
-
         // find the email object
         $email = Email::find($request->_email_id);
 
@@ -164,7 +162,9 @@ class ActionController extends Controller
         $tempRecipientsList = [];
 
         // Add emails to email post
-        $_POST['_email'] = array_merge($_POST['_email'], $csv['Email']);
+        if($request->csvFile){
+            $_POST['_email'] = array_merge($_POST['_email'], $csv['Email']);
+        }
 
         foreach($_POST['_email'] as $key => $recipientEmail)
         {
