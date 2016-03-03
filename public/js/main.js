@@ -48,6 +48,7 @@ $(document).ready(function(){
 	});
 
 	// make sure that there are values in the inputs
+	//Fix to allow CSV only #ASF
 	$('#makePreviews').submit(function()
 	{
 		var fields = $('#recipientList input').serializeArray();
@@ -57,8 +58,7 @@ $(document).ready(function(){
 			{
 				if(fields[k].value === '')
 				{
-					alert('Please make sure all your fields are filled in!');
-					return false;
+					return confirm('There are blank fields. Are you sure you want to proceed?');
 				}
 			}
 		}

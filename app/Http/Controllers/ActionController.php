@@ -124,6 +124,9 @@ class ActionController extends Controller
         // auth the user
         $user = Auth::user();
 
+        // find the email object
+        $email = Email::find($request->_email_id);
+
         //create holders and dump their contents
         $csv = array();
         $headers = array();
@@ -148,14 +151,19 @@ class ActionController extends Controller
                 {
                     foreach($headers as $key => $header)
                     {
-                        array_push($csv[$header], $row[$key]);
+                        if(count($row) == count($headers))
+                        {
+                            array_push($csv[$header], $row[$key]);
+                        } else
+                        {
+//                            return redirect('/edit/'.base64_encode($email->id).'?badCSV=true');
+                return redirect('/edit/'.base64_encode($email->id).'?badEmails=true');
+
+                        }
                     }
                 }
             }
         }
-
-        // find the email object
-        $email = Email::find($request->_email_id);
 
         // build the recipient list and assign the fields to them
         $messages = [];
@@ -186,21 +194,30 @@ class ActionController extends Controller
             $fieldEntries = [];
 
             //Append csv fields to existing requests so they're processed normally
-            foreach($fields as $field){
-                if($request->csvFile)
+            if(count($headers) == count($fieldEntries)){
+
+                foreach($fields as $field)
                 {
-                    foreach($headers as $header)
+                    if($request->csvFile)
                     {
-                        if($header == $field){
-                            $_POST[$field] = array_merge($_POST[$field], $csv[$header]);
+                        foreach($headers as $header)
+                        {
+                            if($header == $field){
+                                $_POST[$field] = array_merge($_POST[$field], $csv[$header]);
+                            }
                         }
                     }
+
+                    $subjectText = str_replace('@@'.$field, $_POST[$field][$key], $subjectText);
+                    $messageText = str_replace('@@'.$field, $_POST[$field][$key], $messageText);
+                    // set up an entry for the recipients list later on
+                    $fieldEntries[] = [$field => $_POST[$field][$key]];
                 }
 
-                $subjectText = str_replace('@@'.$field, $_POST[$field][$key], $subjectText);
-                $messageText = str_replace('@@'.$field, $_POST[$field][$key], $messageText);
-                // set up an entry for the recipients list later on
-                $fieldEntries[] = [$field => $_POST[$field][$key]];
+            } else{
+//                return redirect('/edit/'.base64_encode($email->id).'?badCSV=true');
+                return redirect('/edit/'.base64_encode($email->id).'?badEmails=true');
+
             }
 
             // trim the <p> tags off the messageText
