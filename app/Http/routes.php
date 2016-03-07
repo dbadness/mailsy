@@ -53,7 +53,6 @@ Route::post('/updateCard','ActionController@doUpdateCard');
 Route::post('/membership/cancel/{master?}','ActionController@doCancelMembership');
 Route::get('/sendFirstEmail','ActionController@doSendFirstEmail');
 
-
 // webhooks
 Route::post('/payment/paid','APIController@doInvoicePaid'); // successful invoice payment
 Route::post('/payment/failed','APIController@doInvoiceFailed'); // payment declined for invoice

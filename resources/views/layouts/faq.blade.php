@@ -63,14 +63,14 @@
 
 <body>
 
-    <!-- Navigation -->
+<!--
     <nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
         <div class="container topnav">
-            <!-- Brand and toggle get grouped for better mobile display -->
+
             <div class="navbar-header">
                 <a class="navbar-brand topnav" href="/"><img src='/images/logo.png' alt='Mailsy' width='80px'></a>
             </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
+
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
@@ -81,11 +81,11 @@
                     </li>
                 </ul>
             </div>
-            <!-- /.navbar-collapse -->
-        </div>
-        <!-- /.container -->
-    </nav>
 
+        </div>
+
+    </nav>
+-->
 
     <!-- Header -->
     <a name=""></a>
@@ -149,8 +149,13 @@
                     <i><h4><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Tip:</h4></i>
                     <p class="lead">
                         Before sending your first emails, head to the Settings page to fill in your full name so recipients will see your full name as the "from" field in the email. 
+                    </p>
+                    <br><br>
+                    <i><h4><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Tip:</h4></i>
+                    <p class="lead">
                         Also, don't forget to add a signature and Salesforce email address to fully integrate Mailsy! (You can just copy and paste your Gmail signature.)
                     </p>
+
                 </div>
             </div>
         </div>
@@ -187,7 +192,7 @@
                         Mailsy uses the <a href='https://www.stripe.com' target='_blank'>Stripe</a> service to process credit cards and manage its subscriptions. Mailsy uses Stripe so we don't have to keep any credit cards on our
                         servers which is more secure for our customers - Mailsy specializes in email stuff, not credit card stuff.
                         <br><br>
-                        When you sign up for a subscription, we'll charge your card immediately and then again for that amount ($7 per user) every month on that date (or thereabouts). If you ever cancel a subscription
+                        When you sign up for a subscription, we'll charge your card immediately and then again for that amount ($10 per user) every month on that date (or thereabouts). If you ever cancel a subscription
                         (either yours or anyone that you're paying for), the paid version of Mailsy will be available to those people for the duration of that monthly billing period.
                         <br><br>
                         If you add anyone to your subscription plan, Mailsy will prorate the amount that's owed for the remainder of the billing period for that user (or users) and charge that amount to the card on your account immediately. 
@@ -246,11 +251,13 @@
                             <a href="/">Home</a>
                         </li>
                         <li class="footer-menu-divider">&sdot;</li>
+<!--
                         <li>
                             <a href="/auth">Sign Up / Log in</a>
                         </li>
+-->
                     </ul>
-                    <p class="copyright text-muted small">Copyright &copy;<?php echo date('Y');?> Mailsy Technologies, LLC. All Rights Reserved</p>
+                    <p class="copyright text-muted small">Copyright &copy;<?php echo date('Y');?> Lucolo Inc. All Rights Reserved</p>
                 </div>
             </div>
         </div>

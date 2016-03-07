@@ -85,6 +85,7 @@ class PagesController extends Controller
 
         // decode the email
         $email = User::verifyUser($eid);
+
         // retrieve the messages that aren't deleted or sent for this email
         $messages = Message::where('email_id',$email->id)->whereNull('deleted_at')->whereNull('status')->get();
 

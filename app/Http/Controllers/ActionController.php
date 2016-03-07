@@ -14,7 +14,11 @@ use App\Message;
 use App\Recipient;
 use App\Field;
 use Redirect;
+<<<<<<< HEAD
 use File;
+=======
+use Log;
+>>>>>>> mailsyFrontChanges
 
 // for SendinBlue
 use \Sendinblue\Mailin as Mailin;
@@ -127,9 +131,53 @@ class ActionController extends Controller
         // find the email object
         $email = Email::find($request->_email_id);
 
+        //create holders and dump their contents
+        $csv = array();
+        $headers = array();
+
+        if($request->csvFile)
+        {
+            // get the contents of the text file and put it into an array
+            $rows = array_map('str_getcsv', file($request->csvFile));
+
+            foreach($rows as $row)
+            {
+                //create an array for each header
+                if($row == $rows[0])
+                {
+                    foreach($row as $header)
+                    {
+                        $csv[$header] = array();
+                        array_push($headers, $header);
+                    }
+                //For the rest, populate the array with values
+                } else
+                {
+                    foreach($headers as $key => $header)
+                    {
+                        if(count($row) == count($headers))
+                        {
+                            array_push($csv[$header], $row[$key]);
+                        } else
+                        {
+//                            return redirect('/edit/'.base64_encode($email->id).'?badCSV=true');
+                return redirect('/edit/'.base64_encode($email->id).'?badEmails=true');
+
+                        }
+                    }
+                }
+            }
+        }
+
         // build the recipient list and assign the fields to them
         $messages = [];
         $tempRecipientsList = [];
+
+        // Add emails to email post
+        if($request->csvFile){
+            $_POST['_email'] = array_merge($_POST['_email'], $csv['Email']);
+        }
+
         foreach($_POST['_email'] as $key => $recipientEmail)
         {
 
@@ -137,7 +185,7 @@ class ActionController extends Controller
             $fields = [];
             foreach($_POST as $k => $v)
             {
-                if(($k != 'files') && (substr($k,0,1) != '_'))
+                if(($k != 'files') && (substr($k,0,1) != '_') && ($k != 'csvFile'))
                 {
                     $fields[] = $k;
                 }
@@ -148,12 +196,32 @@ class ActionController extends Controller
             $messageText = $request->_email_template;
             $subjectText = $request->_subject;
             $fieldEntries = [];
-            foreach($fields as $field)
-            {
-                $subjectText = str_replace('@@'.$field, $_POST[$field][$key], $subjectText);
-                $messageText = str_replace('@@'.$field, $_POST[$field][$key], $messageText);
-                // set up an entry for the recipients list later on
-                $fieldEntries[] = [$field => $_POST[$field][$key]];
+
+            //Append csv fields to existing requests so they're processed normally
+            if(count($headers) == count($fieldEntries)){
+
+                foreach($fields as $field)
+                {
+                    if($request->csvFile)
+                    {
+                        foreach($headers as $header)
+                        {
+                            if($header == $field){
+                                $_POST[$field] = array_merge($_POST[$field], $csv[$header]);
+                            }
+                        }
+                    }
+
+                    $subjectText = str_replace('@@'.$field, $_POST[$field][$key], $subjectText);
+                    $messageText = str_replace('@@'.$field, $_POST[$field][$key], $messageText);
+                    // set up an entry for the recipients list later on
+                    $fieldEntries[] = [$field => $_POST[$field][$key]];
+                }
+
+            } else{
+//                return redirect('/edit/'.base64_encode($email->id).'?badCSV=true');
+                return redirect('/edit/'.base64_encode($email->id).'?badEmails=true');
+
             }
 
             // trim the <p> tags off the messageText
@@ -191,7 +259,7 @@ class ActionController extends Controller
         $email->temp_recipients_list = json_encode($tempRecipientsList);
         $email->save();
 
-              // make sure the emails are legit
+        // make sure the emails are legit
         foreach($request->_email as $recipientEmail)
         {
             if(!filter_var($recipientEmail,FILTER_VALIDATE_EMAIL))
@@ -622,6 +690,7 @@ class ActionController extends Controller
         return 'success';
     }
 
+<<<<<<< HEAD
     // webhook for emails opened by the recipients (read receipts) and returns an image to fool the email
     // we'll also need the user id since this webhook is stateless
     public function doTrack($e_user_id, $e_message_id)
@@ -665,6 +734,21 @@ class ActionController extends Controller
         }
 
         return File::get('images/email-tracker.png');
+=======
+    // send the tutorial email to the user
+    public function deleteMessage($id)
+    {
+        $user = Auth::user();
+
+        $task = Task::findOrFail($id);
+
+        $task->delete();
+
+        Session::flash('flash_message', 'Task successfully deleted!');
+
+        return redirect()->route('tasks.index');
+
+>>>>>>> mailsyFrontChanges
     }
 
 }

@@ -128,7 +128,7 @@
 
     <!-- Page Content -->
 
-	<a name="hiw"></a>
+    <a name="hiw"></a>
     <div class="content-section-a">
 
         <div class="container">
@@ -296,7 +296,7 @@
 
     </div>
     <!-- /.content-section-a -->
-	<a name="contact"></a>
+    <a name="contact"></a>
     <div class="banner" style='background:lightgray;'>
 
         <div class="container">

@@ -1,18 +1,20 @@
 @extends('layouts.master')
 
 @section('content')
+	<br>
+	<br>
 
 	@if($emails == '[]')
 		<div class="jumbotron">
-			<h2>Email prospecting is so much faster with Mailsy.</h2>
+			<h2>Prospecting is lightspeed with Mailsy.</h2>
 			<p>Mailsy allows you to send multiple, individualized emails in seconds - 
-			create a template, fill in the pieces of relevent information that you define per recipient, 
-			and send out those emails all at once.</p>
-			<p>Check out the <a href='/faq'>quickstart guide</a> or dive right in and <a href='/create'>create your first template!</a>
+			create a template, fill in the pieces of relevent information, 
+			and  hit send. Just once!</p>
+			<p>Dive right in and <a href='/create'><strong>create your first template!</strong></a> or check out the <a href='/faq'><strong>quickstart guide</strong></a></p>
 		</div>
 	@endif
 
-	<div class="panel panel-default">
+	<div class="panel panel-success">
 		<!-- Table -->
 		<table class="table">
 			<tr>

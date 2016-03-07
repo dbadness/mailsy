@@ -3,8 +3,11 @@
 @section('content')
 
 	<div class="page-header">
-	<h1>View Email Previews <small>{!! $email->name !!}</small></h1>
+		<h1>View Email Previews <small>{!! $email->name !!}</small></h1>
 	</div>
+	<a class="btn btn-info pull-right" href="#sendButton"><span>Go To End</span></a>
+	<br>
+	<br>
 
 	<!-- Let them know how many emails they have left (and that, if they send em, they'll be deleted -->
 	@if(!$user->paid && (count($messages) > App\User::howManyEmailsLeft()))
@@ -22,6 +25,8 @@
 		@foreach($messages as $message)
 
 			<div class="well">
+
+
 				{!! Form::hidden('messages[]', $message->id) !!}
 				To: {!! $message->recipient !!}
 				<br>
@@ -36,7 +41,7 @@
 
 		@endforeach
 
-		<button class="btn btn-primary" role="button">
+		<button class="btn btn-primary" role="button" id="sendButton">
 			Send Emails
 		</button>
 		<a href='/edit/{!! base64_encode($email->id) !!}'>
