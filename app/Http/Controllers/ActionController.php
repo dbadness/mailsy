@@ -144,6 +144,10 @@ class ActionController extends Controller
                 {
                     foreach($row as $header)
                     {
+                        $header = strtolower($header);
+                        if($header == 'emails'){
+                            $header = 'email';
+                        }
                         $csv[$header] = array();
                         array_push($headers, $header);
                     }
@@ -158,7 +162,7 @@ class ActionController extends Controller
                         } else
                         {
 //                            return redirect('/edit/'.base64_encode($email->id).'?badCSV=true');
-                return redirect('/edit/'.base64_encode($email->id).'?badEmails=true');
+                            return redirect('/edit/'.base64_encode($email->id).'?badEmails=true');
 
                         }
                     }
@@ -172,7 +176,7 @@ class ActionController extends Controller
 
         // Add emails to email post
         if($request->csvFile){
-            $_POST['_email'] = array_merge($_POST['_email'], $csv['Email']);
+            $_POST['_email'] = array_merge($_POST['_email'], $csv['email']);
         }
 
         foreach($_POST['_email'] as $key => $recipientEmail)
@@ -195,7 +199,7 @@ class ActionController extends Controller
             $fieldEntries = [];
 
             //Append csv fields to existing requests so they're processed normally
-            if(count($headers) == count($fieldEntries)){
+            if(count($headers) >= count($fieldEntries)){
 
                 foreach($fields as $field)
                 {
@@ -699,6 +703,8 @@ class ActionController extends Controller
         Session::flash('flash_message', 'Task successfully deleted!');
 
         return redirect()->route('tasks.index');
+
+    }
 
     // webhook for emails opened by the recipients (read receipts) and returns an image to fool the email
     // we'll also need the user id since this webhook is stateless

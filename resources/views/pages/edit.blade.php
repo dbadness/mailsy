@@ -22,7 +22,7 @@
 		<h1>Edit Template <small>{!! $email->name !!}</small></h1>
 	</div>
 	@if($email->temp_recipients_list)
-		<form method='post' action='/makePreviews' id='makePreviews'>
+		<form method='post' action='/makePreviews' id='makePreviews' enctype="multipart/form-data">
 	@else
 		<form method='post' action='/saveTemplate'>
 	@endif
