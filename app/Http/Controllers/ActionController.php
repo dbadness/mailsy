@@ -14,11 +14,6 @@ use App\Message;
 use App\Recipient;
 use App\Field;
 use Redirect;
-<<<<<<< HEAD
-use File;
-=======
-use Log;
->>>>>>> mailsyFrontChanges
 
 // for SendinBlue
 use \Sendinblue\Mailin as Mailin;
@@ -690,7 +685,6 @@ class ActionController extends Controller
         return 'success';
     }
 
-<<<<<<< HEAD
     // webhook for emails opened by the recipients (read receipts) and returns an image to fool the email
     // we'll also need the user id since this webhook is stateless
     public function doTrack($e_user_id, $e_message_id)
@@ -734,21 +728,6 @@ class ActionController extends Controller
         }
 
         return File::get('images/email-tracker.png');
-=======
-    // send the tutorial email to the user
-    public function deleteMessage($id)
-    {
-        $user = Auth::user();
-
-        $task = Task::findOrFail($id);
-
-        $task->delete();
-
-        Session::flash('flash_message', 'Task successfully deleted!');
-
-        return redirect()->route('tasks.index');
-
->>>>>>> mailsyFrontChanges
     }
 
 }
