@@ -37,7 +37,7 @@ $(document).ready(function()
 			}
 		});
 		// add up the users to get the final amount
-		var totalAmount = 700*userCount;
+		var totalAmount = 1000*userCount;
 		var customerEmail = $('input[name=myEmail]').val();
 		var customerInfo;
 		if(myself && (userCount > 1))

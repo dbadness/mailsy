@@ -17,6 +17,8 @@
     <!-- Custom CSS -->
     <link href="/css/landing-page.css" rel="stylesheet">
     <link href="/css/whhg.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
+
 
     <!-- Custom Fonts -->
     <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -108,8 +110,8 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="intro-message">
-                        <h1>Less time prospecting. More time turning prospects into customers.</h1>
-                        <h3>Send many individual, customized emails all at once with Mailsy.</h3>
+                        <h1>Less time emailing customers. <br>More time working with them.</h1>
+                        <h3>Send and track many emails at once with Mailsy.</h3>
                         <hr class="intro-divider">
                         <ul class="list-inline intro-social-buttons">
                             <li>
@@ -136,11 +138,9 @@
                 <div class="col-lg-5 col-sm-6">
                     <hr class="section-heading-spacer">
                     <div class="clearfix"></div>
-                    <h2 class="section-heading">How does Mailsy work?</h2>
+                    <h2 class="section-heading">What the heck is Mailsy?</h2>
                     <p class="lead">
-                        Mailsy allows you to create email templates with pieces of information that you can customize for each individual message.
-                        <br><br>With the template made and each recipients' individualized information ready to go in each message,
-                        send them all with a single click using your Google-hosted email account. They also can go right into your Salesforce instance. Couldn't be easier.
+                        Mailsy is an email tool that allows you to reach out to more people to sell, market, and advocate your brand. We save you time by sending the emails out all at once while keeping the authenticity that comes from sending emails one at a time.<br><br>Create email templates with a basic message, input details into those messages to make each email unique for your recipients, and then send 'em off. Mailsy even tracks those emails so you know when your recipient opens them.
                     </p>
                 </div>
                 <div class="col-lg-5 col-lg-offset-2 col-sm-6">
@@ -163,13 +163,27 @@
                 <div class="col-lg-5 col-lg-offset-1 col-sm-push-6  col-sm-6">
                     <hr class="section-heading-spacer">
                     <div class="clearfix"></div>
-                    <h2 class="section-heading">Why should you use Mailsy?</h2>
+                    <h2 class="section-heading">Mailsy keeps it simple, but gives you what you need to email more effectively.</h2>
                     <p class="lead">
-                        Email prospecting by sending individual emails takes a lot of time. You're willing to invest this time since relevant emails improve the chance of the recipient replying to you.
-                        <br><br>
-                        By sending out emails all at once while still being able to individualize each email dramatically speeds up this process while still keeping your emails engaging.
-                        <br><br>
-                        Now you can spend that time building up the relationships you prospected which helps you sell, advocate, or market far more effectively.
+                        <span class='subheader'>Email Templates (Mail Merge)</span>
+                        <br>
+                        Using a simple yet powerful templating technology, you can create a template to use over and over again but you're still able to define peices of information for each
+                        recipient to increase the chance of a reply.
+                        <br>
+                        <br>
+                        <span class='subheader'>Email Tracking</span>
+                        <br>
+                        Each email sent through Mailsy has a little magic in it so you can get a notification when that recipient opens that email. That way you know when you're on their mind.
+                        <br>
+                        <br>
+                        <span class='subheader'>CRM Integration</span>
+                        <br>
+                        By adding your CRM BCC email into the Settings page, you're configured to let Mailsy send your outreach emails right into your CRM software. Now that's easy.
+                        <br>
+                        <br>
+                        <span class='subheader'>Upload CSV Lists</span>
+                        <br>
+                        Some people like to add the recipient's information one at a time. Other people like to upload a CSV with the list already made. Who are we to say who's right? You can do both with Mailsy.
                     </p>
                 </div>
                 <div class="col-lg-5 col-sm-pull-6  col-sm-6">
@@ -209,7 +223,7 @@
                                 <h3>$0</h3>                            
                             </td>
                             <td> 
-                                <h3>$7</h3>
+                                <h3>$10</h3>
                             </td>
                         </tr>
                         <tr>
@@ -225,7 +239,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <strong>Sent from Your Gmail Account</strong>
+                                <strong>Sent from Your Email Account</strong>
                             </td>
                             <td>
                                 <h3><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></h3>
@@ -281,12 +295,13 @@
                 <div class="col-lg-5 col-sm-pull-6  col-sm-6">
                     <hr class="section-heading-spacer">
                     <div class="clearfix"></div>
-                    <h2 class="section-heading">Free to use. No trial periods.</h2>
+                    <h2 class="section-heading">Free to use with no trail periods.</h2>
                     <p class="lead">
-                        You can use your Google credentials to sign up for Mailsy and send 10 emails per day on a free account. There are no trial periods so you can use a free account as long as you'd like.
+                        You can use your Google credentials to sign up for Mailsy and send 10 emails per day with all of the features on a free account. There are no trial periods so you can use a free account as long as you'd like.
                         <br><br>
-                        If you want to send unlimited emails per day, you can upgrade to a paid account for only $7 per month. If you're a team leader, you can even pay for multiple accounts all at once which makes administration
-                        and billing incredibly simple. Also, you can cancel and go back down to the free account whenever you'd like - no yearly contracts or anything like that.
+                        If you want to send unlimited emails per day, you can upgrade to a paid account for only $10 per month. If you're a team leader, you can even pay for multiple accounts all at once which makes administration and billing incredibly simple. 
+                        <br><br>
+                        As always, you can cancel or go back down to a free account whenever you'd like - there are no yearly contracts or anything like that.
                     </p>
                 </div>
             </div>
@@ -351,7 +366,7 @@
                             <a href="/auth">Sign Up / Log In</a>
                         </li>
                     </ul>
-                    <p class="copyright text-muted small">Copyright &copy;<?php echo date('Y');?> Mailsy Technologies, LLC. All Rights Reserved</p>
+                    <p class="copyright text-muted small">Copyright &copy;<?php echo date('Y');?> Mailsy by Lucolo, Inc. All Rights Reserved</p>
                 </div>
             </div>
         </div>
