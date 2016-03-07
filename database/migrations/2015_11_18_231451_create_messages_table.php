@@ -26,6 +26,7 @@ class CreateMessagesTable extends Migration
             $table->integer('deleted_at')->nullable();
             $table->string('status')->nullable();
             $table->string('send_to_salesforce')->nullable();
+            $table->integer('read_at')->nullable();
         });
     }
 

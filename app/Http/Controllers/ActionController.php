@@ -15,6 +15,7 @@ use App\Recipient;
 use App\Field;
 use Redirect;
 use Log;
+use File;
 
 // for SendinBlue
 use \Sendinblue\Mailin as Mailin;
@@ -296,11 +297,14 @@ class ActionController extends Controller
             {
                 $message = Message::find($id);
 
+                // prepend the read receipt callback webhook to the message
+                $full_body = $message->message.'<img src="'.env('DOMAIN').'/track/'.base64_encode($user->id).'/'.base64_encode($message->id).'">';
+
                 // use swift mailer to build the mime
                 $mail = new \Swift_Message;
                 $mail->setFrom(array($user->email => $user->name));
                 $mail->setTo([$message->recipient]);
-                $mail->setBody($message->message, 'text/html');
+                $mail->setBody($full_body, 'text/html');
                 $mail->setSubject($message->subject);
                 if($message->send_to_salesforce)
                 {
@@ -337,6 +341,15 @@ class ActionController extends Controller
         $user->name = $request->name;
         $user->sf_address = $request->sf_address;
         $user->signature = $request->signature;
+        if($request->track_email == 'yes')
+        {
+            $user->track_email = 'yes';
+        }
+        else
+        {
+            $user->track_email = NULL;
+        }
+        
         $user->save();
 
         return 'success';
@@ -495,8 +508,10 @@ class ActionController extends Controller
     // requests, updates, and return the message status
     public function doUpdateMessageStatus($id)
     {
-        $status = Message::updateMessageStatus($id);
-        return ucfirst($status);
+        // get the message object
+        $message = Message::find($id);
+
+        return ucfirst($message->status);
     }
 
     // update a customer card
@@ -663,7 +678,7 @@ class ActionController extends Controller
         $data = str_replace(array('+','/','='),array('-','_',''),$data); // url safe
         $m = new \Google_Service_Gmail_Message();
         $m->setRaw($data);
-        // $gmailMessage = $gmail->users_messages->send('me', $m);
+        $gmailMessage = $gmail->users_messages->send('me', $m);
 
         // update the DB so we can check if this feature is used
         $user->tutorial_email = 'yes';
@@ -685,6 +700,49 @@ class ActionController extends Controller
 
         return redirect()->route('tasks.index');
 
+    // webhook for emails opened by the recipients (read receipts) and returns an image to fool the email
+    // we'll also need the user id since this webhook is stateless
+    public function doTrack($e_user_id, $e_message_id)
+    {
+        // decrypt the ids
+        $user_id = base64_decode($e_user_id);
+        $message_id = base64_decode($e_message_id);
+
+        // get the message id and make the DB update
+        $message = Message::find($message_id);
+
+        if($message->status != 'read')
+        {
+            $user = Auth::loginUsingId($user_id);
+
+            $message->status = 'read';
+            $message->read_at = time();
+            $message->save();
+
+            if($user->track_email)
+            {
+                // set the timezone
+                date_default_timezone_set('EST');
+
+                // end a test email
+                $subject = $message->recipient.', opened your Mailsy email!';
+                $body = 'Hi there,<br><br>';
+                $body .= 'We\'re writing to let you that '.$message->recipient.' opened your email on '.date('D, M d, Y', $message->read_at).' at '.date('g:ia',$message->read_at).' EST.';
+                $body .= '<br><br>Best,<br>The Mailsy Team';
+
+                $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
+                $data = array( 
+                    "to" => array($user->email => $user->name),
+                    "from" => array('no-reply@mailsy.co','Mailsy'),
+                    "subject" => $subject,
+                    "html" => $body
+                );
+                
+                $mailin->send_email($data);
+            }
+        }
+
+        return File::get('images/email-tracker.png');
     }
 
 }

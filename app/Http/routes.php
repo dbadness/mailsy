@@ -56,3 +56,4 @@ Route::get('/sendFirstEmail','ActionController@doSendFirstEmail');
 // webhooks
 Route::post('/payment/paid','APIController@doInvoicePaid'); // successful invoice payment
 Route::post('/payment/failed','APIController@doInvoiceFailed'); // payment declined for invoice
+Route::get('/track/{e_user_id}/{e_message_id}', 'ActionController@doTrack'); // processes a read receipt when a recipient opens an email

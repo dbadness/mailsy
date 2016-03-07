@@ -40,6 +40,25 @@
 			<p>Name (to appear in the inbox of the recipient - <strong><i>highly recommended</i></strong>):</p>
 			<div class="input-group" style="border-style: solid;">
 			  	<span class="input-group-addon" id="basic-addon1" style="border: solid;">Name</span>
+			<p>Email Tracking</p>
+			<div class="input-group">
+				<span class="input-group-addon">
+					<select id='trackEmail' name='track_email'>
+						@if($user->track_email)
+							<option value='yes' selected>Yes</option>
+							<option value='no'>No</option>
+						@else
+							<option value='yes'>Yes</option>
+							<option value='no' selected>No</option>
+						@endif
+					</select>
+				</span>
+				<input type="text" class="form-control" value='Send me an email when someone opens my emails.' disabled>
+			</div>
+			<br>
+			<p>Name (to appear in the inbox of the recipient - <i>highly recommended</i>):</p>
+			<div class="input-group">
+			  	<span class="input-group-addon" id="basic-addon1">Name</span>
 			  	<input type="text" name='name' class="form-control" aria-describedby="basic-addon1" value='{!! $user->name !!}'>
 			</div>
 			<br>

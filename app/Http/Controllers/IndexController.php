@@ -89,6 +89,8 @@ class IndexController extends Controller
                     $existingUser->paid = null;
                 }
             }
+            $existingUser->track_email = 'yes';
+            $existingUser->name = $name;
             $existingUser->save();
             return redirect('/home');
         }
@@ -111,6 +113,7 @@ class IndexController extends Controller
             $user->name = $name;
             $user->gmail_token = $accessToken;
             $user->created_at = time();
+            $user->track_email = 'yes';
             $user->referer = $referer;
 
             // save it to the DB
