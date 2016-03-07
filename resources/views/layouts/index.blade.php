@@ -22,9 +22,6 @@
     <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
 
-    <link rel="stylesheet" href="{!! asset('/css/main.css') !!}">
-    <link href="/css/paper.css" rel="stylesheet"/>
-
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -66,15 +63,15 @@
 </head>
 
 <body>
-<!--
 
+    <!-- Navigation -->
     <nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
         <div class="container topnav">
-
+            <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
                 <a class="navbar-brand topnav" href="/"><img src='/images/logo.png' alt='Mailsy' width='80px'></a>
             </div>
-
+            <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
@@ -97,43 +94,41 @@
                     </li>
                 </ul>
             </div>
-
+            <!-- /.navbar-collapse -->
         </div>
-
+        <!-- /.container -->
     </nav>
--->
+
 
     <!-- Header -->
     <a name=""></a>
     <div class="intro-header">
         <div class="container">
-            <a href="/auth" class="pull-right">Beta Tester Log In</a>
+
             <div class="row">
                 <div class="col-lg-12">
                     <div class="intro-message">
-                        <h1>Less prospecting. <br>More customers.</h1>
-                        <h3>Send mass personalized emails in minutes with Mailsy.</h3>
+                        <h1>Less time prospecting. More time turning prospects into customers.</h1>
+                        <h3>Send many individual, customized emails all at once with Mailsy.</h3>
                         <hr class="intro-divider">
                         <ul class="list-inline intro-social-buttons">
                             <li>
-                                <a href="/auth" class="btn btn-info btn-lg"></i>&nbsp&nbsp&nbsp&nbsp<span class="network-name">Apply to Beta ! >></span></a>
+                                <a href="/auth" class="btn btn-info btn-lg"></i>&nbsp&nbsp&nbsp&nbsp<span class="network-name">Signup for Free Using Google</span></a>
                             </li>
                         </ul>
-        <a href="#hiw">Learn More
-        <br>
-        VV</a>
                     </div>
                 </div>
             </div>
 
         </div>
         <!-- /.container -->
+
     </div>
     <!-- /.intro-header -->
 
     <!-- Page Content -->
 
-	<a name="hiw"></a>
+    <a name="hiw"></a>
     <div class="content-section-a">
 
         <div class="container">
@@ -141,15 +136,11 @@
                 <div class="col-lg-5 col-sm-6">
                     <hr class="section-heading-spacer">
                     <div class="clearfix"></div>
-                    <h2 class="section-heading">What is Mailsy?</h2>
+                    <h2 class="section-heading">How does Mailsy work?</h2>
                     <p class="lead">
-                        Mailsy is a mass personalized emailing system. 
-                        <br><br>You make a template. You put customer information into the system. Mailsy generates and sends personalized emails for you. Right from your account. There's even salesforce integration. It couldn't be easier.
-<!--
                         Mailsy allows you to create email templates with pieces of information that you can customize for each individual message.
                         <br><br>With the template made and each recipients' individualized information ready to go in each message,
                         send them all with a single click using your Google-hosted email account. They also can go right into your Salesforce instance. Couldn't be easier.
--->
                     </p>
                 </div>
                 <div class="col-lg-5 col-lg-offset-2 col-sm-6">
@@ -172,20 +163,13 @@
                 <div class="col-lg-5 col-lg-offset-1 col-sm-push-6  col-sm-6">
                     <hr class="section-heading-spacer">
                     <div class="clearfix"></div>
-                    <h2 class="section-heading">Why is Mailsy awesome?</h2>
+                    <h2 class="section-heading">Why should you use Mailsy?</h2>
                     <p class="lead">
-                        Because sales is about selling, not inboxes.
-                        <br><br>
-                        Mailsy helps you send many more emails in dramatically less time, all without losing out on the personalization that drives engagement.
-                        <br><br>
-                        This lets you spend more time doing what you do best: building relationships, selling, advocating, and getting your product into as many eager hands as possible.
-<!--
                         Email prospecting by sending individual emails takes a lot of time. You're willing to invest this time since relevant emails improve the chance of the recipient replying to you.
                         <br><br>
                         By sending out emails all at once while still being able to individualize each email dramatically speeds up this process while still keeping your emails engaging.
                         <br><br>
                         Now you can spend that time building up the relationships you prospected which helps you sell, advocate, or market far more effectively.
--->
                     </p>
                 </div>
                 <div class="col-lg-5 col-sm-pull-6  col-sm-6">
@@ -211,37 +195,37 @@
                             <td> 
                             </td>
                             <td>
-                                <h3>Free</h3>
+                                <h3>Free Account</h3>
                             </td>
                             <td>
-                                <h3>Unlimited</h3>
+                                <h3>Paid Account</h3>
                             </td>
                         </tr>
                         <tr style='border-top:solid 2px lightgray;'>
-                            <td>
-                                <strong>Emails per Day</strong>
+                            <td style='padding:15px 0 0 0;'>
+                                <strong>Monthly Cost per Person</strong>
                             </td>
                             <td>
-                                <h3>10</h3>
+                                <h3>$0</h3>                            
                             </td>
-                            <td>
-                                <h3>∞</h3>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <strong>Templates</strong>
-                            </td>
-                            <td>
-                                <h3>5</h3>
-                            </td>
-                            <td>
-                                <h3>∞</h3>
+                            <td> 
+                                <h3>$7</h3>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <strong>Sent from Your Gmail</strong>
+                                <strong>Unlimited Templates</strong>
+                            </td>
+                            <td>
+                                <h3><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></h3>
+                            </td>
+                            <td>
+                                <h3><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></h3>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Sent from Your Gmail Account</strong>
                             </td>
                             <td>
                                 <h3><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></h3>
@@ -255,7 +239,7 @@
                                 <strong>Unlimited Support</strong>
                             </td>
                             <td>
-                                <h3><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></h3>
+                                <h3><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></h3>
                             </td>
                             <td>
                                 <h3><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></h3>
@@ -263,10 +247,21 @@
                         </tr>
                         <tr>
                             <td>
-                                <strong>Simple Billing</strong>
+                                <strong>Emails per Day</strong>
                             </td>
                             <td>
-                                <h3 class="glyphicon glyphicon-ban-circle" aria-hidden="true"></h3>
+                                <h3>10</h3>
+                            </td>
+                            <td>
+                                <h3>Unlimited</h3>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Pay for Other Users<br>(Simple Billing)</strong>
+                            </td>
+                            <td>
+                                <h3></h3>
                             </td>
                             <td>
                                 <h3><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></h3>
@@ -274,72 +269,41 @@
                         </tr>
                         <tr>
                             <td>
-                                <strong>Feed the Mailsy Mouse</strong>
                             </td>
                             <td>
-                                <h3 class="glyphicon glyphicon-remove-circle" aria-hidden="true"></h3>
-                            </td>
-                            <td>
-                                <h3><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></h3>
-                            </td>
-                        </tr>
-                        <tr style='border-top:solid 2px lightgray;'>
-                            <td style='padding:15px 0 0 0;'>
-                                <strong>Monthly Cost</strong>
-                            </td>
-                            <td>
-                                <h3>$0</h3>                            
-                            </td>
-                            <td> 
-                                <h3>$10</h3>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
+                                <a href='/auth'><button class='btn btn-primary' role='button'>Sign Up for Free</button></a>
                             </td>
                             <td>
                             </td>
                         </tr>
                     </table>
-
                 </div>
                 <div class="col-lg-5 col-sm-pull-6  col-sm-6">
-                    <h1 class="section-heading">Plans</h2>
                     <hr class="section-heading-spacer">
                     <div class="clearfix"></div>
-                    <h3 class="section-heading">Free is Free.<br> Unlimited is unlimited.<br> Forever.</h3>
+                    <h2 class="section-heading">Free to use. No trial periods.</h2>
                     <p class="lead">
-                        Sign up for free and send up to ten emails per day using up to five templates. When you're ready to do more, upgrade at any time.
-                        <br><br>
-                        You can cancel at anytime too . No contracts or yearlies to keep you paying for software you don't use.
-<!--
                         You can use your Google credentials to sign up for Mailsy and send 10 emails per day on a free account. There are no trial periods so you can use a free account as long as you'd like.
                         <br><br>
                         If you want to send unlimited emails per day, you can upgrade to a paid account for only $7 per month. If you're a team leader, you can even pay for multiple accounts all at once which makes administration
                         and billing incredibly simple. Also, you can cancel and go back down to the free account whenever you'd like - no yearly contracts or anything like that.
--->
                     </p>
                 </div>
             </div>
 
         </div>
         <!-- /.container -->
-        <div class="jumbotron">
-            <div  class="text-center">
-                <a href="/auth" class="btn btn-fill btn-info btn-lg"></i>&nbsp&nbsp&nbsp&nbsp<span class="network-name">Apply to Beta ! >></span></a>
-            </div>
-        </div>
 
     </div>
     <!-- /.content-section-a -->
-	<a name="contact"></a>
-    <div class="banner" style='background:darkgrey;'>
+    <a name="contact"></a>
+    <div class="banner" style='background:lightgray;'>
 
         <div class="container">
 
             <div class="row">
                 <div class="col-lg-6">
-                    <h2>Contact us!</h2>
+                    <h2>Reach out with any questions and you'll get a speedy reply.</h2>
                 </div>
                 <div class="col-lg-6" style='text-align:right;'>
                     <span>hello[at]mailsy[dot]co</span><br>
@@ -360,10 +324,9 @@
                 <div class="col-lg-12">
                     <ul class="list-inline">
                         <li>
-                            <a href="#">Back to Top</a>
+                            <a href="#">Home</a>
                         </li>
                         <li class="footer-menu-divider">&sdot;</li>
-<!--
                         <li>
                             <a href="#hiw">How It Works</a>
                         </li>
@@ -373,10 +336,9 @@
                         </li>
                         <li class="footer-menu-divider">&sdot;</li>
                         <li>
-                            <a href="#pricing">Plans</a>
+                            <a href="#pricing">Pricing</a>
                         </li>
                         <li class="footer-menu-divider">&sdot;</li>
--->
                         <li>
                             <a href="#contact">Contact</a>
                         </li>
@@ -386,10 +348,10 @@
                         </li>
                         <li class="footer-menu-divider">&sdot;</li>
                         <li>
-                            <a href="/auth">Beta Tester Log In</a>
+                            <a href="/auth">Sign Up / Log In</a>
                         </li>
                     </ul>
-                    <p class="copyright text-muted small">Copyright &copy;<?php echo date('Y');?> Lucolo Inc. All Rights Reserved</p>
+                    <p class="copyright text-muted small">Copyright &copy;<?php echo date('Y');?> Mailsy Technologies, LLC. All Rights Reserved</p>
                 </div>
             </div>
         </div>
