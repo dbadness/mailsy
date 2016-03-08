@@ -199,7 +199,6 @@ class ActionController extends Controller
                 }
             }
 
-            Log::info(count($_POST['_email']));
             if(count($_POST['_email']) == 0){
                return redirect('/edit/'.base64_encode($email->id).'?missingColumns=false&badEmails=false&droppedRows=false&columnMismatch=false&invalidCSV=false&empty=true');
             }
