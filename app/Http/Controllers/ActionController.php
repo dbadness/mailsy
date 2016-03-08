@@ -173,7 +173,7 @@ class ActionController extends Controller
                 $fieldEntries = [];
 
                 //Append csv fields to existing requests so they're processed normally
-                if((count($headers)-1) >= count($fields)){
+                if((count($headers)-1) == count($fields)){
                     foreach($fields as $field)
                     {
                         if($request->csvFile)
