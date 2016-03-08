@@ -39,6 +39,12 @@
 				Your CSV is invalid. Usually this means you don't have an email column. Sometimes because there's no headers.
 			</div>
 		@endif
+		@if($_GET['empty'] == 'true')
+			<div class="alert alert-danger alert-dismissible" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				You didn't enter any fields!
+			</div>
+		@endif
 
 	@endif
 
@@ -86,13 +92,20 @@
 					<td class='field'>
 						<b>Email</b>
 					</td>
-					@foreach(json_decode($recipients[0]->_fields) as $k => $v)
-						@foreach($v as $field => $value)
-							<td class='field'>
-								<b>{!! $field !!}</b>
-							</td>
+					@if($recipients)
+						@foreach(json_decode($recipients[0]->_fields) as $k => $v)
+							@foreach($v as $field => $value)
+								<td class='field'>
+									<b>{!! $field !!}</b>
+								</td>
+							@endforeach
 						@endforeach
-					@endforeach
+					@else
+			<div class="alert alert-danger alert-dismissible" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				There's no recipients
+			</div>
+					@endif
 				</tr>
 				@foreach($recipients as $recipient)
 					<tr class='recipient'>

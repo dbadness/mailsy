@@ -165,14 +165,14 @@ class ActionController extends Controller
                             array_push($csv[$header], $row[$key]);
                         } else
                         {
-                           return redirect('/edit/'.base64_encode($email->id).'?columnMismatch=true&badEmails=false&missingColumns=false&droppedRows=false&invalidCSV=false');
+                           return redirect('/edit/'.base64_encode($email->id).'?columnMismatch=true&badEmails=false&missingColumns=false&droppedRows=false&invalidCSV=false&empty=false');
 
                         }
                     }
                 }
             }
             if($invalid){
-                return redirect('/edit/'.base64_encode($email->id).'?invalidCSV=true&badEmails=false&missingColumns=false&droppedRows=false&columnMismatch=false');
+                return redirect('/edit/'.base64_encode($email->id).'?invalidCSV=true&badEmails=false&missingColumns=false&droppedRows=false&columnMismatch=false&empty=false');
             }
         }
 
@@ -199,14 +199,21 @@ class ActionController extends Controller
                 }
             }
 
+            if(count($fields == 0)){
+               return redirect('/edit/'.base64_encode($email->id).'?missingColumns=false&badEmails=false&droppedRows=false&columnMismatch=false&invalidCSV=false&empty=false');
+            }
+
             // for each field provided, replace the variable in the template with the correct field input
             // use the key we returned from figuring out with recipient entry we're currently on
             $messageText = $request->_email_template;
             $subjectText = $request->_subject;
             $fieldEntries = [];
 
+            Log::info($fields);
+            Log::info($headers);
+
             //Append csv fields to existing requests so they're processed normally
-            if(count($headers) >= count($fieldEntries)){
+            if((count($headers)-1) >= count($fields)){
 
                 foreach($fields as $field)
                 {
@@ -228,7 +235,7 @@ class ActionController extends Controller
                 }
 
             } else{
-               return redirect('/edit/'.base64_encode($email->id).'?missingColumns=true&badEmails=false&droppedRows=false&columnMismatch=false&invalidCSV=false');
+               return redirect('/edit/'.base64_encode($email->id).'?missingColumns=true&badEmails=false&droppedRows=false&columnMismatch=false&invalidCSV=false&empty=false');
 
             }
 
@@ -276,9 +283,9 @@ class ActionController extends Controller
             if(!filter_var($recipientEmail,FILTER_VALIDATE_EMAIL))
             {
                 if($dropped){
-                     return redirect('/edit/'.base64_encode($email->id).'?droppedRows=true&badEmails=false&missingColumns=false&columnMismatch=false&invalidCSV=false');
+                     return redirect('/edit/'.base64_encode($email->id).'?droppedRows=true&badEmails=false&missingColumns=false&columnMismatch=false&invalidCSV=false&empty=false');
                 } else{
-                    return redirect('/edit/'.base64_encode($email->id).'?badEmails=true&missingColumns=false&droppedRows=false&columnMismatch=false&invalidCSV=false');
+                    return redirect('/edit/'.base64_encode($email->id).'?badEmails=true&missingColumns=false&droppedRows=false&columnMismatch=false&invalidCSV=false&empty=false');
                 }
             }
             else
