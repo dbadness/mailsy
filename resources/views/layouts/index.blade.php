@@ -179,9 +179,9 @@
                 </i>
             </span>
             <h4 class="service-heading">
-                Email Templates (Mail Merge)
+                Email Templates
             </h4>
-            <p class="text-muted">
+            <p class="text">
                 Using a simple yet powerful templating technology, you can create a template to use over and over again but you're still able to define peices of information for each recipient to increase the chance of a reply.
             </p>
         </div>
@@ -195,7 +195,7 @@
             <h4 class="service-heading">
                 Email Tracking
             </h4>
-            <p class="text-muted">
+            <p class="text">
                 Each email sent through Mailsy has a little magic in it so you can get a notification when that recipient opens that email. That way you know when you're on their mind.
             </p>
         </div>
@@ -209,7 +209,7 @@
             <h4 class="service-heading">
                 CRM Integration
             </h4>
-            <p class="text-muted">
+            <p class="text">
                 By adding your CRM BCC email into the Settings page, you're configured to let Mailsy send your outreach emails right into your CRM software. Now that's easy.
             </p>
         </div>
@@ -223,7 +223,7 @@
             <h4 class="service-heading">
                 Upload CSV Lists
             </h4>
-            <p class="text-muted">
+            <p class="text">
                 Some people like to add the recipient's information one at a time. Other people like to upload a CSV with the list already made. Who are we to say who's right? You can do both with Mailsy.
             </p>
         </div>
