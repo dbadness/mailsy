@@ -162,7 +162,7 @@ class ActionController extends Controller
                     }
                 }
 
-                if(count($_POST['_email']) == 0 || (count($content) === 1 && $content[0] === '')){
+                if(count($_POST['_email']) == 0 || (count($csv) === 1 && $csv[0] === '')){
                    return redirect('/use/'.base64_encode($email->id).'?missingColumns=false&badEmails=false&droppedRows=false&columnMismatch=false&invalidCSV=false&empty=true');
                 }
 
@@ -239,6 +239,9 @@ class ActionController extends Controller
                     '_fields' => json_encode($fieldEntries)
                 ];
             } else{
+                if(count($_POST['_email']) == 0 || (count($csv['email']) === 0)){
+                   return redirect('/use/'.base64_encode($email->id).'?missingColumns=false&badEmails=false&droppedRows=false&columnMismatch=false&invalidCSV=false&empty=true');
+                }
                 $dropped = true;
             }
         }
