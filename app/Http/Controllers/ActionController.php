@@ -165,14 +165,14 @@ class ActionController extends Controller
                             array_push($csv[$header], $row[$key]);
                         } else
                         {
-                           return redirect('/edit/'.base64_encode($email->id).'?columnMismatch=true');
+                           return redirect('/edit/'.base64_encode($email->id).'?columnMismatch=true&badEmails=false&missingColumns=false&droppedRows=false&invalidCSV=false');
 
                         }
                     }
                 }
             }
             if($invalid){
-                return redirect('/edit/'.base64_encode($email->id).'?invalidCSV=true');
+                return redirect('/edit/'.base64_encode($email->id).'?invalidCSV=true&badEmails=false&missingColumns=false&droppedRows=false&columnMismatch=false');
             }
         }
 
@@ -228,7 +228,7 @@ class ActionController extends Controller
                 }
 
             } else{
-               return redirect('/edit/'.base64_encode($email->id).'?missingColumns=true');
+               return redirect('/edit/'.base64_encode($email->id).'?missingColumns=true&badEmails=false&droppedRows=false&columnMismatch=false&invalidCSV=false');
 
             }
 
@@ -276,9 +276,9 @@ class ActionController extends Controller
             if(!filter_var($recipientEmail,FILTER_VALIDATE_EMAIL))
             {
                 if($dropped){
-                     return redirect('/edit/'.base64_encode($email->id).'?droppedRows=true');
+                     return redirect('/edit/'.base64_encode($email->id).'?droppedRows=true&badEmails=false&missingColumns=false&columnMismatch=false&invalidCSV=false');
                 } else{
-                    return redirect('/edit/'.base64_encode($email->id).'?badEmails=true');
+                    return redirect('/edit/'.base64_encode($email->id).'?badEmails=true&missingColumns=false&droppedRows=false&columnMismatch=false&invalidCSV=false');
                 }
             }
             else
