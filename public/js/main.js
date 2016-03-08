@@ -61,6 +61,7 @@ $(document).ready(function(){
 					return confirm('There are blank fields. Are you sure you want to proceed?');
 				}
 			}
+
 		}
 	});
 	

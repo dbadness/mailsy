@@ -12,7 +12,31 @@
 		@if($_GET['badEmails'])
 			<div class="alert alert-danger alert-dismissible" role="alert">
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				There was an error with your fields or CSV. Please correct it and make sure no columns were dropped.
+				At least one email is bad
+			</div>
+		@endif
+		@if($_GET['missingColumns'])
+			<div class="alert alert-danger alert-dismissible" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				At least one column is missing or mismatched
+			</div>
+		@endif
+		@if($_GET['droppedRows'])
+			<div class="alert alert-danger alert-dismissible" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				Some rows have been dropped due to not having emails. Check to make sure they weren't important.
+			</div>
+		@endif
+		@if($_GET['columnMismatch'])
+			<div class="alert alert-danger alert-dismissible" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				At least one column is empty
+			</div>
+		@endif
+		@if($_GET['invalidCSV'])
+			<div class="alert alert-danger alert-dismissible" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				Your CSV is invalid. Usually this means you don't have an email column. Sometimes because there's no headers.
 			</div>
 		@endif
 

@@ -134,6 +134,7 @@ class ActionController extends Controller
 
         if($request->csvFile)
         {
+            $invalid = true;
             // get the contents of the text file and put it into an array
             $rows = array_map('str_getcsv', file($request->csvFile));
 
@@ -147,6 +148,9 @@ class ActionController extends Controller
                         $header = strtolower($header);
                         if($header == 'emails'){
                             $header = 'email';
+                            $invalid = false;
+                        } elseif($header == 'email'){
+                            $invalid = false;
                         }
                         $csv[$header] = array();
                         array_push($headers, $header);
@@ -161,12 +165,14 @@ class ActionController extends Controller
                             array_push($csv[$header], $row[$key]);
                         } else
                         {
-//                            return redirect('/edit/'.base64_encode($email->id).'?badCSV=true');
-                            return redirect('/edit/'.base64_encode($email->id).'?badEmails=true');
+                           return redirect('/edit/'.base64_encode($email->id).'?columnMismatch=true');
 
                         }
                     }
                 }
+            }
+            if($invalid){
+                return redirect('/edit/'.base64_encode($email->id).'?invalidCSV=true');
             }
         }
 
@@ -181,6 +187,7 @@ class ActionController extends Controller
 
         foreach($_POST['_email'] as $key => $recipientEmail)
         {
+            if($recipientEmail){
 
             // return the array of the fields from the user
             $fields = [];
@@ -207,7 +214,8 @@ class ActionController extends Controller
                     {
                         foreach($headers as $header)
                         {
-                            if($header == $field){
+                            if($header == $field)
+                            {
                                 $_POST[$field] = array_merge($_POST[$field], $csv[$header]);
                             }
                         }
@@ -220,8 +228,7 @@ class ActionController extends Controller
                 }
 
             } else{
-//                return redirect('/edit/'.base64_encode($email->id).'?badCSV=true');
-                return redirect('/edit/'.base64_encode($email->id).'?badEmails=true');
+               return redirect('/edit/'.base64_encode($email->id).'?missingColumns=true');
 
             }
 
@@ -254,6 +261,9 @@ class ActionController extends Controller
                 '_email' => $recipientEmail,
                 '_fields' => json_encode($fieldEntries)
             ];
+            } else{
+                $dropped = true;
+            }
         }
 
         // save the tempRecipientsList to the email object for future use (if needed)
@@ -265,7 +275,11 @@ class ActionController extends Controller
         {
             if(!filter_var($recipientEmail,FILTER_VALIDATE_EMAIL))
             {
-                return redirect('/edit/'.base64_encode($email->id).'?badEmails=true');
+                if($dropped){
+                     return redirect('/edit/'.base64_encode($email->id).'?droppedRows=true');
+                } else{
+                    return redirect('/edit/'.base64_encode($email->id).'?badEmails=true');
+                }
             }
             else
             {
