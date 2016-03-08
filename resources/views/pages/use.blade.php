@@ -1,6 +1,5 @@
 @extends('layouts.master')
-<br>
-<br>
+
 @section('content')
 
 <form method='post' action='/makePreviews' id='makePreviews' enctype="multipart/form-data">

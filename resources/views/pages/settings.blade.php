@@ -34,7 +34,7 @@
 	<div class='page-header'>
 		<h1>Settings</h1>
 	</div>
-	<div class="panel panel-success">
+	<div class="panel panel-default">
 		<div class="panel-heading"><strong>Email Settings</strong></div>
 		<div class="panel-body">
 			<p>Name (to appear in the inbox of the recipient - <strong><i>highly recommended</i></strong>):</p>
@@ -65,9 +65,9 @@
 			<p>Signature to be inserted at the end of your emails:</p>
 			<div id="signature"></div>
 			<textarea name='_email_template' id='emailTemplateHolder'></textarea>
-			<p>Salesforce email address to log your emails in Salesforce:</p>
-			<div class="input-group" style="border-style: solid;">
-			  	<span class="input-group-addon" id="basic-addon1" style="border: solid;">Salesforce Email</span>
+			<p>Salesforce email address to log your emails in Salesforce (if you select that option when sending emails):</p>
+			<div class="input-group">
+			  	<span class="input-group-addon" id="basic-addon1">Salesforce Email</span>
 			  	<input type="text" name='sf_address' class="form-control" aria-describedby="basic-addon1" value='{!! $user->sf_address !!}'>
 			</div>
 			<br>
@@ -76,7 +76,7 @@
 	</div>
 
 	@if($user->status == 'paying')
-		<div class="panel panel-success">
+		<div class="panel panel-default">
 			<div class="panel-heading"><strong>Card Settings</strong></div>
 			<div class="panel-body">
 				<div class='cardLeft'>
@@ -115,7 +115,7 @@
 		</div>
 
 		@if($user->has_users)
-			<div class="panel panel-success">
+			<div class="panel panel-default">
 				<div class="panel-heading"><strong>User Management</strong></div>
 				<div class="panel-body">
 					<table style='width:100%;'>
@@ -140,7 +140,7 @@
 				</div>
 			</div>
 		@else
-			<div class="panel panel-success">
+			<div class="panel panel-default">
 				<div class="panel-heading"><strong>User Management</strong></div>
 				<div class="panel-body">
 					<p>You're not paying for any other people. Want to <a href='/membership/add'>add some?</a></p>
@@ -148,21 +148,17 @@
 			</div>
 		@endif
 	@elseif(!$user->status && $user->paid)
-		<div class="panel panel-success">
+		<div class="panel panel-default">
 			<div class="panel-heading"><strong>Card Settings</strong></div>
 			<div class="panel-body">
 				You don't have a card registered since someone is paying for you.
 			</div>
 		</div>
 	@else
-		<div class="panel panel-success">
+		<div class="panel panel-default">
 			<div class="panel-heading"><strong>Card Settings</strong></div>
 			<div class="panel-body">
-				<p>You don't have a card registered since you're on a free account. <br>You can <a href='/upgrade'>upgrade</a> to make your account a paid membership, pay for others (like your team) to give them paid memberships, or both! </p>
-
-            <div  class="text-center">
-                <a href="/upgrade" class="btn btn-fill btn-success btn-lg"></i>&nbsp&nbsp&nbsp&nbsp<span class="network-name">UPGRADE! >></span></a>
-            </div>
+				You don't have a card registered since you're on a free account. You can <a href='/upgrade'>upgrade</a> to make your account a paid membership, pay for others (like your team) to give them paid memberships, or both! 
 			</div>
 		</div>
 	@endif

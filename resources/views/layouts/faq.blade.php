@@ -74,10 +74,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a href="/auth">Sign Up</a>
-                    </li>
-                    <li>
-                        <a href="/auth">Log In</a>
+                        <a href="/auth">Sign Up / Log In</a>
                     </li>
                 </ul>
             </div>
@@ -122,7 +119,7 @@
                         Here's a brief guide to get you familiar with the service:
                         <ol>
                             <li>
-                                Create your first template by clicking on the "New Email" button on the top of the page once you sign up or log in.
+                                Create your first template by clicking on the "New Template" button on the top of the page once you sign up or log in.
                             </li>
                             <li>
                                 Give your template a name so you can use it or update it later (you can change this later, don't worry).
@@ -257,7 +254,11 @@
                         </li>
 -->
                     </ul>
+<<<<<<< HEAD
                     <p class="copyright text-muted small">Copyright &copy;<?php echo date('Y');?> Lucolo Inc. All Rights Reserved</p>
+=======
+                    <p class="copyright text-muted small">Copyright &copy;<?php echo date('Y');?> Mailsy by Lucolo, Inc. All Rights Reserved</p>
+>>>>>>> copy-edits-20160301
                 </div>
             </div>
         </div>
