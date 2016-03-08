@@ -199,8 +199,9 @@ class ActionController extends Controller
                 }
             }
 
-            if(count($fields == 0)){
-               return redirect('/edit/'.base64_encode($email->id).'?missingColumns=false&badEmails=false&droppedRows=false&columnMismatch=false&invalidCSV=false&empty=false');
+            Log::info(count($_POST['_email']));
+            if(count($_POST['_email']) == 0){
+               return redirect('/edit/'.base64_encode($email->id).'?missingColumns=false&badEmails=false&droppedRows=false&columnMismatch=false&invalidCSV=false&empty=true');
             }
 
             // for each field provided, replace the variable in the template with the correct field input
