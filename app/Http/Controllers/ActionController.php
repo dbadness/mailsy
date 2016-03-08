@@ -162,7 +162,7 @@ class ActionController extends Controller
                     }
                 }
 
-                if(count($_POST['_email']) == 0){
+                if(count($_POST['_email']) == 0 || count($csv)){
                    return redirect('/use/'.base64_encode($email->id).'?missingColumns=false&badEmails=false&droppedRows=false&columnMismatch=false&invalidCSV=false&empty=true');
                 }
 
