@@ -54,14 +54,15 @@ $(document).ready(function(){
 		var fields = $('#recipientList input').serializeArray();
 		for(var k in fields)
 		{
+		if(!document.getElementById("csvFileUpload")){
 			if(typeof fields[k] !== 'function')
-			{
-				if(fields[k].value === '')
 				{
-					return confirm('There are blank fields. Are you sure you want to proceed?');
+					if(fields[k].value === '')
+					{
+						return confirm('There are blank fields. Are you sure you want to proceed?');
+					}
 				}
 			}
-
 		}
 	});
 	

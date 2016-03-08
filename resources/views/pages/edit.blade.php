@@ -8,46 +8,6 @@
 		var template = '{!! addslashes($email->template) !!}';
 	</script>
 
-	@if($_GET)
-		@if($_GET['badEmails'] == 'true')
-			<div class="alert alert-danger alert-dismissible" role="alert">
-				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				At least one email is bad
-			</div>
-		@endif
-		@if($_GET['missingColumns'] == 'true')
-			<div class="alert alert-danger alert-dismissible" role="alert">
-				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				At least one column is missing or mismatched
-			</div>
-		@endif
-		@if($_GET['droppedRows'] == 'true')
-			<div class="alert alert-danger alert-dismissible" role="alert">
-				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				Some rows have been dropped due to not having emails. Check to make sure they weren't important.
-			</div>
-		@endif
-		@if($_GET['columnMismatch'] == 'true')
-			<div class="alert alert-danger alert-dismissible" role="alert">
-				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				At least one column is empty
-			</div>
-		@endif
-		@if($_GET['invalidCSV'] == 'true')
-			<div class="alert alert-danger alert-dismissible" role="alert">
-				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				Your CSV is invalid. Usually this means you don't have an email column. Sometimes because there's no headers.
-			</div>
-		@endif
-		@if($_GET['empty'] == 'true')
-			<div class="alert alert-danger alert-dismissible" role="alert">
-				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				You didn't enter any fields!
-			</div>
-		@endif
-
-	@endif
-
 	<div class="page-header">
 		<h1>Edit Template <small>{!! $email->name !!}</small></h1>
 	</div>
