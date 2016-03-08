@@ -172,8 +172,21 @@ class ActionController extends Controller
                 $subjectText = $request->_subject;
                 $fieldEntries = [];
 
+                $count = 0;
+                foreach($fields as $field){
+                    foreach($headers as $header){
+                        if ($field == $header){
+                            $count++;
+                        }
+                    }
+                }
+
+                if($count != count($fields)){
+                   return redirect('/use/'.base64_encode($email->id).'?missingColumns=true&badEmails=false&droppedRows=false&columnMismatch=false&invalidCSV=false&empty=false');
+                }
+
                 //Append csv fields to existing requests so they're processed normally
-                if((count($headers)-1) == count($fields)){
+                if((count($headers)-1) >= count($fields)){
                     foreach($fields as $field)
                     {
                         if($request->csvFile)
