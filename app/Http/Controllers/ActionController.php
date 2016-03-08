@@ -26,6 +26,7 @@ class ActionController extends Controller
     // return the fields to the new email view from the ajax call with template
     public function returnFields(Request $request)
     {
+        Log::info($request);
         // make sure that all the fields are accounted for and are alphanumeric
         if(!$request->_name || !$request->_subject || !$request->_email_template)
         {
@@ -51,7 +52,13 @@ class ActionController extends Controller
         else
         {
             $email = Email::find($request->_email_id);
+            $email->name = $request->_name;
+            $email->subject = $request->_subject;
+            $email->template = $request->_email_template;
+
         }
+
+//        Log::info($request->_email_template);
 
         // combine the subject and template for regex matching
         $content = $request->_subject.' '.$request->_email_template;
@@ -162,8 +169,14 @@ class ActionController extends Controller
                     }
                 }
 
-                if(count($_POST['_email']) == 0 || (count($csv) === 1 && $csv[0] === '')){
-                   return redirect('/use/'.base64_encode($email->id).'?missingColumns=false&badEmails=false&droppedRows=false&columnMismatch=false&invalidCSV=false&empty=true');
+                if(count($_POST['_email']) == 0){
+                    if($csv){
+                         if(count($csv) === 1 && $csv[0] === ''){
+                           return redirect('/use/'.base64_encode($email->id).'?missingColumns=false&badEmails=false&droppedRows=false&columnMismatch=false&invalidCSV=false&empty=true');                            
+                         }
+                    } elseif(!$csv){
+                       return redirect('/use/'.base64_encode($email->id).'?missingColumns=false&badEmails=false&droppedRows=false&columnMismatch=false&invalidCSV=false&empty=true');
+                    }
                 }
 
                 // for each field provided, replace the variable in the template with the correct field input
@@ -176,6 +189,8 @@ class ActionController extends Controller
                 foreach($fields as $field){
                     foreach($headers as $header){
                         if ($field == $header){
+                            Log::info($field);
+                            Log::info($header);
                             $count++;
                         }
                     }
@@ -186,28 +201,25 @@ class ActionController extends Controller
                 }
 
                 //Append csv fields to existing requests so they're processed normally
-                if((count($headers)-1) >= count($fields)){
-                    foreach($fields as $field)
+                foreach($fields as $field)
+                {
+                    if($request->csvFile)
                     {
-                        if($request->csvFile)
+                        foreach($headers as $header)
                         {
-                            foreach($headers as $header)
+                            if($header == $field)
                             {
-                                if($header == $field)
-                                {
-                                    $_POST[$field] = array_merge($_POST[$field], $csv[$header]);
-                                }
+                                $_POST[$field] = array_merge($_POST[$field], $csv[$header]);
                             }
                         }
-
-                        $subjectText = str_replace('@@'.$field, $_POST[$field][$key], $subjectText);
-                        $messageText = str_replace('@@'.$field, $_POST[$field][$key], $messageText);
-                        // set up an entry for the recipients list later on
-                        $fieldEntries[] = [$field => $_POST[$field][$key]];
                     }
-                } else{
-                   return redirect('/use/'.base64_encode($email->id).'?missingColumns=true&badEmails=false&droppedRows=false&columnMismatch=false&invalidCSV=false&empty=false');
+
+                    $subjectText = str_replace('@@'.$field, $_POST[$field][$key], $subjectText);
+                    $messageText = str_replace('@@'.$field, $_POST[$field][$key], $messageText);
+                    // set up an entry for the recipients list later on
+                    $fieldEntries[] = [$field => $_POST[$field][$key]];
                 }
+
 
                 // trim the <p> tags off the messageText
                 $messageText = substr($messageText,0,-4);
@@ -239,8 +251,14 @@ class ActionController extends Controller
                     '_fields' => json_encode($fieldEntries)
                 ];
             } else{
-                if(count($_POST['_email']) == 0 || (count($csv['email']) === 0)){
-                   return redirect('/use/'.base64_encode($email->id).'?missingColumns=false&badEmails=false&droppedRows=false&columnMismatch=false&invalidCSV=false&empty=true');
+                if(count($_POST['_email']) == 0){
+                    if($csv){
+                         if(count($csv) === 1 && $csv[0] === ''){
+                           return redirect('/use/'.base64_encode($email->id).'?missingColumns=false&badEmails=false&droppedRows=false&columnMismatch=false&invalidCSV=false&empty=true');                            
+                         }
+                    } elseif(!$csv){
+                       return redirect('/use/'.base64_encode($email->id).'?missingColumns=false&badEmails=false&droppedRows=false&columnMismatch=false&invalidCSV=false&empty=true');
+                    }
                 }
                 $dropped = true;
             }

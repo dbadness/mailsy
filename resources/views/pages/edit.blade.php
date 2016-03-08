@@ -1,8 +1,7 @@
 @extends('layouts.master')
 
 @section('content')
-	<br>
-	<br>
+
 	<script>
 		// fill in the #emailTemplate
 		var template = '{!! addslashes($email->template) !!}';
@@ -14,7 +13,7 @@
 	@if($email->temp_recipients_list)
 		<form method='post' action='/makePreviews' id='makePreviews' enctype="multipart/form-data">
 	@else
-		<form method='post' action='/saveTemplate'>
+		<form method='post' action='/saveTemplate' enctype="multipart/form-data">
 	@endif
 		{!! Form::token() !!}
 		<input type='hidden' name='_email_id' value='{!! $email->id !!}'>
@@ -60,11 +59,6 @@
 								</td>
 							@endforeach
 						@endforeach
-					@else
-			<div class="alert alert-danger alert-dismissible" role="alert">
-				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				There's no recipients
-			</div>
 					@endif
 				</tr>
 				@foreach($recipients as $recipient)
@@ -87,13 +81,6 @@
 			<button class="btn btn-primary" role="button" id='saveTemplate'>
 				View Previews
 			</button>
-
- 			<br>
-			<br>
-			<p><b>And/or upload a CSV</b>
-				<input type="file" name="csvFile" id="csvFileUpload" accept=".csv" value="" />
-			</p>
-
 		@else
 			<button class="btn btn-primary" role="button" id='saveTemplate'>
 				Save Template
