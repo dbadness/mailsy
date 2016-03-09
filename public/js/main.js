@@ -34,6 +34,9 @@ $(document).ready(function(){
 	    }
 	  });
 
+	//initial hiding of uploadData
+	$('#uploadData').hide();
+
 	// fill in the email template and sig
 	// the variable is in the view
 	if(typeof template !== 'undefined')
@@ -48,24 +51,22 @@ $(document).ready(function(){
 	});
 
 	// make sure that there are values in the inputs
-	//Fix to allow CSV only #ASF
 	$('#makePreviews').submit(function()
 	{
 		var fields = $('#recipientList input').serializeArray();
+		var csv = document.getElementById('csvFileUpload').value;
 		for(var k in fields)
 		{
-		if(!document.getElementById("csvFileUpload")){
 			if(typeof fields[k] !== 'function')
+			{
+				if(fields[k].value === '' && csv == '')
 				{
-					if(fields[k].value === '')
-					{
-						return confirm('There are blank fields. Are you sure you want to proceed?');
-					}
+					alert('Please make sure all your data is complete!');
+					return false;
 				}
 			}
 		}
 	});
-	
 
 	// return the list of input fields for this template
 	$('#addContacts').click(function(){
@@ -249,8 +250,7 @@ $(document).ready(function(){
 		{
 			$('#firstEmail').hide();
 		}
-	});
-	
+	});	
 
 	// send the first/tutorial email
 	$('#sendFirstEmail').click(function()
@@ -273,6 +273,20 @@ $(document).ready(function(){
 			}
 		});
 
+	});
+
+	$('#showData').click(function()
+	{
+		$('#uploadData').toggle();
+		$('#uploadCSV').toggle();
+		$('#recipientList input').val('');
+	});
+
+	$('#showCSV').click(function()
+	{
+		$('#uploadData').toggle();
+		$('#uploadCSV').toggle();
+		$('csvFileUpload').val(null);
 	});
 
 	

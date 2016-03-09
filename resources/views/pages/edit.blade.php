@@ -7,6 +7,15 @@
 		var template = '{!! addslashes($email->template) !!}';
 	</script>
 
+	@if($_GET)
+		@if($_GET['badEmails'] == 'true')
+			<div class="alert alert-danger alert-dismissible" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				At least one email is bad
+			</div>
+		@endif
+	@endif
+
 	<div class="page-header">
 		<h1>Edit Template <small>{!! $email->name !!}</small></h1>
 	</div>
