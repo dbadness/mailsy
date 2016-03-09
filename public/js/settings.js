@@ -18,7 +18,8 @@ $(document).ready(function()
 				'_token' : $('input[name=_token').val(),
 				'name': $('input[name=name').val(),
 				'sf_address' : $('input[name=sf_address]').val(),
-				'signature' : $('#signature').code()
+				'signature' : $('#signature').code(),
+				'track_email' : $('#trackEmail').val()
 			},
 			error: function()
 			{
@@ -35,7 +36,7 @@ $(document).ready(function()
 
 	// build stripe button
 	var handler = StripeCheckout.configure({
-		key: 'pk_test_CIZBh7IaLuncqqScIchbbbuh',
+		key: 'pk_live_mk4MY5ZqkgdzuRT3uWK1kLtJ',
 		image: '', // <-- make sure to put the logo here
 		locale: 'auto'
 	});

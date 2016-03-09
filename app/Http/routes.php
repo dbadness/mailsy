@@ -24,6 +24,7 @@ Route::get('/logout', function(){
 
 // pages
 Route::get('/home', 'PagesController@showHome');
+Route::get('/track/{e_user_id}/{e_message_id}', 'ActionController@doTrack'); // processes a read receipt when a recipient opens an email
 Route::get('/tutorial/step1', 'PagesController@showTutorial1');
 Route::get('/tutorial/step2', 'PagesController@showTutorial2');
 Route::get('/tutorial/step3', 'PagesController@showTutorial3');
@@ -56,5 +57,3 @@ Route::get('/sendFirstEmail','ActionController@doSendFirstEmail');
 // webhooks
 Route::post('/payment/paid','APIController@doInvoicePaid'); // successful invoice payment
 Route::post('/payment/failed','APIController@doInvoiceFailed'); // payment declined for invoice
-
-Route::get('/test', 'PagesController@showHome');
