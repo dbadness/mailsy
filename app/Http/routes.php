@@ -29,7 +29,7 @@ Route::get('/tutorial/step1', 'PagesController@showTutorial1');
 Route::get('/tutorial/step2', 'PagesController@showTutorial2');
 Route::get('/tutorial/step3', 'PagesController@showTutorial3');
 Route::get('/create', 'PagesController@showNewEmail');
-Route::get('/edit/{eid}','PagesController@showEdit');
+Route::get('/edit/{eid}/{withData?}','PagesController@showEdit');
 Route::get('/preview/{eid}','PagesController@showPreview');
 Route::get('/email/{eid}','PagesController@showEmail');
 Route::get('/settings','PagesController@showSettings');

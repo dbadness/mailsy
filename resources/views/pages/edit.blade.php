@@ -18,6 +18,7 @@
 
 	<div class="page-header">
 		<h1>Edit Template <small>{!! $email->name !!}</small></h1>
+		<a href='/use/{!! base64_encode($email->id) !!}'>Use Template</a>
 	</div>
 	@if($email->temp_recipients_list)
 		<form method='post' action='/makePreviews' id='makePreviews' enctype="multipart/form-data">
@@ -48,7 +49,7 @@
 				</div>
 				@if(!$user->sf_address || !$user->signature)
 					<div class='checkHolder'>
-						<p>Head to <a href='/settings'>the settings page</a> to add your signature and Salesforce email address</p>
+						<p style='font-size:80%;'>Head to <a href='/settings'>the settings page</a> to add your signature and Salesforce email address</p>
 					</div>
 				@endif
 				<div class='clear'></div>

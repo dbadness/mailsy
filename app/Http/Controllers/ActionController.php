@@ -108,25 +108,30 @@ class ActionController extends Controller
     {
         // auth the user
         $user = Auth::user();
+
         // find the email object
         $email = Email::find($request->_email_id);
+
+        // if there is a CSV to process, let's do that
         if($request->csvFile)
         {
-            $hold = Email::processCSV($request->csvFile, $email->id);
-            if(is_array($hold)){
-                $csv = $hold[0];
-                $headers = $hold[1];
-            } else{
-                return $hold;
+            // send to the csv processor to parse the csv data into useable parts
+            $csv_info = Email::processCSV($request->csvFile, $email->id);
+
+            if(is_array($csv_info)){
+                $csv = $csv_info[0];
+                $headers = $csv_info[1];
             }
+
+            // set the csv emails as if they came in with the $_POST request
+            $_POST['_email'] = $csv['email'];
         }
+
         // build the recipient list and assign the fields to them
         $messages = [];
         $tempRecipientsList = [];
-        // Add emails to email post
-        if($request->csvFile){
-            $_POST['_email'] = array_merge($_POST['_email'], $csv['email']);
-        }
+
+        // with our master array of recipients ready for their related data, let's fill it in
         foreach($_POST['_email'] as $key => $recipientEmail)
         {
             if($recipientEmail){
@@ -134,7 +139,7 @@ class ActionController extends Controller
                 $fields = [];
                 foreach($_POST as $k => $v)
                 {
-                    if(($k != 'files') && (substr($k,0,1) != '_') && ($k != 'csvFile'))
+                    if((substr($k,0,1) != '_') && ($k != 'csvFile'))
                     {
                         $fields[] = $k;
                     }

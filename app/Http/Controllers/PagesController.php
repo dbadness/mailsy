@@ -94,11 +94,18 @@ class PagesController extends Controller
     }
 
     // show an edit page for the email that has been created
-    public function showEdit($eid)
+    public function showEdit($eid, $withData = NULL)
     {
         $user = Auth::user();
 
         $email = User::verifyUser($eid);
+
+        // if there should be previous messages shown, keep them in the 'temp_recipients_list' field. if not, make sure there's nothing there
+        if(!$withData)
+        {
+            $email->temp_recipients_list = null;
+            $email->save();
+        }
 
         // if you're editing a template, erase the messages that haven't been sent
         Message::where('email_id',$email->id)->whereNull('deleted_at')->whereNull('status')->update(['deleted_at' => time()]);
