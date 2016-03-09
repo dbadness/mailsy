@@ -54,15 +54,14 @@ $(document).ready(function(){
 	$('#makePreviews').submit(function()
 	{
 		var fields = $('#recipientList input').serializeArray();
-		var csv = document.getElementById('#csvFileUpload');
-		console.log(csv);
+		var csv = document.getElementById('csvFileUpload').value;
 		for(var k in fields)
 		{
 			if(typeof fields[k] !== 'function')
 			{
-				if(fields[k].value === '' && csv)
+				if(fields[k].value === '' && csv == '')
 				{
-					alert('Please make sure all your fields are filled in!');
+					alert('Please make sure all your data is complete!');
 					return false;
 				}
 			}

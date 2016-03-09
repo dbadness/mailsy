@@ -157,8 +157,6 @@ class ActionController extends Controller
                 foreach($fields as $field){
                     foreach($headers as $header){
                         if ($field == $header){
-                            Log::info($field);
-                            Log::info($header);
                             $count++;
                         }
                     }
@@ -227,6 +225,19 @@ class ActionController extends Controller
         // save the tempRecipientsList to the email object for future use (if needed)
         $email->temp_recipients_list = json_encode($tempRecipientsList);
         $email->save();
+
+        $counter = 0;
+        foreach($_POST['_email'] as $emailIter)
+        {
+            if($emailIter != ''){
+                $counter++;
+            }
+        }
+
+        if($counter == 0){
+            return redirect('/use/'.base64_encode($email->id).'?badEmails=false&missingColumns=false&droppedRows=false&columnMismatch=false&invalidCSV=false&empty=true');
+        }
+
         // make sure the emails are legit
         foreach($request->_email as $recipientEmail)
         {
