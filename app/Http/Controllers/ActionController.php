@@ -93,6 +93,7 @@ class ActionController extends Controller
                 }
             }
         }
+        
         // save the email template
         $email = Email::find($request->_email_id);
         $email->name = $request->_name;
