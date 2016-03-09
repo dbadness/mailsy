@@ -26,7 +26,6 @@ class ActionController extends Controller
     // return the fields to the new email view from the ajax call with template
     public function returnFields(Request $request)
     {
-        Log::info($request);
         // make sure that all the fields are accounted for and are alphanumeric
         if(!$request->_name || !$request->_subject || !$request->_email_template)
         {
@@ -57,8 +56,6 @@ class ActionController extends Controller
             $email->template = $request->_email_template;
 
         }
-
-//        Log::info($request->_email_template);
 
         // combine the subject and template for regex matching
         $content = $request->_subject.' '.$request->_email_template;
@@ -135,157 +132,12 @@ class ActionController extends Controller
         // find the email object
         $email = Email::find($request->_email_id);
 
-        if($request->csvFile)
-        {
-            $hold = Email::processCSV($request->csvFile, $email->id);
-            if(is_array($hold)){
-                $csv = $hold[0];
-                $headers = $hold[1];
-            } else{
-                return $hold;
-            }
-        }
-
-        // build the recipient list and assign the fields to them
-        $messages = [];
-        $tempRecipientsList = [];
-
-        // Add emails to email post
         if($request->csvFile){
-            $_POST['_email'] = array_merge($_POST['_email'], $csv['email']);
-        }
+            return Email::processCSV($request, $email, $user);
+        } else{
+            return Email::processManualData($request, $email, $user);
+        };
 
-        foreach($_POST['_email'] as $key => $recipientEmail)
-        {
-            if($recipientEmail){
-
-                // return the array of the fields from the user
-                $fields = [];
-                foreach($_POST as $k => $v)
-                {
-                    if(($k != 'files') && (substr($k,0,1) != '_') && ($k != 'csvFile'))
-                    {
-                        $fields[] = $k;
-                    }
-                }
-
-                if(count($_POST['_email']) == 0){
-                    if($csv){
-                         if(count($csv) === 1 && $csv[0] === ''){
-                           return redirect('/use/'.base64_encode($email->id).'?missingColumns=false&badEmails=false&droppedRows=false&columnMismatch=false&invalidCSV=false&empty=true');                            
-                         }
-                    } elseif(!$csv){
-                       return redirect('/use/'.base64_encode($email->id).'?missingColumns=false&badEmails=false&droppedRows=false&columnMismatch=false&invalidCSV=false&empty=true');
-                    }
-                }
-
-                // for each field provided, replace the variable in the template with the correct field input
-                // use the key we returned from figuring out with recipient entry we're currently on
-                $messageText = $request->_email_template;
-                $subjectText = $request->_subject;
-                $fieldEntries = [];
-
-                $count = 0;
-                foreach($fields as $field){
-                    foreach($headers as $header){
-                        if ($field == $header){
-                            Log::info($field);
-                            Log::info($header);
-                            $count++;
-                        }
-                    }
-                }
-
-                if($count != count($fields)){
-                   return redirect('/use/'.base64_encode($email->id).'?missingColumns=true&badEmails=false&droppedRows=false&columnMismatch=false&invalidCSV=false&empty=false');
-                }
-
-                //Append csv fields to existing requests so they're processed normally
-                foreach($fields as $field)
-                {
-                    if($request->csvFile)
-                    {
-                        foreach($headers as $header)
-                        {
-                            if($header == $field)
-                            {
-                                $_POST[$field] = array_merge($_POST[$field], $csv[$header]);
-                            }
-                        }
-                    }
-
-                    $subjectText = str_replace('@@'.$field, $_POST[$field][$key], $subjectText);
-                    $messageText = str_replace('@@'.$field, $_POST[$field][$key], $messageText);
-                    // set up an entry for the recipients list later on
-                    $fieldEntries[] = [$field => $_POST[$field][$key]];
-                }
-
-
-                // trim the <p> tags off the messageText
-                $messageText = substr($messageText,0,-4);
-                $messageText = substr($messageText,3);
-
-                // make a message to throw into the DB
-                $message = new Message;
-                $message->user_id = $user->id;
-                $message->email_id = $email->id;
-                $message->recipient = $recipientEmail;
-                $message->subject = $subjectText;
-                if($request->_signature == 'on')
-                {
-                    $message->message = $messageText.'<br><br>'.$user->signature;
-                }else
-                {
-                    $message->message = $messageText;
-                }
-                if($request->_send_to_salesforce == 'on')
-                {
-                    $message->send_to_salesforce = 'yes';
-                }
-                $message->created_at = time();
-                $message->save();
-
-                // set up the data list in case the user wants to go back and make some edits
-                $tempRecipientsList[] = [
-                    '_email' => $recipientEmail,
-                    '_fields' => json_encode($fieldEntries)
-                ];
-            } else{
-                if(count($_POST['_email']) == 0){
-                    if($csv){
-                         if(count($csv) === 1 && $csv[0] === ''){
-                           return redirect('/use/'.base64_encode($email->id).'?missingColumns=false&badEmails=false&droppedRows=false&columnMismatch=false&invalidCSV=false&empty=true');                            
-                         }
-                    } elseif(!$csv){
-                       return redirect('/use/'.base64_encode($email->id).'?missingColumns=false&badEmails=false&droppedRows=false&columnMismatch=false&invalidCSV=false&empty=true');
-                    }
-                }
-                $dropped = true;
-            }
-        }
-
-        // save the tempRecipientsList to the email object for future use (if needed)
-        $email->temp_recipients_list = json_encode($tempRecipientsList);
-        $email->save();
-
-        // make sure the emails are legit
-        foreach($request->_email as $recipientEmail)
-        {
-            if(!filter_var($recipientEmail,FILTER_VALIDATE_EMAIL))
-            {
-                if($dropped){
-//                     return redirect('/edit/'.base64_encode($email->id).'?droppedRows=true&badEmails=false&missingColumns=false&columnMismatch=false&invalidCSV=false&empty=false');
-                      return redirect('/preview/'.base64_encode($email->id));
-
-                } else{
-                    return redirect('/use/'.base64_encode($email->id).'?badEmails=true&missingColumns=false&droppedRows=false&columnMismatch=false&invalidCSV=false&empty=false');
-                }
-            }
-            else
-            {
-                return redirect('/preview/'.base64_encode($email->id));
-            }
-        }
     }
     
     // send the emails

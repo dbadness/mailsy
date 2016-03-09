@@ -75,46 +75,75 @@
 		<div class='clear'></div>
 	</div>
 	<br>
-	<table class="table" id="recipientList">
-		<tr id='headers'>
-			<td style='width:40px;'></td>
-			<td class='field'>
-				<b>Email</b>
-			</td>
-			@foreach(json_decode($email->fields) as $field)
+
+	<div id="uploadData">
+		<table class="table" id="recipientList">
+			<tr id='headers'>
+				<td style='width:40px;'></td>
 				<td class='field'>
-					<b>{!! $field !!}</b>
+					<b>Email</b>
 				</td>
-			@endforeach
-		</tr>
-		<tr class='recipient'>
-			<td class='removeRow'>
-				<div style='height:5px;'></div>
-				<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-			</td>
-			<td class='field'>
-				<input type="text" class="form-control" name='_email[]'>
-			</td>
-			@foreach(json_decode($email->fields) as $field)
+				@foreach(json_decode($email->fields) as $field)
+					<td class='field'>
+						<b>{!! $field !!}</b>
+					</td>
+				@endforeach
+			</tr>
+			<tr class='recipient'>
+				<td class='removeRow'>
+					<div style='height:5px;'></div>
+					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+				</td>
 				<td class='field'>
-					<input type="text" class="form-control" name='{!! $field !!}[]'>
+					<input type="text" class="form-control" name='_email[]'>
 				</td>
-			@endforeach
-		</tr>
-	</table>
-	<div class="btn btn-info" id='addRecipient' role="button">
-		<span class="glyphicon glyphicon-plus-sign"></span> Add Another Recipient
+				@foreach(json_decode($email->fields) as $field)
+					<td class='field'>
+						<input type="text" class="form-control" name='{!! $field !!}[]'>
+					</td>
+				@endforeach
+			</tr>
+		</table>
+		<div class="btn btn-info" id='addRecipient' role="button">
+			<span class="glyphicon glyphicon-plus-sign"></span> Add Another Recipient
+		</div>
+		<br>
+		<br>
+		<button class="btn btn-primary" id='viewPreviews' role="button">
+			View Previews
+		</button>
+
+		<span class="btn btn-primary" id="showCSV" role="button">
+			Or Upload a CSV
+		</span>
 	</div>
 
-	<button class="btn btn-primary" id='viewPreviews' role="button">
-		View Previews
-	</button>
+	<div id="uploadCSV">
+		<table class="table" id="recipientList">
+			<tr id='headers'>
+				<td style='width:40px;'></td>
+				<td class='field'>
+					<b>Email</b>
+				</td>
+				@foreach(json_decode($email->fields) as $field)
+					<td class='field'>
+						<b>{!! $field !!}</b>
+					</td>
+				@endforeach
+			</tr>
+		</table>
+		<p><b>Upload a CSV</b>
+			<input type="file" name="csvFile" id="csvFileUpload" accept=".csv" value="" />
+		</p>
 
-	<br>
-	<br>
-	<p><b>And/or upload a CSV</b>
-		<input type="file" name="csvFile" id="csvFileUpload" accept=".csv" value="" />
-	</p>
+		<button class="btn btn-primary" id='viewPreviews' role="button">
+			View Previews
+		</button>
+
+		<span class="btn btn-primary" id="showData" role="button">
+			Or Enter Data Manually
+		</span>
+	</div>
 
 </form>
 
