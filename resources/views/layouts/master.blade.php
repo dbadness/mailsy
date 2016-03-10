@@ -63,7 +63,7 @@
             <div class="container-fluid" style="width:81%;">
                 <div class="navbar-header" style="width:100%;">
                     <div class="navbar-header">
-                        <a class="navbar-brand topnav" href="/"><img src='/images/logo.png' alt='Mailsy' width='80px'></a>
+                        <a class="navbar-brand topnav" href="/home"><img src='/images/logo.png' alt='Mailsy' width='80px'></a>
                     </div>
                     @if($user = Auth::user())
                         <ul class="nav navbar_nav" style="float:left;margin:5px 0 0 0;">

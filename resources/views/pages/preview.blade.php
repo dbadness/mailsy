@@ -44,7 +44,7 @@
 		<button class="btn btn-primary" role="button" id="sendButton">
 			Send Emails
 		</button>
-		<a href='/edit/{!! base64_encode($email->id)/withData !!}'>
+		<a href='/edit/{!! base64_encode($email->id) !!}'>
 			<div class="btn btn-info" role="button">
 				Make Some Edits
 			</div>
