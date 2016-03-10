@@ -1,30 +1,29 @@
 @extends('layouts.master')
 
 @section('content')
-	<br>
-	<br>
+
 	<script>
 		// fill in the #emailTemplate
 		var template = '{!! addslashes($email->template) !!}';
 	</script>
 
 	@if($_GET)
-		@if($_GET['badEmails'])
+		@if($_GET['badEmails'] == 'true')
 			<div class="alert alert-danger alert-dismissible" role="alert">
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				There was an error with your fields or CSV. Please correct it and make sure no columns were dropped.
+				At least one email is bad
 			</div>
 		@endif
-
 	@endif
 
 	<div class="page-header">
 		<h1>Edit Template <small>{!! $email->name !!}</small></h1>
+		<a href='/use/{!! base64_encode($email->id) !!}'>Use Template</a>
 	</div>
 	@if($email->temp_recipients_list)
-		<form method='post' action='/makePreviews' id='makePreviews'>
+		<form method='post' action='/makePreviews' id='makePreviews' enctype="multipart/form-data">
 	@else
-		<form method='post' action='/saveTemplate'>
+		<form method='post' action='/saveTemplate' enctype="multipart/form-data">
 	@endif
 		{!! Form::token() !!}
 		<input type='hidden' name='_email_id' value='{!! $email->id !!}'>
@@ -50,7 +49,7 @@
 				</div>
 				@if(!$user->sf_address || !$user->signature)
 					<div class='checkHolder'>
-						<p>Head to <a href='/settings'>the settings page</a> to add your signature and Salesforce email address</p>
+						<p style='font-size:80%;'>Head to <a href='/settings'>the settings page</a> to add your signature and Salesforce email address</p>
 					</div>
 				@endif
 				<div class='clear'></div>
@@ -62,13 +61,15 @@
 					<td class='field'>
 						<b>Email</b>
 					</td>
-					@foreach(json_decode($recipients[0]->_fields) as $k => $v)
-						@foreach($v as $field => $value)
-							<td class='field'>
-								<b>{!! $field !!}</b>
-							</td>
+					@if($recipients)
+						@foreach(json_decode($recipients[0]->_fields) as $k => $v)
+							@foreach($v as $field => $value)
+								<td class='field'>
+									<b>{!! $field !!}</b>
+								</td>
+							@endforeach
 						@endforeach
-					@endforeach
+					@endif
 				</tr>
 				@foreach($recipients as $recipient)
 					<tr class='recipient'>
@@ -90,13 +91,6 @@
 			<button class="btn btn-primary" role="button" id='saveTemplate'>
 				View Previews
 			</button>
-
- 			<br>
-			<br>
-			<p><b>And/or upload a CSV</b>
-				<input type="file" name="csvFile" id="csvFileUpload" accept=".csv" value="" />
-			</p>
-
 		@else
 			<button class="btn btn-primary" role="button" id='saveTemplate'>
 				Save Template

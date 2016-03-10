@@ -164,32 +164,70 @@
                     <hr class="section-heading-spacer">
                     <div class="clearfix"></div>
                     <h2 class="section-heading">Mailsy keeps it simple, but gives you what you need to email more effectively.</h2>
-                    <p class="lead">
-                        <span class='subheader'>Email Templates (Mail Merge)</span>
-                        <br>
-                        Using a simple yet powerful templating technology, you can create a template to use over and over again but you're still able to define peices of information for each
-                        recipient to increase the chance of a reply.
-                        <br>
-                        <br>
-                        <span class='subheader'>Email Tracking</span>
-                        <br>
-                        Each email sent through Mailsy has a little magic in it so you can get a notification when that recipient opens that email. That way you know when you're on their mind.
-                        <br>
-                        <br>
-                        <span class='subheader'>CRM Integration</span>
-                        <br>
-                        By adding your CRM BCC email into the Settings page, you're configured to let Mailsy send your outreach emails right into your CRM software. Now that's easy.
-                        <br>
-                        <br>
-                        <span class='subheader'>Upload CSV Lists</span>
-                        <br>
-                        Some people like to add the recipient's information one at a time. Other people like to upload a CSV with the list already made. Who are we to say who's right? You can do both with Mailsy.
-                    </p>
                 </div>
                 <div class="col-lg-5 col-sm-pull-6  col-sm-6">
                     <img class="img-responsive" src="/images/recipients.png" alt="">
                 </div>
             </div>
+
+    <div class="row text-center">
+        <div class="col-md-3">
+            <span class="fa-stack fa-4x">
+                <i class="fa fa-circle fa-stack-2x text-primary">
+                </i>
+                <i class="fa fa-envelope-square fa-stack-1x fa-inverse">
+                </i>
+            </span>
+            <h4 class="service-heading">
+                Email Templates
+            </h4>
+            <p class="text">
+                Using a simple yet powerful templating technology, you can create a template to use over and over again but you're still able to define peices of information for each recipient to increase the chance of a reply.
+            </p>
+        </div>
+        <div class="col-md-3">
+            <span class="fa-stack fa-4x">
+                <i class="fa fa-circle fa-stack-2x text-primary">
+                </i>
+                <i class="fa fa-eye fa-stack-1x fa-inverse">
+                </i>
+            </span>
+            <h4 class="service-heading">
+                Email Tracking
+            </h4>
+            <p class="text">
+                Each email sent through Mailsy has a little magic in it so you can get a notification when that recipient opens that email. That way you know when you're on their mind.
+            </p>
+        </div>
+        <div class="col-md-3">
+            <span class="fa-stack fa-4x">
+                <i class="fa fa-circle fa-stack-2x text-primary">
+                </i>
+                <i class="fa fa-group fa-stack-1x fa-inverse">
+                </i>
+            </span>
+            <h4 class="service-heading">
+                CRM Integration
+            </h4>
+            <p class="text">
+                By adding your CRM BCC email into the Settings page, you're configured to let Mailsy send your outreach emails right into your CRM software. Now that's easy.
+            </p>
+        </div>
+        <div class="col-md-3">
+            <span class="fa-stack fa-4x">
+                <i class="fa fa-circle fa-stack-2x text-primary">
+                </i>
+                <i class="fa fa-upload fa-stack-1x fa-inverse">
+                </i>
+            </span>
+            <h4 class="service-heading">
+                Upload CSV Lists
+            </h4>
+            <p class="text">
+                Some people like to add the recipient's information one at a time. Other people like to upload a CSV with the list already made. Who are we to say who's right? You can do both with Mailsy.
+            </p>
+        </div>
+    </div>
 
         </div>
         <!-- /.container -->

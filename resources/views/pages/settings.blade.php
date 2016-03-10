@@ -37,6 +37,9 @@
 	<div class="panel panel-default">
 		<div class="panel-heading"><strong>Email Settings</strong></div>
 		<div class="panel-body">
+			<p>Name (to appear in the inbox of the recipient - <strong><i>highly recommended</i></strong>):</p>
+			<div class="input-group" style="border-style: solid;">
+			  	<span class="input-group-addon" id="basic-addon1" style="border: solid;">Name</span>
 			<p>Email Tracking</p>
 			<div class="input-group">
 				<span class="input-group-addon">
