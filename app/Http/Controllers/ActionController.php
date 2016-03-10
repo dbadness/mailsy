@@ -118,15 +118,6 @@ class ActionController extends Controller
         if($request->csvFile)
         {
             return $response = Email::processCSV($request, $email, $user);
-            // if($response[0] == 0){
-
-            // } elseif($response[0] == 2){
-
-            // } elseif($response[0] == 1){
-
-            // }else{
-            //     return 'Super bombad error';
-            // }
         } else
         {
             return Email::processManualData($request, $email, $user);
