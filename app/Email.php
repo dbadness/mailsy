@@ -123,7 +123,7 @@ class Email extends Model
         {
             foreach($csv as $i => $row)
             {
-                if($i > 50000){
+                if($i > env('MESSAGE_MAX')){
                     $errors['tooLarge'] = "true";
                     return redirect('/use/'.base64_encode($email->id) . '?' . http_build_query($errors));
                 }

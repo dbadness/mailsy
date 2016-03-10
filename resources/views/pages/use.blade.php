@@ -49,7 +49,7 @@
 		@if($_GET['tooLarge'] == 'true')
 			<div class="alert alert-danger alert-dismissible" role="alert">
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				Your CSV has exceeded Mailsy's maximum limit (50,000 rows)
+				Your CSV has exceeded Mailsy's maximum limit ({!! env('MESSAGE_MAX') !!} rows)
 			</div>
 		@endif
 	@endif

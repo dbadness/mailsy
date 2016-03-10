@@ -118,7 +118,11 @@ class PagesController extends Controller
     public function showUseEmail($eid)
     {
         $user = Auth::user();
+
         $email = Email::find(base64_decode($eid));
+
+        // if there are messages that are 'in the queue', make sure they're deleted as the user is about to enter more
+        Message::where('email_id',$email->id)->whereNull('deleted_at')->update(['deleted_at' => time()]);
 
         return view('pages.use', ['user' => $user, 'email' => $email]);
     }
