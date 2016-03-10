@@ -54,14 +54,25 @@ $(document).ready(function(){
 	$('#makePreviews').submit(function()
 	{
 		var fields = $('#recipientList input').serializeArray();
+<<<<<<< HEAD
 		var csv = document.getElementById('csvFileUpload').value;
+=======
+		var csv = document.getElementById('#csvFileUpload');
+		console.log(csv);
+>>>>>>> bd1e3ca60f0583a631c7e0df4dc883f467bae4fc
 		for(var k in fields)
 		{
 			if(typeof fields[k] !== 'function')
 			{
+<<<<<<< HEAD
 				if(fields[k].value === '' && csv == '')
 				{
 					alert('Please make sure all your data is complete!');
+=======
+				if(fields[k].value === '' && csv)
+				{
+					alert('Please make sure all your fields are filled in!');
+>>>>>>> bd1e3ca60f0583a631c7e0df4dc883f467bae4fc
 					return false;
 				}
 			}
