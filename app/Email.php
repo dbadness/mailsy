@@ -27,6 +27,7 @@ class Email extends Model
             "rowsNotExtant" => 'false',
             "incompleteColumns" => 'false',
             "blankData" => 'false',
+            'tooLarge' => 'false'
             );
 
         //Get a list of fields from request
@@ -66,7 +67,7 @@ class Email extends Model
             $header = strtolower($header);
 
             //emails are handled differently
-            if($header == 'emails' || $header == 'email')
+            if(strtolower($header) == 'emails' || strtolower($header) == 'email')
             {
                 $headers[$i] = 'email';
                 $emailExists = true;
@@ -105,21 +106,30 @@ class Email extends Model
         $csv = $fullCsv->setOffset(1)->fetchAll();
 
         //make sure CSV exists below headers, or else error
-        if(count($csv[0]) < count($headers))
+        if(count($csv) < 1)
         {
             $errors["rowsNotExtant"] = "true";
             return redirect('/use/'.base64_encode($email->id) . '?' . http_build_query($errors));
+
+            if(count($csv[0]) < count($headers))
+            {
+            $errors["rowsNotExtant"] = "true";
+            return redirect('/use/'.base64_encode($email->id) . '?' . http_build_query($errors));
+            }
         }
 
-        //check to see the values all exist
+        //check to see the values all exist and there aren't too many
         foreach($fields as $field)
         {
             foreach($csv as $i => $row)
             {
+                if($i > 50000){
+                    $errors['tooLarge'] = "true";
+                    return redirect('/use/'.base64_encode($email->id) . '?' . http_build_query($errors));
+                }
                 if(count($row) < count($headers))
                 {
                     $errors["incompleteColumns"] = "true";
-                    return redirect('/use/'.base64_encode($email->id) . '?' . http_build_query($errors));
                 }
                 if($row[$locater[$field]] == '')
                 {
@@ -155,8 +165,8 @@ class Email extends Model
             $fieldEntries = [];
             foreach($fields as $field)
             {
-                $subjectText = str_replace('@@'.$field, $processedCSV[$field][$key], $subjectText);
-                $messageText = str_replace('@@'.$field, $processedCSV[$field][$key], $messageText);
+                $subjectText = str_ireplace('@@'.$field, $processedCSV[$field][$key], $subjectText);
+                $messageText = str_ireplace('@@'.$field, $processedCSV[$field][$key], $messageText);
                 // set up an entry for the recipients list later on
                 $fieldEntries[] = [$field => $processedCSV[$field][$key]];
             }

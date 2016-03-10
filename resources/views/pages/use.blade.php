@@ -46,6 +46,12 @@
 				CSV Error: At least one of your fields is blank
 			</div>
 		@endif
+		@if($_GET['tooLarge'] == 'true')
+			<div class="alert alert-danger alert-dismissible" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				Your CSV has exceeded Mailsy's maximum limit (50,000 rows)
+			</div>
+		@endif
 	@endif
 	<div class="page-header">
 		<h1>{!! $email->name !!}</h1>
