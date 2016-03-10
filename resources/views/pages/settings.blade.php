@@ -36,10 +36,7 @@
 	</div>
 	<div class="panel panel-default">
 		<div class="panel-heading"><strong>Email Settings</strong></div>
-		<div class="panel-body">
-			<p>Name (to appear in the inbox of the recipient - <strong><i>highly recommended</i></strong>):</p>
-			<div class="input-group" style="border-style: solid;">
-			  	<span class="input-group-addon" id="basic-addon1" style="border: solid;">Name</span>
+		<div class='panel-body'>
 			<p>Email Tracking</p>
 			<div class="input-group">
 				<span class="input-group-addon">
@@ -158,7 +155,10 @@
 		<div class="panel panel-default">
 			<div class="panel-heading"><strong>Card Settings</strong></div>
 			<div class="panel-body">
-				You don't have a card registered since you're on a free account. You can <a href='/upgrade'>upgrade</a> to make your account a paid membership, pay for others (like your team) to give them paid memberships, or both! 
+				You don't have a card registered since you're on a free account. You can <a href='/upgrade'>upgrade</a> to make your account a paid membership, pay for others (like your team) to give them paid memberships, or both!
+				<br>
+				<br>
+				<a href='/upgrade'><button class='btn btn-success'>Upgrade my Account for Unlimited Emails per Day!</button></a>
 			</div>
 		</div>
 	@endif
