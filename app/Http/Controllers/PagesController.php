@@ -89,6 +89,12 @@ class PagesController extends Controller
         // retrieve the messages that aren't deleted or sent for this email
         $messages = Message::where('email_id',$email->id)->whereNull('deleted_at')->whereNull('status')->get();
 
+        // if there are no message to show, reidrect them back to the /email/ view
+        if($messages == '[]')
+        {
+            return redirect('/email/'.base64_encode($email->id));
+        }
+
         // if all is good to go, return the view with the previews
         return view('pages.preview', ['user' => $user, 'email' => $email, 'messages' => $messages]);
     }
@@ -118,7 +124,11 @@ class PagesController extends Controller
     public function showUseEmail($eid)
     {
         $user = Auth::user();
+
         $email = Email::find(base64_decode($eid));
+
+        // if there are messages that are 'in the queue', make sure they're deleted as the user is about to enter more
+        Message::where('email_id',$email->id)->whereNull('deleted_at')->whereNull('status')->update(['deleted_at' => time()]);
 
         return view('pages.use', ['user' => $user, 'email' => $email]);
     }

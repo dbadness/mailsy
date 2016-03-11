@@ -49,7 +49,7 @@
 		@if($_GET['tooLarge'] == 'true')
 			<div class="alert alert-danger alert-dismissible" role="alert">
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				Your CSV has exceeded Mailsy's maximum limit (50,000 rows)
+				Your CSV has exceeded Mailsy's maximum limit of {!! env('MESSAGE_MAX') !!} rows.
 			</div>
 		@endif
 	@endif
@@ -124,15 +124,20 @@
 			<button class="btn btn-primary" id='viewPreviews' role="button">
 				View Email Previews
 			</button>
-
+			or
 			<span class="btn btn-primary" id="showCSV" role="button">
-				Or Upload a CSV
+				Upload a CSV
 			</span>
 		</div>
 
 		<div id="uploadCSV">
 			<!-- Trigger the modal with a button -->
-			<button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">Upload CSV List of Emails and Message Information</button>
+			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Upload CSV List of Emails and Message Information</button>
+			or
+
+			<span class="btn btn-primary" id="showData" role="button">
+				Enter Data Manually
+			</span>
 
 			<!-- Modal -->
 			<div class="modal fade" id="myModal" role="dialog">
@@ -141,10 +146,10 @@
 				<!-- Modal content-->
 					<div class="modal-content">
 						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4>Upload a CSV of recipient data</h4>
 						</div>
 						<div class="modal-body">
-							<p><b>Upload a CSV</b>
+							<p>
 								<input type="file" name="csvFile" id="csvFileUpload" accept=".csv" value="" />
 							</p>
 							<button class="btn btn-primary" id='viewPreviews' role="button" style='float:right;'>
@@ -160,9 +165,6 @@
 				</div>
 			</div>
 
-			<span class="btn btn-primary" id="showData" role="button">
-				Or Enter Data Manually
-			</span>
 		</div>
 
 	</form>

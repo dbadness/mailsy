@@ -50,4 +50,4 @@ $(document).ready(function()
 		$('tr').css('border','none');
 	});
 
-});	
+});	// end of doc ready

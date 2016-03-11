@@ -125,56 +125,57 @@ class ActionController extends Controller
     }
     
     // send the emails
-    public function sendEmails(Request $request)
+    public function sendEmail($email_id, $message_id)
     {
         // get the user info
         $user = Auth::user();
         // find the email object and delete and temp_recipients_list
-        $email = Email::find($request->email_id);
+        $email = Email::find($email_id);
         $email->temp_recipients_list = null;
         $email->save();
         // get up a gmail client connection
         $client = User::googleClient();
         // get the gmail service
         $gmail = new \Google_Service_Gmail($client);
-        // send out the emails
-        foreach($request->messages as $id)
+
+
+        // send out the email
+
+        // if they're not a paid user, make sure they don't send more than 10 emails per day
+        $emailsLeft = User::howManyEmailsLeft();
+        if($emailsLeft > 0)
         {
-            // if they're not a paid user, make sure they don't send more than 10 emails per day
-            $emailsLeft = User::howManyEmailsLeft();
-            if($emailsLeft > 0)
+            $message = Message::find($message_id);
+            // prepend the read receipt callback webhook to the message
+            $full_body = $message->message.'<img src="'.env('DOMAIN').'/track/'.base64_encode($user->id).'/'.base64_encode($message->id).'">';
+            // use swift mailer to build the mime
+            $mail = new \Swift_Message;
+            $mail->setFrom(array($user->email => $user->name));
+            $mail->setTo([$message->recipient]);
+            $mail->setBody($full_body, 'text/html');
+            $mail->setSubject($message->subject);
+            if($message->send_to_salesforce)
             {
-                $message = Message::find($id);
-                // prepend the read receipt callback webhook to the message
-                $full_body = $message->message.'<img src="'.env('DOMAIN').'/track/'.base64_encode($user->id).'/'.base64_encode($message->id).'">';
-                // use swift mailer to build the mime
-                $mail = new \Swift_Message;
-                $mail->setFrom(array($user->email => $user->name));
-                $mail->setTo([$message->recipient]);
-                $mail->setBody($full_body, 'text/html');
-                $mail->setSubject($message->subject);
-                if($message->send_to_salesforce)
-                {
-                    // if they selected the 'send to salesforce' button for the email...
-                    $mail->addBCC($user->sf_address);
-                }
-                $data = base64_encode($mail->toString());
-                $data = str_replace(array('+','/','='),array('-','_',''),$data); // url safe
-                $m = new \Google_Service_Gmail_Message();
-                $m->setRaw($data);
-                $gmailMessage = $gmail->users_messages->send('me', $m);
-                // insert the returned google message id into the DB and mark it as sent
-                $message->google_message_id = $gmailMessage->id;
-                $message->status = 'sent';
-                $message->sent_at = time();
-                $message->save();
+                // if they selected the 'send to salesforce' button for the email...
+                $mail->addBCC($user->sf_address);
             }
-            else
-            {
-                // delete all unsent emails (the user has been warned)
-                Message::where('id',$id)->update(['deleted_at' => time()]);
-            }
+            $data = base64_encode($mail->toString());
+            $data = str_replace(array('+','/','='),array('-','_',''),$data); // url safe
+            $m = new \Google_Service_Gmail_Message();
+            $m->setRaw($data);
+            $gmailMessage = $gmail->users_messages->send('me', $m);
+            // insert the returned google message id into the DB and mark it as sent
+            $message->google_message_id = $gmailMessage->id;
+            $message->status = 'sent';
+            $message->sent_at = time();
+            $message->save();
         }
+        else
+        {
+            // delete all unsent emails (the user has been warned)
+            Message::where('id',$id)->update(['deleted_at' => time()]);
+        }
+
         return redirect('/email/'.base64_encode($email->id));
     }
     // save the settings page
@@ -195,6 +196,7 @@ class ActionController extends Controller
         }
         
         $user->save();
+
         return 'success';
     }
     // upgrade the user to a paid account (and send out invites to users if need be)
