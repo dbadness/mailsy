@@ -1,3 +1,28 @@
+### 3.9.2 2016-03-04
+
+* Fix error when an object's metadata is set more than once
+
+### 3.9.1 2016-02-24
+
+* Fix encoding behavior of nested arrays for requests (see #227)
+
+### 3.9.0 2016-02-09
+
+* Add automatic pagination mechanism with `autoPagingIterator()`
+* Allow global account ID to be set with `Stripe::setAccountId()`
+
+### 3.8.0 2016-02-08
+
+* Add `CountrySpec` model for looking up country payment information
+
+### 3.7.1 2016-02-01
+
+* Update bundled CA certs
+
+### 3.7.0 2016-01-27
+
+* Support deleting Relay products and SKUs
+
 ### 3.6.0 2016-01-05
 
 * Allow configuration of HTTP client timeouts

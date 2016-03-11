@@ -42,7 +42,7 @@ Route::get('/membership/add','PagesController@showAddUsers');
 Route::post('/returnFields', 'ActionController@returnFields');
 Route::post('/makePreviews', 'ActionController@makePreviews');
 Route::post('/updatePreviews', 'ActionController@updatePreviews');
-Route::post('/sendEmails', 'ActionController@sendEmails');
+Route::get('/sendEmail/{email_id}/{message_id}', 'ActionController@sendEmail');
 Route::post('/saveSettings', 'ActionController@saveSettings');
 Route::post('/upgrade/{add?}', 'ActionController@doUpgrade');
 Route::post('/saveTemplate','ActionController@saveTemplate');

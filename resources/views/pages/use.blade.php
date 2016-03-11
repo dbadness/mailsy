@@ -10,37 +10,48 @@
 				At least one email is bad
 			</div>
 		@endif
-		@if($_GET['missingColumns'] == 'true')
+		@if($_GET['noHeaders'] == 'true')
 			<div class="alert alert-danger alert-dismissible" role="alert">
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				At least one column is missing or mismatched
+				CSV Error: You don't have headers
 			</div>
 		@endif
-		@if($_GET['droppedRows'] == 'true')
+		@if($_GET['noEmailInHeaders'] == 'true')
 			<div class="alert alert-danger alert-dismissible" role="alert">
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				Some rows have been dropped due to not having emails. Check to make sure they weren't important.
+				CSV Error: There is no email field in the headers (call it email).
 			</div>
 		@endif
-		@if($_GET['columnMismatch'] == 'true')
+		@if($_GET['headerFieldMissing'] == 'true')
 			<div class="alert alert-danger alert-dismissible" role="alert">
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				At least one column is empty
+				CSV Error: At least one of the fields is not in the headers
 			</div>
 		@endif
-		@if($_GET['invalidCSV'] == 'true')
+		@if($_GET['rowsNotExtant'] == 'true')
 			<div class="alert alert-danger alert-dismissible" role="alert">
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				Your CSV is invalid. Usually this means you don't have an email column. Sometimes because there's no headers.
+				CSV Error: You are missing data beneath the headers
 			</div>
 		@endif
-		@if($_GET['empty'] == 'true')
+		@if($_GET['incompleteColumns'] == 'true')
 			<div class="alert alert-danger alert-dismissible" role="alert">
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				You didn't enter any fields!
+				CSV Error: One of your columns is shorter than is acceptable, probably indicating lost data or ill formatted row
 			</div>
 		@endif
-
+		@if($_GET['blankData'] == 'true')
+			<div class="alert alert-danger alert-dismissible" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				CSV Error: At least one of your fields is blank
+			</div>
+		@endif
+		@if($_GET['tooLarge'] == 'true')
+			<div class="alert alert-danger alert-dismissible" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				Your CSV has exceeded Mailsy's maximum limit of {!! env('MESSAGE_MAX') !!} rows.
+			</div>
+		@endif
 	@endif
 	<div class="page-header">
 		<h1>{!! $email->name !!}</h1>
@@ -113,15 +124,20 @@
 			<button class="btn btn-primary" id='viewPreviews' role="button">
 				View Email Previews
 			</button>
-
+			or
 			<span class="btn btn-primary" id="showCSV" role="button">
-				Or Upload a CSV
+				Upload a CSV
 			</span>
 		</div>
 
 		<div id="uploadCSV">
 			<!-- Trigger the modal with a button -->
-			<button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">Upload CSV List of Emails and Message Information</button>
+			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Upload CSV List of Emails and Message Information</button>
+			or
+
+			<span class="btn btn-primary" id="showData" role="button">
+				Enter Data Manually
+			</span>
 
 			<!-- Modal -->
 			<div class="modal fade" id="myModal" role="dialog">
@@ -130,10 +146,10 @@
 				<!-- Modal content-->
 					<div class="modal-content">
 						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4>Upload a CSV of recipient data</h4>
 						</div>
 						<div class="modal-body">
-							<p><b>Upload a CSV</b>
+							<p>
 								<input type="file" name="csvFile" id="csvFileUpload" accept=".csv" value="" />
 							</p>
 							<button class="btn btn-primary" id='viewPreviews' role="button" style='float:right;'>
@@ -149,9 +165,6 @@
 				</div>
 			</div>
 
-			<span class="btn btn-primary" id="showData" role="button">
-				Or Enter Data Manually
-			</span>
 		</div>
 		@endif
 		<div class='clear'></div>
