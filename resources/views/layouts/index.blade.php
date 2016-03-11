@@ -86,9 +86,6 @@
                         <a href="#pricing">Pricing</a>
                     </li>
                     <li>
-                        <a href="#contact">Contact</a>
-                    </li>
-                    <li>
                         <a href="/faq">FAQ</a>
                     </li>
                     <li>
@@ -163,14 +160,14 @@
                 <div class="col-lg-5 col-lg-offset-1 col-sm-push-6  col-sm-6">
                     <hr class="section-heading-spacer">
                     <div class="clearfix"></div>
-                    <h2 class="section-heading">Mailsy keeps it simple, but gives you what you need to email more effectively.</h2>
+                    <h2 class="section-heading">Mailsy keeps it simple, but gives you what you need to reach people more effectively.</h2>
                 </div>
                 <div class="col-lg-5 col-sm-pull-6  col-sm-6">
                     <img class="img-responsive" src="/images/recipients.png" alt="">
                 </div>
             </div>
 
-    <div class="row text-center">
+    <div class="row text-center" style='margin-top:5%;'>
         <div class="col-md-3">
             <span class="fa-stack fa-4x">
                 <i class="fa fa-circle fa-stack-2x text-primary">
@@ -393,7 +390,7 @@
                         </li>
                         <li class="footer-menu-divider">&sdot;</li>
                         <li>
-                            <a href="#contact">Contact</a>
+                            <a href="mailto:hello@mailsy.co">Contact</a>
                         </li>
                         <li class="footer-menu-divider">&sdot;</li>
                         <li>

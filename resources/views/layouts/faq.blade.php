@@ -63,7 +63,6 @@
 
 <body>
 
-<!--
     <nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
         <div class="container topnav">
 
@@ -82,7 +81,6 @@
         </div>
 
     </nav>
--->
 
     <!-- Header -->
     <a name=""></a>
@@ -141,11 +139,6 @@
                                 View the previews and, if they look good, send 'em out!
                             </li>
                         </ol> 
-                    </p>
-                    <br><br>
-                    <i><h4><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Tip:</h4></i>
-                    <p class="lead">
-                        Before sending your first emails, head to the Settings page to fill in your full name so recipients will see your full name as the "from" field in the email. 
                     </p>
                     <br><br>
                     <i><h4><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Tip:</h4></i>
@@ -248,17 +241,11 @@
                             <a href="/">Home</a>
                         </li>
                         <li class="footer-menu-divider">&sdot;</li>
-<!--
                         <li>
                             <a href="/auth">Sign Up / Log in</a>
                         </li>
--->
                     </ul>
-<<<<<<< HEAD
-                    <p class="copyright text-muted small">Copyright &copy;<?php echo date('Y');?> Lucolo Inc. All Rights Reserved</p>
-=======
                     <p class="copyright text-muted small">Copyright &copy;<?php echo date('Y');?> Mailsy by Lucolo, Inc. All Rights Reserved</p>
->>>>>>> copy-edits-20160301
                 </div>
             </div>
         </div>
