@@ -181,6 +181,8 @@ class Email extends Model
             $message->email_id = $email->id;
             $message->recipient = $recipientEmail;
             $message->subject = $subjectText;
+            // let the db know that the message came from a csv
+            $message->sent_with_csv = 'yes';
 
             if($request->_signature == 'on')
             {
