@@ -179,7 +179,7 @@
                 Email Templates
             </h4>
             <p class="text">
-                Using a simple yet powerful templating technology, you can create a template to use over and over again but you're still able to define peices of information for each recipient to increase the chance of a reply.
+                Using a simple yet powerful templating technology, you can create a template to use over and over again while still being able to define peices of information for each recipient to increase the chance of a reply.
             </p>
         </div>
         <div class="col-md-3">
