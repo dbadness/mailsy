@@ -449,6 +449,21 @@ class ActionController extends Controller
         return 'This subscription was updated on '.date('n/d/Y', time());
     }
 
+    // add a user to an existing team if there are licenses available
+    public function doRedeemLicense(Request $request)
+    {
+        $user = Auth::user();
+
+        if(User::domainCheck())
+        {
+            $company = Customer::find($request->company_id);
+        }
+        else
+        {
+            return redirect('/settings?error=wrongCompany');
+        }
+    }
+
     // send feedback on 500 page
     public function doSendFeedback(Request $request)
     {

@@ -15,11 +15,40 @@
 	</script>
 
 	@if($_GET)
-		@if($_GET['message'])
-			<div class="alert alert-success alert-dismissible" role="alert">
-				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				You've successfully upgraded to a paid membership! You'll get a receipt in the mail. Well, ok, email.
-			</div>
+		@if(isset($_GET['message']))
+			@if($_GET['message'] == 'upgradeSuccess')
+
+				<div class="alert alert-success alert-dismissible" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					You've successfully upgraded to a paid membership!
+				</div>
+
+			@elseif($_GET['message'] == 'teamCreated')
+
+				<div class="alert alert-success alert-dismissible" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					You've successfully created your team! You can send people to www.mailsy.co/team/{!! $customer_details->domain !!} to have them signup for their paid versions of Mailsy.
+				</div>
+
+			@endif
+		@endif
+
+		@if(isset($_GET['error']))
+			@if($_GET['error'] == 'wrongCompany')
+
+				<div class="alert alert-danger alert-dismissible" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					You've tried to access a company that you don't belong to.
+				</div>
+
+			@elseif($_GET['error'] == 'noLicenses')
+
+				<div class="alert alert-danger alert-dismissible" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					Your company is out of paid Mailsy licenses. Please email {!! $company->email !!} to request more.
+				</div>
+
+			@endif
 		@endif
 	@endif
 
@@ -29,7 +58,11 @@
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<p>You belong to a team that is already paying for Mailsy... Click the button below to use one of {!! $company->company_name !!}'s Mailsy licenses. If you have questions about this, please email {!! $company->email !!}.</p>
 			<br>
-			<button class='btn btn-success' role='button' id='addToSubButton'>Join the Team</button>
+			<form method='post' action='/useLicense'>
+				<input type='hidden' name='company_id' value='{!! $company->id !!}'>
+				{!! Form::token() !!}
+				<button class='btn btn-success' role='button' id='addToSubButton'>Join the Team</button>
+			</form>
 		</div>
 
 	@endif
@@ -64,7 +97,7 @@
 				<input type="text" class="form-control" value='Send me an email when someone opens my emails.' disabled>
 			</div>
 			<br>
-			<p>Name (to appear in the inbox of the recipient - <i>highly recommended</i>):</p>
+			<p>Name:</p>
 			<div class="input-group">
 			  	<span class="input-group-addon" id="basic-addon1">Name</span>
 			  	<input type="text" name='name' class="form-control" aria-describedby="basic-addon1" value='{!! $user->name !!}'>
@@ -84,6 +117,39 @@
 	</div>
 
 	@if($user->status == 'paying')
+
+		<div class="panel panel-default">
+			<div class="panel-heading"><strong>User Management</strong></div>
+			<div class="panel-body">
+			
+			@if($user->admin)
+		
+				<p>You have {!! $customer_details->users_left !!} licenses left out of the {!! $customer_details->total_users !!} you paid for. Remember that you can invite people to join Mailsy at <a href='/team/{!! $customer_details->domain !!}' target='_blank'>www.mailsy.co/team/{!! $customer_details->domain !!}</a> to use your licenses!</p>
+
+			@else
+
+				<p>You're not paying for any other people. Want to <a href='/upgrade/createTeam'>create a team</a> to add some?</p>
+
+			@endif
+
+			@if($user->has_users)
+
+				<table style='width:100%;'>
+				    @foreach($children as $child)
+				    	<tr>
+				    		<td><h5>{!! $child->email !!}</h5></td>
+				    		<td>
+				    			<a member='{!! $child->id !!}' class='revokeAccessLink'>Revoke Access</a>
+				    			<div class='clear'></div>
+				    		</td>
+				    	</tr>
+				    @endforeach
+				</table>
+
+			@endif
+
+			</div>
+		</div>
 
 		<div class="panel panel-default">
 			<div class="panel-heading"><strong>Card Settings</strong></div>
@@ -123,47 +189,17 @@
 			</div>
 		</div>
 
-		<div class="panel panel-default">
-			<div class="panel-heading"><strong>User Management</strong></div>
-			<div class="panel-body">
-			
-			@if($user->admin)
-		
-				<p>You have {!! $customer_details->users_left !!} licenses left out of the {!! $customer_details->total_users !!} you paid for. Remember that you can invite them to join Mailsy at <a href='/team/{!! $customer_details->domain !!}' target='_blank'>www.mailsy.co/team/{!! $customer_details->domain !!}</a>!</p>
-
-			@else
-
-				<p>You're not paying for any other people. Want to <a href='/upgrade/createTeam'>create a team</a> to add some?</p>
-
-			@endif
-
-			@if($user->has_users)
-
-				<table style='width:100%;'>
-				    @foreach($children as $child)
-				    	<tr>
-				    		<td><h5>{!! $child->email !!}</h5></td>
-				    		<td>
-				    			<a member='{!! $child->id !!}' class='revokeAccessLink'>Revoke Access</a>
-				    			<div class='clear'></div>
-				    		</td>
-				    	</tr>
-				    @endforeach
-				</table>
-
-			@endif
-
-			</div>
-		</div>
-
 	@elseif(!$user->status && $user->paid)
+
 		<div class="panel panel-default">
 			<div class="panel-heading"><strong>Card Settings</strong></div>
 			<div class="panel-body">
 				You don't have a card registered since someone is paying for you.
 			</div>
 		</div>
+
 	@else
+
 		<div class="panel panel-default">
 			<div class="panel-heading"><strong>Card Settings</strong></div>
 			<div class="panel-body">
@@ -173,6 +209,7 @@
 				<a href='/upgrade'><button class='btn btn-success'>Upgrade my Account!</button></a>
 			</div>
 		</div>
+
 	@endif
 
 @endsection

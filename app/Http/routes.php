@@ -47,6 +47,7 @@ Route::get('/sendEmail/{email_id}/{message_id}', 'ActionController@sendEmail');
 Route::post('/saveSettings', 'ActionController@saveSettings');
 Route::post('/upgrade', 'ActionController@doUpgrade');
 Route::post('/createTeam', 'ActionController@doTeamUpgrade');
+Route::post('/useLicense','ActionController@doRedeemLicense');
 Route::post('/saveTemplate','ActionController@saveTemplate');
 Route::post('/sendFeedback','ActionController@doSendFeedback');
 
