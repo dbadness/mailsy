@@ -108,4 +108,37 @@ class User extends Model implements AuthenticatableContract,
 
         return $left;
     }
+
+    // check if this user is a part of the domain that's logged in
+    public static function domainCheck()
+    {
+        $user = Auth::user();
+
+        // get the domain name for the url that we'll create
+        $domain = strstr($user->email,'@');
+        $tld = strrpos($domain, '.');
+        // strip the tld
+        $domain = substr($domain, 0, $tld);
+        // strip the @ symbol
+        $domain = substr($domain, 1, 50);
+
+        // return all the company info if they're the admin
+        $customerDetails = Customer::where('owner_id', $user->id)->whereNull('deleted_at')->first();
+
+        // return just basic info if they're a part of the company but not the admin
+        $company = Customer::where('domain',$domain)->whereNull('deleted_at')->first();
+
+        if($customerDetails != '[]')
+        {
+            return true;
+        }
+        elseif($company != '[]')
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }

@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\User;
+use App\Customer;
 use Auth;
 
 use \Sendinblue\Mailin as Mailin;
@@ -22,13 +23,25 @@ class IndexController extends Controller
         {
             setcookie('mailsy_referer', $_SERVER['HTTP_REFERER'], time() + (86400 * 30), '/'); // 86400 = 1 day
         }
+
         return view('layouts.index');
     }
 
+
+
     // display a login page
-    public function showLogin()
+    public function showCompanyPage($customer_url)
     {
-        return view('pages.login');
+        $customer = Customer::where('domain',$customer_url)->first();
+
+        if($customer)
+        {
+            return view('pages.customer', ['customer' => $customer]);
+        }
+        else
+        {
+            return redirect('/');
+        }
     }
 
     public function showFaq()

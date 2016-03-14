@@ -23,6 +23,17 @@
 		@endif
 	@endif
 
+	@if(!$user->paid && $company)
+
+		<div class="alert alert-success alert-dismissible" role="alert">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<p>You belong to a team that is already paying for Mailsy... Click the button below to use one of {!! $company->company_name !!}'s Mailsy licenses. If you have questions about this, please email {!! $company->email !!}.</p>
+			<br>
+			<button class='btn btn-success' role='button' id='addToSubButton'>Join the Team</button>
+		</div>
+
+	@endif
+
 	<div class="alert alert-success alert-dismissible" role="alert" id='settingsSaved'>
 		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 		Settings saved.
@@ -73,6 +84,7 @@
 	</div>
 
 	@if($user->status == 'paying')
+
 		<div class="panel panel-default">
 			<div class="panel-heading"><strong>Card Settings</strong></div>
 			<div class="panel-body">
@@ -98,9 +110,9 @@
 				<table style='width:100%;'>
 					<tr>
 						@if(!$user->state)
-							<td><h5>Membership Status: Active</h5></td>
+							<td><p>Membership Status: Active</p></td>
 						@elseif($user->state == 'deliquent')
-							<td><h5>Membership Status: Deliquent</h5></td>
+							<td><p>Membership Status: Deliquent</p></td>
 						@endif
 						<td>
 							<a href='/membership/cancel' class='cancelLink'>Cancel Subscription</a>
@@ -111,45 +123,39 @@
 			</div>
 		</div>
 
-		@if($user->has_users)
-			<div class="panel panel-default">
-				<div class="panel-heading"><strong>User Management</strong></div>
-				<div class="panel-body">
-					<table style='width:100%;'>
-					    @foreach($children as $child)
-					    	<tr>
-					    		<td><h5>{!! $child->email !!}</h5></td>
-					    		<td>
-					    			<a member='{!! $child->id !!}' class='revokeAccessLink'>Revoke Access</a>
-					    			<div class='clear'></div>
-					    		</td>
-					    	</tr>
-					    @endforeach
-					    <tr>
-					    	<td> </td>
-					    	@if(!$user->paid)
-					    		<td style='text-align:right;'>Want to <a href='/upgrade'>yourself</a> to your account?</td>
-					    	@endif
-					    </tr>
-					</table>
-					<p>You have {!! $customer_details->users_left !!} licenses left out of the {!! $customer_details->total_users !!} you paid for. Remember that you can invite them to join Mailsy at <a href='www.mailsy.co/{!! $customer_details->domain !!}' target='_blank'>www.mailsy.co/{!! $customer_details->domain !!}</a>!</p>
-				</div>
+		<div class="panel panel-default">
+			<div class="panel-heading"><strong>User Management</strong></div>
+			<div class="panel-body">
+			
+			@if($user->admin)
+		
+				<p>You have {!! $customer_details->users_left !!} licenses left out of the {!! $customer_details->total_users !!} you paid for. Remember that you can invite them to join Mailsy at <a href='/team/{!! $customer_details->domain !!}' target='_blank'>www.mailsy.co/team/{!! $customer_details->domain !!}</a>!</p>
+
+			@else
+
+				<p>You're not paying for any other people. Want to <a href='/upgrade/createTeam'>create a team</a> to add some?</p>
+
+			@endif
+
+			@if($user->has_users)
+
+				<table style='width:100%;'>
+				    @foreach($children as $child)
+				    	<tr>
+				    		<td><h5>{!! $child->email !!}</h5></td>
+				    		<td>
+				    			<a member='{!! $child->id !!}' class='revokeAccessLink'>Revoke Access</a>
+				    			<div class='clear'></div>
+				    		</td>
+				    	</tr>
+				    @endforeach
+				</table>
+
+			@endif
+
 			</div>
-		@elseif(!$user->has_users && $user->admin)
-			<div class="panel panel-default">
-				<div class="panel-heading"><strong>User Management</strong></div>
-				<div class="panel-body">
-					<p>You have {!! $customer_details->users_left !!} licenses left out of the {!! $customer_details->total_users !!} you paid for. Remember that you can invite them to join Mailsy at <a href='www.mailsy.co/{!! $customer_details->domain !!}' target='_blank'>www.mailsy.co/{!! $customer_details->domain !!}</a>!</p>
-				</div>
-			</div>
-		@else
-			<div class="panel panel-default">
-				<div class="panel-heading"><strong>User Management</strong></div>
-				<div class="panel-body">
-					<p>You're not paying for any other people. Want to <a href='/upgrade/createTeam'>create a team</a> to add some?</p>
-				</div>
-			</div>
-		@endif
+		</div>
+
 	@elseif(!$user->status && $user->paid)
 		<div class="panel panel-default">
 			<div class="panel-heading"><strong>Card Settings</strong></div>

@@ -37,6 +37,7 @@ Route::get('/upgrade', 'PagesController@showUpgrade');
 Route::get('/upgrade/createTeam', 'PagesController@showCreateTeam');
 Route::get('/membership/cancel', 'PagesController@showCancel');
 Route::get('/use/{eid}', 'PagesController@showUseEmail');
+Route::get('/team/{customer_url}','IndexController@showCompanyPage');
 
 // actions
 Route::post('/returnFields', 'ActionController@returnFields');
