@@ -19,7 +19,6 @@ class ActionController extends Controller
     // return the fields to the new email view from the ajax call with template
     public function returnFields(Request $request)
     {
-        Log::info($request);
         // make sure that all the fields are accounted for and are alphanumeric
         if(!$request->_name || !$request->_subject || !$request->_email_template)
         {
@@ -46,7 +45,7 @@ class ActionController extends Controller
             $email->subject = $request->_subject;
             $email->template = $request->_email_template;
         }
-//        Log::info($request->_email_template);
+
         // combine the subject and template for regex matching
         $content = $request->_subject.' '.$request->_email_template;
         // find the variables in the email and return them to the view        
@@ -122,6 +121,12 @@ class ActionController extends Controller
         {
             return Email::processManualData($request, $email, $user);
         }
+        
+        if($request->csvFile){
+            return Email::processCSV($request, $email, $user);
+        } else{
+            return Email::processManualData($request, $email, $user);
+        };
     }
     
     // send the emails
