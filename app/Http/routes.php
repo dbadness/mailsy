@@ -35,6 +35,7 @@ Route::get('/email/{eid}','PagesController@showEmail');
 Route::get('/settings','PagesController@showSettings');
 Route::get('/upgrade', 'PagesController@showUpgrade');
 Route::get('/upgrade/createTeam', 'PagesController@showCreateTeam');
+Route::get('/membership/cancel', 'PagesController@showCancel');
 Route::get('/use/{eid}', 'PagesController@showUseEmail');
 
 // actions
@@ -51,7 +52,7 @@ Route::post('/sendFeedback','ActionController@doSendFeedback');
 // ajax calls
 Route::get('/getMessageStatus/{id}','ActionController@doUpdateMessageStatus');
 Route::post('/updateCard','ActionController@doUpdateCard');
-Route::post('/membership/cancel/{master?}','ActionController@doCancelMembership');
+Route::post('/membership/cancel','ActionController@doCancelMembership');
 Route::get('/sendFirstEmail','ActionController@doSendFirstEmail');
 
 // webhooks

@@ -103,7 +103,7 @@
 							<td><h5>Membership Status: Deliquent</h5></td>
 						@endif
 						<td>
-							<a href='/membership/confirm/me/master' class='cancelLink'>Cancel Subscription</a>
+							<a href='/membership/cancel' class='cancelLink'>Cancel Subscription</a>
 							<div class='clear'></div>
 						</td>
 					</tr>
@@ -120,7 +120,7 @@
 					    	<tr>
 					    		<td><h5>{!! $child->email !!}</h5></td>
 					    		<td>
-					    			<a href='/membership/confirm/{!! base64_encode($child->id.rand(10000,99999)) !!}' class='cancelLink'>Cancel Membership</a>
+					    			<a member='{!! $child->id !!}' class='revokeAccessLink'>Revoke Access</a>
 					    			<div class='clear'></div>
 					    		</td>
 					    	</tr>
@@ -128,12 +128,18 @@
 					    <tr>
 					    	<td> </td>
 					    	@if(!$user->paid)
-					    		<td style='text-align:right;'>Want to <a href='/membership/add'>add some new people or yourself</a> to your account?</td>
-					    	@else
-					    		<td style='text-align:right;'>Want to <a href='/membership/add'>add some new people</a> to your account?</td>
+					    		<td style='text-align:right;'>Want to <a href='/upgrade'>yourself</a> to your account?</td>
 					    	@endif
 					    </tr>
 					</table>
+					<p>You have {!! $customer_details->users_left !!} licenses left out of the {!! $customer_details->total_users !!} you paid for. Remember that you can invite them to join Mailsy at <a href='www.mailsy.co/{!! $customer_details->domain !!}' target='_blank'>www.mailsy.co/{!! $customer_details->domain !!}</a>!</p>
+				</div>
+			</div>
+		@elseif(!$user->has_users && $user->admin)
+			<div class="panel panel-default">
+				<div class="panel-heading"><strong>User Management</strong></div>
+				<div class="panel-body">
+					<p>You have {!! $customer_details->users_left !!} licenses left out of the {!! $customer_details->total_users !!} you paid for. Remember that you can invite them to join Mailsy at <a href='www.mailsy.co/{!! $customer_details->domain !!}' target='_blank'>www.mailsy.co/{!! $customer_details->domain !!}</a>!</p>
 				</div>
 			</div>
 		@else
@@ -158,7 +164,7 @@
 				You don't have a card registered since you're on a free account. You can <a href='/upgrade'>upgrade</a> to make your account a paid membership, pay for others (like your team) to give them paid memberships, or both!
 				<br>
 				<br>
-				<a href='/upgrade'><button class='btn btn-success'>Upgrade my Account for Unlimited Emails per Day!</button></a>
+				<a href='/upgrade'><button class='btn btn-success'>Upgrade my Account!</button></a>
 			</div>
 		</div>
 	@endif

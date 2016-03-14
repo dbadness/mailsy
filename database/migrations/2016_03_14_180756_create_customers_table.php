@@ -20,6 +20,7 @@ class CreateCustomersTable extends Migration
             $table->integer('total_users');
             $table->integer('users_left');
             $table->integer('created_at');
+            $table->integer('deleted_at');
         });
     }
 

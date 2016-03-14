@@ -292,6 +292,7 @@ class ActionController extends Controller
             // set their stripe id and their payment settings
             $user->stripe_id = $customer->id;
             $user->status = 'paying';
+            $user->admin = 'yes';
             $user->expires = null; // in case they reupgrade before their subscription exprires
             $user->save();
         }
@@ -348,6 +349,7 @@ class ActionController extends Controller
         $mailin->send_transactional_template($data);
         return json_encode($card);
     }
+
     // update/cancel memberships
     public function doCancelMembership(Request $request)
     {
@@ -378,20 +380,21 @@ class ActionController extends Controller
         $canceledSubscription = $subscription->cancel(['at_period_end' => true]);
         $user->expires = $subscription->current_period_end;
         $user->has_users = null;
+        $user->admin = null; // ditch their admin status
         $user->status = null;
         $user->save();
 
         // send an email to the admin letting them know they're unsubscribed
         $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
         // the email body
-        $body = 'Hi '.$user->name.',<br><br>We\'re writing to let you know that your Mailsy subscription has been successfully cancelled and use to our paid features will expire on '.date($user->expires, 'n/d/Y').'.<br><br>';
+        $body = 'Hi '.$user->name.',<br><br>We\'re writing to let you know that your Mailsy subscription has been successfully canceled and use of our paid features will expire on '.date('n/d/Y', $user->expires).'.<br><br>';
         $body .= 'If you have any feedback for us, please send an email to <a href="mailto:hello@mailsy.co">hello@mailsy.com</a> as we\'d like to learn why Mailsy wasn\'t a good fit for you.<br><br>';
         $body .= 'Thank you,<br>The Mailsy Team';
         $data = array(
             "id" => 5, // blank template
             "to" => $user->email,
             "attr" => array(
-                "SUBJECT" => 'Mailsy Subscription Successfully Cancelled',
+                "SUBJECT" => 'Mailsy Subscription Successfully Canceled',
                 "TITLE" => 'We\'re sorry to see you go...',
                 'BODY' => $body
             )
@@ -399,7 +402,51 @@ class ActionController extends Controller
         $mailin->send_transactional_template($data);
 
         // success message
-        return 'This subscription was canceled at '.$canceledSubscription->cancel_at_period_end;
+        return 'This subscription was canceled on '.date('n/d/Y', time());
+    }
+
+    // update/cancel memberships
+    public function doRevokeAccess(Request $request)
+    {
+        // auth the user
+        $user = Auth::user();
+
+        // update the subscription and decrement it by one
+        // retrieve the subscription info
+        // set the stripe token
+        \Stripe\Stripe::setApiKey(env('STRIPE_TOKEN'));
+        $customer = \Stripe\Customer::retrieve($user->stripe_id);
+        $subscription = $customer->subscriptions->retrieve($customer->subscriptions->data{0}->id);
+
+        if($user->has_users > 1)
+        { 
+            // update this users expiration date and remove the relationship to this admin
+            $child = User::where('id',$child_id)->update(['expires' => $subscription->current_period_end, 'belongs_to' => NULL]);
+            // decrement the suscription
+            $subscription->quantity = $subscription->quantity - 1;
+            $subscription->save();
+        }
+
+        // send an email to the admin letting them know they're unsubscribed
+        $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
+        // the email body
+        $body = 'Hi '.$user->name.',<br><br>We\'re writing to let you know that the Mailsy subscription for '.$child->name.' has been successfully cancelled but they can still use our paid features until '.date('n/d/Y', $user->expires).'.<br><br>';
+        $body .= 'If you have any feedback for us, please send an email to <a href="mailto:hello@mailsy.co">hello@mailsy.com</a> as we\'d like to learn why Mailsy wasn\'t a good fit for '.$child->name.'.<br><br>';
+        $body .= 'Thank you,<br>The Mailsy Team';
+        $data = array(
+            "id" => 5, // blank template
+            "to" => $user->email,
+            "attr" => array(
+                "SUBJECT" => 'Mailsy Subscription Successfully Updated',
+                "TITLE" => 'Mailsy Subscription Successfully Updated',
+                'BODY' => $body
+            )
+        );
+        // send out the email
+        $mailin->send_transactional_template($data);
+
+        // success message
+        return 'This subscription was updated on '.date('n/d/Y', time());
     }
 
     // send feedback on 500 page

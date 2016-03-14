@@ -11,6 +11,7 @@ use Auth;
 use App\User;
 use App\Email;
 use App\Message;
+use App\Customer;
 
 class PagesController extends Controller
 {
@@ -149,8 +150,8 @@ class PagesController extends Controller
     {
         $user = Auth::user();
 
-        // grab the card info if it's a paid user
-        if($user->stripe_id && $user->paid)
+        // grab the card info if it's a paid user that's currently paying
+        if($user->stripe_id)
         {
             \Stripe\Stripe::setApiKey(env('STRIPE_TOKEN'));
 
@@ -171,7 +172,12 @@ class PagesController extends Controller
         {
             $children = null;
         }
-        return view('pages.settings', ['user' => $user, 'children' => $children]);
+
+        // fetch their admin details if they are one
+        $customerDetails = Customer::where('owner_id', $user->id)->whereNull('deleted_at')->first();
+
+        // parse the view
+        return view('pages.settings', ['user' => $user, 'children' => $children, 'customer_details' => $customerDetails]);
     }
 
     // show the upgrade page
@@ -183,31 +189,17 @@ class PagesController extends Controller
     }
 
     // show a confirmation page regarding user management
-    public function showMembershipConfirm($member, $master = null)
+    public function showCancel()
     {
         // auth the user
         $user = Auth::user();
 
         // get the subscription info
         \Stripe\Stripe::setApiKey(env('STRIPE_TOKEN'));
-        $stripeUser = \Stripe\Customer::retrieve($user->stripe_id);
+        $customer = \Stripe\Customer::retrieve($user->stripe_id);
+        $subscription = $customer->subscriptions->retrieve($customer->subscriptions->data{0}->id);
 
-        if($member != 'me')
-        {
-            $member = User::find(substr(base64_decode($member),0,-5));
-            $member->endDate = $stripeUser->subscriptions->data{0}->current_period_end;
-            $member->oldAmt = '$'.substr((700 * $stripeUser->subscriptions->data{0}->quantity),0,-2);
-            $member->newAmt = '$'.substr(((700 * $stripeUser->subscriptions->data{0}->quantity)-700),0,-2);
-        }
-        else
-        {
-            $user->endDate = $stripeUser->subscriptions->data{0}->current_period_end;
-            $user->oldAmt = '$'.substr(700 * $stripeUser->subscriptions->data{0}->quantity,0,-2);
-            $user->newAmt = '$'.substr(((700 * $stripeUser->subscriptions->data{0}->quantity)-700),0,-2);
-        }
-        
-
-        return view('pages.confirm', ['user' => $user, 'member' => $member, 'master' => $master]);
+        return view('pages.confirm', ['user' => $user, 'end_date' => $subscription->current_period_end]);
     }
 
     // page to add users
