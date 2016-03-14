@@ -7,8 +7,7 @@ use Auth;
 use App\User;
 use App\Email;
 use App\Message;
-use App\Recipient;
-use App\Field;
+use App\Customer;
 use Redirect;
 use Log;
 use File;
@@ -205,137 +204,112 @@ class ActionController extends Controller
         return 'success';
     }
     // upgrade the user to a paid account (and send out invites to users if need be)
-    public function doUpgrade(Request $request, $add = null)
+    public function doUpgrade(Request $request)
     {
         // auth the user
         $user = Auth::user();
-        // get the count of users that are being charged for their accounts
-        $userCount = 0;
-        if($request->myself == 'on')
-        {
-            $userCount++;
-            $user->paid = 'yes';
-        }
-        if($request->newusers)
-        {
-            // tell the DB that this is an admin type user
-            $user->has_users = 'yes';
-            $count = count($request->newusers);
-            $userCount = $userCount + $count;
-        }
+
         // attempt to charge their card via stripe
-        // Set your secret key: remember to change this to your live secret key in production
         // See your keys here https://dashboard.stripe.com/account/apikeys
         \Stripe\Stripe::setApiKey(env('STRIPE_TOKEN'));
         // for the emails
         $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
+
         // if this a new subscription...
-        if(!$add)
+        // make a new customer if this is their first time upgrading
+        if(!$user->stripe_id)
         {
-            // make a new customer if this is their first time upgrading
-            if(!$user->stripe_id)
-            {
-                // Use Stripe's library to make requests...
-                $customer = \Stripe\Customer::create(array(
-                    'source' => $request->stripe_token,
-                    'plan' => 'paid',
-                    'email' => $user->email,
-                    'quantity' => $userCount
-                ));
-                $user->stripe_id = $customer->id;
-            }
-            else
-            {
-                // if they're an existing user, just create a new subscription for them
-                $customer = \Stripe\Customer::retrieve($user->stripe_id);
-                $customer->subscriptions->create(array("plan" => "paid"));
-            }
-            
-            $user->status = 'paying';
-            $user->expires = null; // in case they reupgrade before their subscription exprires
-            // the email will be sent by the stripe webhook
-        }
-        else // if they're adding to a pre-existing subscription
-        {
-            // add the user new count to the quantity of the subscription
-            $stripeUser = \Stripe\Customer::retrieve($user->stripe_id);
-            $quantity = (int) $stripeUser->subscriptions->data{0}->quantity;
-            $subscription = $stripeUser->subscriptions->retrieve($stripeUser->subscriptions->data{0}->id);
-            $subscription->quantity = $quantity + $userCount;
-            $subscription->save();
-            // create an invoice on this subsription with the new users at the prorated rate
-            $stripeUser = \Stripe\Customer::retrieve($user->stripe_id);
-            $invoice = \Stripe\Invoice::create(array(
-                'customer' => $user->stripe_id,
-                'subscription' => $stripeUser->subscriptions->data{0}->id
+            // Use Stripe's library to make requests...
+            $customer = \Stripe\Customer::create(array(
+                'source' => $request->stripe_token,
+                'plan' => 'paid',
+                'email' => $user->email,
+                'quantity' => 1
             ));
-            // pay that invoice with the card that's on file
-            $invoice = \Stripe\Invoice::retrieve($invoice->id);
-            $invoice->pay();
-            // send this user an email to confirm the upgrade
-            // let the user know that they've updated their card
-            // the email body
-            if($userCount == 1)
-            {
-                $descriptor = 'person';
-            }
-            else
-            {
-                $descriptor = 'people';
-            }
-            $body = 'Hi '.$user->email.',<br><br>You\'ve successully added '.$userCount.' new '.$descriptor.' to your Mailsy subscription.<br><br>';
-            $body .= 'If you have any questions, please send an email to <a href="mailto:hello@mailsy.co">hello@mailsy.com</a> and we\'d be happy to help.<br><br>';
-            $body .= 'Thank you,<br>The Mailsy Team';
-            $data = array(
-                "id" => 5, // blank template
-                "to" => $user->email,
-                "attr" => array(
-                    "SUBJECT" => 'You\'ve added '.$userCount.' '.$descriptor.' to your Mailsy subscription',
-                    "TITLE" => 'You\'ve successfully added '.$descriptor.' to your Mailsy subscription!',
-                    'BODY' => $body
-                )
-            );
-            $mailin->send_transactional_template($data);
+
+            // set their stripe id and their payment settings
+            $user->stripe_id = $customer->id;
+            $user->status = 'paying';
+            $user->paid = 'yes';
+            $user->expires = null; // in case they reupgrade before their subscription exprires
+            $user->save();
         }
-        // save the user's attributes
-        $user->save();
-        
-        // if there are multiple users, sign them up and mark them as paid users
-        if($request->newusers)
+        else
         {
-            foreach($request->newusers as $newuser)
-            {
-                if(!User::where('email',$newuser)->first())
-                {
-                    // create the new user
-                    $newuserObject = new User;
-                    $newuserObject->email = $newuser;
-                    $newuserObject->paid = 'yes';
-                    $newuserObject->belongs_to = $user->id;
-                    $newuserObject->created_at = time();
-                    $newuserObject->save(); 
-                }
-                else
-                {
-                    // get the existing member
-                    $existingUser = User::where('email',$newuser)->first();
-                    $existingUser->paid = 'yes';
-                    $existingUser->belongs_to = $user->id;
-                    $existingUser->save(); 
-                }
-                
-                // send the user an email and let them know they've been signed up
-                $data = array(
-                    "id" => 2,
-                    "to" => $newuser,
-                    "attr" => array("CUSTOMER"=>$newuser,"FROM"=>$user->email)
-                );
-                $mailin->send_transactional_template($data);
-            }
+            // return their existing stripe key and handle the 'resignup' if that's the case based on an expiration
+            $customer = \Stripe\Customer::retrieve($user->stripe_id);
+            $customer->subscriptions->create(array('plan' => 'paid'));
+
+            // update their info in the db
+            $user->status = 'paying';
+            $user->paid = 'yes';
+            $user->expires = null; // in case they reupgrade before their subscription exprires
+            $user->save();
         }
-        // send the admin to the settings page so they can see how to manage the members they signed up
+
+        // send them to the settings page so they can see that they're signup for a paid account
         return redirect('/settings?message=upgradeSuccess');
     }
+
+    // create a team and perform the necessary stripe functions
+    public function doTeamUpgrade(Request $request)
+    {
+        $user = Auth::user();
+
+        // return the stripe API key
+        \Stripe\Stripe::setApiKey(env('STRIPE_TOKEN'));
+
+        // validate the domain
+        $domain = strstr($user->email,'@');
+        $tld = strrpos($domain, '.');
+        // strip the tld
+        $domain = substr($domain, 0, $tld);
+        // strip the @ symbol
+        $domain = substr($domain, 1, 50);
+
+        // add them to the customers table
+        $customer = new Customer;
+        $customer->owner_id = $user->id;
+        $customer->company_name = $request->company_name;
+        $customer->domain = $domain;
+        $customer->total_users = $request->user_count;
+        $customer->users_left = $request->user_count;
+        $customer->created_at = time();
+        $customer->save();
+
+        // update the information in stripe
+        // make a new customer if this is their first time upgrading
+        if(!$user->stripe_id)
+        {
+            // Use Stripe's library to make requests...
+            $customer = \Stripe\Customer::create(array(
+                'source' => $request->stripe_token,
+                'plan' => 'paid',
+                'email' => $user->email,
+                'quantity' => $request->user_count
+            ));
+
+            // set their stripe id and their payment settings
+            $user->stripe_id = $customer->id;
+            $user->status = 'paying';
+            $user->expires = null; // in case they reupgrade before their subscription exprires
+            $user->save();
+        }
+        else
+        {
+            // return their existing stripe key and handle the 'resignup' if that's the case based on an expiration
+            $customer = \Stripe\Customer::retrieve($user->stripe_id);
+            $customer->subscriptions->create(array('plan' => 'paid','quantity' => $user_count));
+
+            // update their info in the db
+            $user->status = 'paying';
+            $user->expires = null; // in case they reupgrade before their subscription exprires
+            $user->save();
+        }
+
+        return redirect('/settings?message=teamCreated');
+    }
+
     // requests, updates, and return the message status
     public function doUpdateMessageStatus($id)
     {
@@ -343,6 +317,7 @@ class ActionController extends Controller
         $message = Message::find($id);
         return ucfirst($message->status);
     }
+
     // update a customer card
     public function doUpdateCard(Request $request)
     {
@@ -374,73 +349,59 @@ class ActionController extends Controller
         return json_encode($card);
     }
     // update/cancel memberships
-    public function doCancelMembership(Request $request, $master = null)
+    public function doCancelMembership(Request $request)
     {
-        // set the stripe token
-        \Stripe\Stripe::setApiKey(env('STRIPE_TOKEN'));
         // auth the user
         $user = Auth::user();
+
+        // since their an admin cancel their's and everyone they're paying f
         // retrieve the subscription info
+        // set the stripe token
+        \Stripe\Stripe::setApiKey(env('STRIPE_TOKEN'));
         $customer = \Stripe\Customer::retrieve($user->stripe_id);
         $subscription = $customer->subscriptions->retrieve($customer->subscriptions->data{0}->id);
-        if($master)
+
+        if($user->has_users)
         {
-            if($user->has_users)
-            {
-                // get the users that are associated with this admin user
-                $children = User::where('belongs_to',$user->id)->whereNull('deleted_at')->get();
-                // make everyone a free user at the end of the subscription period
-                foreach($children as $child)
-                {   
-                    // update this users expiration date and remove the relationship to this admin
-                    $success = User::where('id',$child->id)->update(['expires' => $subscription->current_period_end, 'belongs_to' => NULL]);
-                    // send the child an email letting them know that their admin cancelled their subscription
-                } 
-            }
-            // cancel the subscription
-            $canceledSubscription = $subscription->cancel(['at_period_end' => true]);
-            $user->expires = time();
-            $user->has_users = null;
-            $user->status = null;
-            $user->save();
-            // send an email to the admin letting them know they're unsubscribed
-            // success message
-            return 'This subscription was canceled at '.$canceledSubscription->cancel_at_period_end;
+            // get the users that are associated with this admin user
+            $children = User::where('belongs_to',$user->id)->whereNull('deleted_at')->get();
+            // make everyone a free user at the end of the subscription period
+            foreach($children as $child)
+            {   
+                // update this users expiration date and remove the relationship to this admin
+                $success = User::where('id',$child->id)->update(['expires' => $subscription->current_period_end, 'belongs_to' => NULL]);
+                // send the child an email letting them know that their admin cancelled their subscription
+            } 
         }
-        else
-        {
-            // decrement the subscription quantity
-            $subscription->quantity = $subscription->quantity - 1;
-            $subscription->save();
-            // if this is an admin cancelling a members subscription
-            if($request->ref)
-            {
-                $member = User::find(substr(base64_decode($request->ref),0,-5));
-                // update this members attrs
-                $member->belongs_to = null;
-                $member->save();
-            }
-            // if this was the last member this admin manages, update their attr accordingly
-            $memberCount = User::where('belongs_to',$user->id)->count();
-            if($memberCount == 0)
-            {
-                $user->has_users = null;
-                
-                // if the admin isn't a paid user and they were just paying for someone else, cancel the subscription
-                if(!$user->paid)
-                {
-                    $canceledSubscription = $subscription->cancel(['at_period_end' => true]);
-                    $user->status = null;
-                }
-                // save the settings
-                $user->save();
-            }
-            // send an email to the admin letting them know that the update has been successful
-            // send an email to the user letting them know their account has been downgraded
-            // success message
-            return 'Subscription quantity is now '.$subscription->quantity;
-        }
+
+        // cancel the subscription
+        $canceledSubscription = $subscription->cancel(['at_period_end' => true]);
+        $user->expires = $subscription->current_period_end;
+        $user->has_users = null;
+        $user->status = null;
+        $user->save();
+
+        // send an email to the admin letting them know they're unsubscribed
+        $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
+        // the email body
+        $body = 'Hi '.$user->name.',<br><br>We\'re writing to let you know that your Mailsy subscription has been successfully cancelled and use to our paid features will expire on '.date($user->expires, 'n/d/Y').'.<br><br>';
+        $body .= 'If you have any feedback for us, please send an email to <a href="mailto:hello@mailsy.co">hello@mailsy.com</a> as we\'d like to learn why Mailsy wasn\'t a good fit for you.<br><br>';
+        $body .= 'Thank you,<br>The Mailsy Team';
+        $data = array(
+            "id" => 5, // blank template
+            "to" => $user->email,
+            "attr" => array(
+                "SUBJECT" => 'Mailsy Subscription Successfully Cancelled',
+                "TITLE" => 'We\'re sorry to see you go...',
+                'BODY' => $body
+            )
+        );
+        $mailin->send_transactional_template($data);
+
+        // success message
+        return 'This subscription was canceled at '.$canceledSubscription->cancel_at_period_end;
     }
+
     // send feedback on 500 page
     public function doSendFeedback(Request $request)
     {

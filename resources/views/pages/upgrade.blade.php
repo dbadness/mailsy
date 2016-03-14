@@ -16,7 +16,7 @@
 		</div>
 	@else
 		<div class="page-header">
-		  	<h1>Upgrade to a paid membership <small>Unlimited emails per day await!</small></h1>
+		  	<h1>Professional-level prospecting awaits you!</h1>
 		</div>
 
 		<div class="panel panel-default">
@@ -29,16 +29,32 @@
 				or send an email to <a href="mailto:hello@mailsy.co">hello@mailsy.co</a> and you'll get a speedy response.</p> 
 			</div>
 			<div class="panel-body">
-				<div id='paymentUsers'>
-					<input type='hidden' name='myEmail' value='{!! $user->email !!}'>
-					<input type='checkbox' name='myself' id='myselfCheckbox'>
-					{!! Form::token() !!}
-					<form method='post' action='/upgrade' id='otherUsers' class="input-group"></form>
-					<div class='btn btn-info' id='myselfButton'>
-						Pay for Myself
+				<div class="row">
+					<div class="col-sm-2 col-md-6">
+						<div class="thumbnail">
+							<div class="caption">
+								<h3><i class='fa fa-user'></i> Individual Signup</h3>
+								<p>If you're a person that wants to upgrade Mailsy for individual use, this is the pefect option for you. For $10 a month, you can send up to 2000 emails per day through Mailsy (the daily limit on your Google Account imposed by Google).</p>
+								<br>
+								<form method='post' action='/upgrade' id='upgradeForm'>
+									<input type='hidden' id='userEmail' value='{!! $user->email !!}'>
+									<input type='hidden' id='userName' value='{!! $user->name !!}'>
+									{!! Form::token() !!}
+									<p><button class="btn btn-success" role="button" id='individualUpgradeButton'>Upgrade</button></p>
+								</form>
+							</div>
+						</div>
 					</div>
-					<div id='addUsers' class="btn btn-info">Pay for Others</div>
-					<button id="customButton" class="btn btn-primary" role="button">Upgrade</button>
+					<div class="col-sm-6 col-md-6">
+						<div class="thumbnail">
+							<div class="caption">
+								<h3><i class='fa fa-users'></i> Team Signup</h3>
+								<p>If your a team leader, use this option to pick the number of users on your team and be billed in a single monthly payment to make your life easy as pie. With the Team Signup process, we'll create a simple url for you like "www.mailsy.co/myCompany" where your company can easily signup for the Mailsy licences that you purchased.</p>
+								<br>
+								<p><a href='/upgrade/createTeam'><button class="btn btn-success" role="button">Create a Team</button></a></p>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -211,23 +211,19 @@ class PagesController extends Controller
     }
 
     // page to add users
-    public function showAddUsers()
+    public function showCreateTeam()
     {
         // auth the user
         $user = Auth::user();
 
-        // get the prorated amount of a new user based on the current subscription
-        \Stripe\Stripe::setApiKey(env('STRIPE_TOKEN'));
-        $stripeUser = \Stripe\Customer::retrieve($user->stripe_id);
-        $endingTime = $stripeUser->subscriptions->data{0}->current_period_end;
-        $deltaSeconds = $endingTime - time();
-        $deltaDays = round($deltaSeconds/(60*60*24)); // turns the seconds into days
-        $increment = 7/date('t'); // date('t') return the days in the current months
-        $prorated_amount = round(($increment * $deltaDays),2);
+        // get the domain name for the url that we'll create
+        $domain = strstr($user->email,'@');
+        $tld = strrpos($domain, '.');
+        // strip the tld
+        $domain = substr($domain, 0, $tld);
+        // strip the @ symbol
+        $domain = substr($domain, 1, 50);
 
-        // get the last four
-        $lastFour = $stripeUser->sources->data{0}->last4;
-
-        return view('pages.newusers',['user' => $user, 'prorated_amount' => $prorated_amount, 'lastFour' => $lastFour]);
+        return view('pages.createTeam',['user' => $user, 'domain' => $domain]);
     }
 }

@@ -17,6 +17,7 @@
         <link href="/css/summernote.css" rel="stylesheet">
         <script src="/js/summernote.js"></script>
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+        <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
         @yield('PageJS')
 

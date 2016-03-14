@@ -34,9 +34,8 @@ Route::get('/preview/{eid}','PagesController@showPreview');
 Route::get('/email/{eid}','PagesController@showEmail');
 Route::get('/settings','PagesController@showSettings');
 Route::get('/upgrade', 'PagesController@showUpgrade');
+Route::get('/upgrade/createTeam', 'PagesController@showCreateTeam');
 Route::get('/use/{eid}', 'PagesController@showUseEmail');
-Route::get('/membership/confirm/{member}/{master?}','PagesController@showMembershipConfirm');
-Route::get('/membership/add','PagesController@showAddUsers');
 
 // actions
 Route::post('/returnFields', 'ActionController@returnFields');
@@ -44,7 +43,8 @@ Route::post('/makePreviews', 'ActionController@makePreviews');
 Route::post('/updatePreviews', 'ActionController@updatePreviews');
 Route::get('/sendEmail/{email_id}/{message_id}', 'ActionController@sendEmail');
 Route::post('/saveSettings', 'ActionController@saveSettings');
-Route::post('/upgrade/{add?}', 'ActionController@doUpgrade');
+Route::post('/upgrade', 'ActionController@doUpgrade');
+Route::post('/createTeam', 'ActionController@doTeamUpgrade');
 Route::post('/saveTemplate','ActionController@saveTemplate');
 Route::post('/sendFeedback','ActionController@doSendFeedback');
 

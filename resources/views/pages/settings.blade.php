@@ -140,7 +140,7 @@
 			<div class="panel panel-default">
 				<div class="panel-heading"><strong>User Management</strong></div>
 				<div class="panel-body">
-					<p>You're not paying for any other people. Want to <a href='/membership/add'>add some?</a></p>
+					<p>You're not paying for any other people. Want to <a href='/upgrade/createTeam'>create a team</a> to add some?</p>
 				</div>
 			</div>
 		@endif
