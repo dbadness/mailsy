@@ -8,9 +8,11 @@ $(document).ready(function()
 	*/ 
 
 	// build stripe button
+	var stripeKey = $('#stripeKey').val();
+
 	var handler = StripeCheckout.configure({
-		key: 'pk_test_CIZBh7IaLuncqqScIchbbbuh',
-		image: '', // <-- make sure to put the logo here
+		key: stripeKey,
+		image: '/images/google-logo.png', // <-- make sure to put the logo here
 		locale: 'auto',
 		token: function(token) {
 		// Use the token to create the charge with a server-side script.
@@ -81,8 +83,6 @@ $(document).ready(function()
 				}
 			});
 		}
-
-		// with everything validated bring up the stripe form
 	});
 
 	// Close Checkout on page navigation

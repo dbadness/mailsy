@@ -34,9 +34,11 @@ $(document).ready(function()
 		});
 	});
 
+	var stripeKey = $('#stripeKey').val();
+
 	// build stripe button
 	var handler = StripeCheckout.configure({
-		key: 'pk_live_mk4MY5ZqkgdzuRT3uWK1kLtJ',
+		key: stripeKey,
 		image: '', // <-- make sure to put the logo here
 		locale: 'auto'
 	});
@@ -77,7 +79,29 @@ $(document).ready(function()
 				});
 			}
 		});
-	});		
+	});
+
+	// downgrade a user if you're an admin
+	$('.revokeAccessLink').click(function()
+	{
+		$.ajax({
+			method: 'post',
+			url: '/revokeAccess',
+			data: {
+				'_token' : $('input[name=_token').val(),
+				'child_id' : $(this).attr('member')
+			},
+			error: function()
+			{
+				alert('Something went wrong. Please try again later or email hello@mailsy.co for help.');
+			},
+			success: function()
+			{
+				window.location = '/settings?message=downgradeSuccess';
+			}
+		});
+
+	});
 
 	// Close Checkout on page navigation
 	$(window).on('popstate', function() {

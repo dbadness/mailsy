@@ -406,7 +406,7 @@ class ActionController extends Controller
     }
 
     // update/cancel memberships
-    public function doRevokeAccess(Request $request)
+    public function doReduceSubscription(Request $request)
     {
         // auth the user
         $user = Auth::user();
@@ -449,6 +449,48 @@ class ActionController extends Controller
         return 'This subscription was updated on '.date('n/d/Y', time());
     }
 
+    // revoke a user's access but keep their subscription intact
+    public function doRevokeAccess(Request $request)
+    {
+        $user = Auth::user();
+
+        $child = User::find($request->child_id);
+        $child->paid = null;
+        $child->belongs_to = null;
+        $child->save();
+
+        // send the child an email letting them know that they've been revoked
+        // send an email to the admin letting them know they're unsubscribed
+        $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
+        // the email body
+        $body = 'Hi '.$child->name.',<br><br>We\'re writing to let you know that your paid Mailsy subscription has been downgraded to a free account by '.$user->name.'.<br><br>';
+        $body .= 'If you have any questions about this, please send an email '.$user->name.' at '.$user->email.'.<br><br>';
+        $body .= 'Thank you,<br>The Mailsy Team';
+        $data = array(
+            "id" => 5, // blank template
+            "to" => $user->email,
+            "attr" => array(
+                "SUBJECT" => 'Mailsy Subscription Downgraded',
+                "TITLE" => 'Mailsy Subscription Downgraded',
+                'BODY' => $body
+            )
+        );
+        // send out the email
+        $mailin->send_transactional_template($data);
+
+        // return the company information
+        $customer = Customer::where('owner_id',$user->id)->first();
+
+        // if the admin has licenses to get back....
+        if($customer->total_users > $customer->users_left)
+        {
+            $customer->users_left++;
+            $customer->save();
+        }
+
+        return 'success';
+    }
+
     // add a user to an existing team if there are licenses available
     public function doRedeemLicense(Request $request)
     {
@@ -457,6 +499,29 @@ class ActionController extends Controller
         if(User::domainCheck())
         {
             $company = Customer::find($request->company_id);
+
+            // if they have licenses left
+            if($company->users_left > 0)
+            {
+                // grant the access
+                $company->users_left--;
+                $user->paid = 'yes';
+                $user->belongs_to = $company->owner_id;
+
+                // in case it hasn't been done yet, update the admins 'has_users' status
+                User::where('id',$company->owner_id)->update(['has_users' => 'yes']);
+
+                // save everything
+                $user->save();
+                $company->save();
+
+                return redirect('/settings?message=licenseRedeemed');
+            }
+            else
+            {
+                // return an error letting them know that they're out of licenses
+                return redirect('/settings?error=noLicenses');
+            }
         }
         else
         {

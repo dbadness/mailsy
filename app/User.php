@@ -128,11 +128,11 @@ class User extends Model implements AuthenticatableContract,
         // return just basic info if they're a part of the company but not the admin
         $company = Customer::where('domain',$domain)->whereNull('deleted_at')->first();
 
-        if($customerDetails != '[]')
+        if($customerDetails)
         {
             return true;
         }
-        elseif($company != '[]')
+        elseif($company)
         {
             return true;
         }

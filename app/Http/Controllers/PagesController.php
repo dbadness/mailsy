@@ -188,9 +188,12 @@ class PagesController extends Controller
         // return just basic info if they're a part of the company but not the admin
         $company = Customer::where('domain',$domain)->whereNull('deleted_at')->first();
 
-        $company->admin = User::where('id',$company->owner_id)->first();
+        if($company)
+        {
+            $company->admin = User::where('id',$company->owner_id)->first();
 
-        $company->email = $company->admin->email;
+            $company->email = $company->admin->email;
+        }
 
         // parse the view
         return view('pages.settings', ['user' => $user, 'children' => $children, 'customer_details' => $customerDetails, 'company' => $company]);

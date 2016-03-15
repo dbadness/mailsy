@@ -9,6 +9,9 @@
 
 @section('content')
 
+	<!-- set the stripe token -->
+	<input type='hidden' id='stripeKey' value="{!! env('STRIPE_P_TOKEN') !!}">
+
 	<script>
 		// fill in the #emailTemplate
 		var template = '{!! addslashes($user->signature) !!}';
@@ -28,6 +31,13 @@
 				<div class="alert alert-success alert-dismissible" role="alert">
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 					You've successfully created your team! You can send people to www.mailsy.co/team/{!! $customer_details->domain !!} to have them signup for their paid versions of Mailsy.
+				</div>
+
+			@elseif($_GET['message'] == 'downgradeSuccess')
+
+				<div class="alert alert-success alert-dismissible" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					You've successfully downgraded an account to a free account and one license has been added back to your subscription for future use.
 				</div>
 
 			@endif
@@ -81,7 +91,7 @@
 	<div class="panel panel-default">
 		<div class="panel-heading"><strong>Email Settings</strong></div>
 		<div class='panel-body'>
-			<p>Email Tracking</p>
+			<p>Email Tracking:</p>
 			<div class="input-group">
 				<span class="input-group-addon">
 					<select id='trackEmail' name='track_email'>
@@ -103,7 +113,7 @@
 			  	<input type="text" name='name' class="form-control" aria-describedby="basic-addon1" value='{!! $user->name !!}'>
 			</div>
 			<br>
-			<p>Signature to be inserted at the end of your emails:</p>
+			<p>Signature to be appended to the end of your emails:</p>
 			<div id="signature"></div>
 			<textarea name='_email_template' id='emailTemplateHolder'></textarea>
 			<p>Salesforce email address to log your emails in Salesforce (if you select that option when sending emails):</p>
@@ -119,29 +129,30 @@
 	@if($user->status == 'paying')
 
 		<div class="panel panel-default">
-			<div class="panel-heading"><strong>User Management</strong></div>
-			<div class="panel-body">
+			<div class="panel-heading">
+				<strong>User Management</strong>
+				<br>
+				<br>
+				@if($user->admin)
 			
-			@if($user->admin)
-		
-				<p>You have {!! $customer_details->users_left !!} licenses left out of the {!! $customer_details->total_users !!} you paid for. Remember that you can invite people to join Mailsy at <a href='/team/{!! $customer_details->domain !!}' target='_blank'>www.mailsy.co/team/{!! $customer_details->domain !!}</a> to use your licenses!</p>
+					<p>You have <b>{!! $customer_details->users_left !!}</b> licenses left out of the <b>{!! $customer_details->total_users !!}</b> in your subscription. Remember that you can invite people to join Mailsy at <a href='/team/{!! $customer_details->domain !!}' target='_blank'>www.mailsy.co/team/{!! $customer_details->domain !!}</a> to use your licenses!</p>
 
-			@else
+				@else
 
-				<p>You're not paying for any other people. Want to <a href='/upgrade/createTeam'>create a team</a> to add some?</p>
+					<p>You're not paying for any other people. Want to <a href='/upgrade/createTeam'>create a team</a> to add some?</p>
 
-			@endif
+				@endif
+
+			</div>
+			<div class="panel-body">
 
 			@if($user->has_users)
 
 				<table style='width:100%;'>
+					{!! Form::token() !!}
 				    @foreach($children as $child)
 				    	<tr>
-				    		<td><h5>{!! $child->email !!}</h5></td>
-				    		<td>
-				    			<a member='{!! $child->id !!}' class='revokeAccessLink'>Revoke Access</a>
-				    			<div class='clear'></div>
-				    		</td>
+				    		<td><p>{!! $child->email !!} <a member='{!! $child->id !!}' class='revokeAccessLink'>Downgrade to Free Account</a></p></td>
 				    	</tr>
 				    @endforeach
 				</table>

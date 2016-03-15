@@ -50,6 +50,7 @@ Route::post('/createTeam', 'ActionController@doTeamUpgrade');
 Route::post('/useLicense','ActionController@doRedeemLicense');
 Route::post('/saveTemplate','ActionController@saveTemplate');
 Route::post('/sendFeedback','ActionController@doSendFeedback');
+Route::post('/revokeAccess','ActionController@doRevokeAccess');
 
 // ajax calls
 Route::get('/getMessageStatus/{id}','ActionController@doUpdateMessageStatus');
