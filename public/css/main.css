@@ -38,7 +38,7 @@ h6, .h6 {
   text-transform: uppercase; }
 
 p {
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.4em; }
 
 h1 small, h2 small, h3 small, h4 small, h5 small, h6 small, .h1 small, .h2 small, .h3 small, .h4 small, .h5 small, .h6 small, h1 .small, h2 .small, h3 .small, h4 .small, h5 .small, h6 .small, .h1 .small, .h2 .small, .h3 .small, .h4 .small, .h5 .small, .h6 .small {
@@ -91,7 +91,7 @@ Color stuff
 
 body {
   color: #66615b;
-  font-size: 16px;
+  font-size: 14px;
   font-family: 'Montserrat', "Helvetica", Arial, sans-serif; }
 
 a {

@@ -89,7 +89,7 @@
                             Signed in as {!! $user->email !!} 
                             @if(!$user->paid)
                                 ({!! App\User::howManyEmailsLeft() !!} emails left today)
-                                @if(App\User::domainCheck())
+                                @if(App\User::domainCheck($user->email))
                                     <a href='/settings'>Join Your Team</a>
                                 @else
                                     <a href='/upgrade'>Upgrade</a>

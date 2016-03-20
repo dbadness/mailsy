@@ -15,8 +15,8 @@ Route::get('/', 'IndexController@showIndex');
 Route::get('/faq', 'IndexController@showFaq');
 
 // auth stuff
-Route::get('/auth', 'IndexController@doAuth');
-Route::get('/gmail', 'IndexController@doAddUser');
+Route::get('/auth/{license?}', 'IndexController@doAuth');
+Route::get('/gmail/{license?}', 'IndexController@doAddUser');
 Route::get('/logout', function(){
 	Auth::logout();
 	return redirect('/');
@@ -37,7 +37,7 @@ Route::get('/upgrade', 'PagesController@showUpgrade');
 Route::get('/upgrade/createTeam', 'PagesController@showCreateTeam');
 Route::get('/membership/cancel', 'PagesController@showCancel');
 Route::get('/use/{eid}', 'PagesController@showUseEmail');
-Route::get('/team/{customer_url}','IndexController@showCompanyPage');
+Route::get('/team/{customer}','IndexController@showCompanyPage');
 
 // actions
 Route::post('/returnFields', 'ActionController@returnFields');

@@ -50,13 +50,21 @@ class IndexController extends Controller
     }
 
     // send the user through oauth2 process for the Gmail API
-    public function doAuth()
+    public function doAuth($license = null)
     {
         $client = new \Google_Client();
         $client->setDeveloperKey(env('GOOGLE_KEY'));
         $client->setClientID(env('GOOGLE_CLIENT_ID'));
         $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
-        $client->setRedirectURI(env('GOOGLE_URI_REDIRECT'));        
+        // send a flag to return to the app so we know to pull a license
+        if($license)
+        {
+            $client->setRedirectURI(env('GOOGLE_URI_REDIRECT').'/license'); 
+        }
+        else
+        {
+            $client->setRedirectURI(env('GOOGLE_URI_REDIRECT'));
+        }      
         $client->setScopes(['https://www.googleapis.com/auth/gmail.send', 'profile', 'email']);
         $client->setAccessType('offline');
         // $client->setApprovalPrompt('force'); // so we're sure to show the screen to the user (and get a refresh token)
@@ -67,14 +75,22 @@ class IndexController extends Controller
     }
 
     // if the gmail auth was sucessful, this adds them to the DB
-    public function doAddUser()
+    public function doAddUser($license = null)
     {
         // find the user's email in the Google API
         $client = new \Google_Client();
         $client->setDeveloperKey(env('GOOGLE_KEY'));
         $client->setClientID(env('GOOGLE_CLIENT_ID'));
-        $client->setRedirectURI(env('GOOGLE_URI_REDIRECT'));
         $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
+        // make sure we accomodate the lincense flag if it's there
+        if($license)
+        {
+            $client->setRedirectURI(env('GOOGLE_URI_REDIRECT').'/license'); 
+        }
+        else
+        {
+            $client->setRedirectURI(env('GOOGLE_URI_REDIRECT'));
+        }
 
         $accessToken = $client->authenticate($_GET['code']);
 
@@ -128,6 +144,14 @@ class IndexController extends Controller
             $user->created_at = time();
             $user->track_email = 'yes';
             $user->referer = $referer;
+
+            // check if they're using a license
+            $domainDetails = User::domainCheck($email);
+            if($domainDetails && $license)
+            {
+                $user->paid = 'yes';
+                $user->belongs_to = $domainDetails->owner_id;
+            }
 
             // save it to the DB
             $user->save();

@@ -496,7 +496,7 @@ class ActionController extends Controller
     {
         $user = Auth::user();
 
-        if(User::domainCheck())
+        if(User::domainCheck($user->email))
         {
             $company = Customer::find($request->company_id);
 

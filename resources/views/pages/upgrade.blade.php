@@ -10,7 +10,7 @@
 @section('content')
 
 	<!-- set the stripe token -->
-	<input type='hidden' id='stripeKey' value="{!! env(STRIPE_P_TOKEN !!}">
+	<input type='hidden' id='stripeKey' value="{!! env(STRIPE_P_TOKEN) !!}">
 
 	<div class="page-header">
 	  	<h1>Professional-level prospecting awaits!</h1>
