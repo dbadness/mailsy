@@ -94,14 +94,15 @@ body {
   font-size: 14px;
   font-family: 'Montserrat', "Helvetica", Arial, sans-serif; }
 
-a {
+a, .a{
   color: #68B3C8;
   -webkit-transition: all 150ms linear;
   -moz-transition: all 150ms linear;
   -o-transition: all 150ms linear;
   -ms-transition: all 150ms linear;
-  transition: all 150ms linear; }
-  a:hover, a:focus {
+  transition: all 150ms linear;
+  cursor:pointer; }
+  a:hover, a:focus, .a:hover, .a:focus {
     color: #3091B2;
     text-decoration: none; }
 
@@ -169,6 +170,12 @@ hr {
 	font-size:21px;
 	cursor:pointer;
 	color:lightgray;
+}
+
+.spanLink
+{
+  cursor:pointer;
+  color:lightblue;
 }
 
 /* ----------- Home Page CSS ------------- */

@@ -103,6 +103,79 @@ $(document).ready(function()
 
 	});
 
+	/* ---------------------- Subscription modification handling ---------------------- */
+
+	// show the save button if there are changes
+	$('#subscriptionCount').on('change',function()
+	{
+		if($(this).val() != totalUsers)
+		{
+			$('#saveSubscriptionsButton').show();
+		}
+		else
+		{
+			$('#saveSubscriptionsButton').hide();
+		}
+	});
+
+	// handle the changes if there are any
+	$('#saveSubscriptionsButton').click(function()
+	{
+		if($('#subscriptionCount').val() > $('#totalUsers').val())
+		{
+			// find the new delta for the subscriptions
+			var newAmount = ($('#subscriptionCount').val() - $('#totalUsers').val());
+
+			// make sure they confirm but then use the card on file to update their subscription settings
+			var charge = confirm((newAmount)+' licenses will be added to your subscription.');
+
+			if(charge)
+			{
+				$.ajax({
+					url : '/updateSubscription/increase',
+					method : 'post',
+					data : {
+						'_token' : $('input[name=_token').val(),
+						'new_subs' : $('#subscriptionCount').val()
+					},
+					success : function() {
+						alert('Upgraded!');
+					},
+					error : function() {
+						alert('Something went wrong. Please email hello@mailsy.co for help.');
+					}
+				});
+			}
+
+		}
+		else
+		{
+			// find the new delta for the subscriptions
+			var newAmount = ($('#totalUsers').val() - $('#subscriptionCount').val());
+
+			// make sure they confirm but then use the card on file to update their subscription settings
+			var remove = confirm((newAmount)+' licenses will be removed from your subscription.');
+
+			if(remove)
+			{
+				$.ajax({
+					url : '/updateSubscription/increase',
+					method : 'post',
+					data : {
+						'_token' : $('input[name=_token').val(),
+						'new_subs' : $('#subscriptionCount').val()
+					},
+					success : function() {
+						alert('Upgraded!');
+					},
+					error : function() {
+						alert('Something went wrong. Please email hello@mailsy.co for help.');
+					}
+				});
+			}
+		}
+	});
+
 	// Close Checkout on page navigation
 	$(window).on('popstate', function() {
 		handler.close();

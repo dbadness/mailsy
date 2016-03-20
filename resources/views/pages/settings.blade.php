@@ -10,7 +10,7 @@
 @section('content')
 
 	<!-- set the stripe token -->
-	<input type='hidden' id='stripeKey' value="{!! env(STRIPE_P_TOKEN) !!}">
+	<input type='hidden' id='stripeKey' value="{!! env(' ') !!}">
 
 	<script>
 		// fill in the #emailTemplate
@@ -135,7 +135,31 @@
 				<br>
 				@if($user->admin)
 			
-					<p>You have <b>{!! $customer_details->users_left !!}</b> licenses left out of the <b>{!! $customer_details->total_users !!}</b> in your subscription. Remember that you can invite people to join Mailsy at <a href='/team/{!! $customer_details->domain !!}' target='_blank'>www.mailsy.co/team/{!! $customer_details->domain !!}</a> to use your licenses!</p>
+					<p>You have <b>{!! $customer_details->users_left !!}</b> licenses left out of the <b>{!! $customer_details->total_users !!}</b> in your subscription. <span class='a' id='subscriptionModalButton' data-toggle="modal" data-target="#subscriptionModal">Add/Remove Licenses</span><br><br>Remember that you can invite people to join Mailsy at <a href='/team/{!! $customer_details->domain !!}' target='_blank'>www.mailsy.co/team/{!! $customer_details->domain !!}</a> to use your licenses!</p>
+
+					<!-- Make a modal for subscription handling -->
+					<!-- Modal -->
+					<div id="subscriptionModal" class="modal fade" role="dialog">
+						<div class="modal-dialog">
+							<!-- Modal content-->
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+									<h4 class="modal-title">Manage Subscriptions</h4>
+								</div>
+								<div class="modal-body">
+									<p>Your subscriptions: <input type='number' id='subscriptionCount' min='0' style='width:60px;' value='{!! $company->total_users !!}'></p>
+									<p><b>Note: You can only decrease your subscriptions if you have unused licenses (you have {!! $company->users_left !!} unused licenses). If you don't have any unused licenses, you can downgrade users on the Settings page and then come back here to reduce your licenses.</b></p>
+									<input type='hidden' id='totalUsers' value='{!! $company->total_users !!}'>
+									<input type='hidden' id='usersLeft' value='{!! $company->users_left !!}'>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+									<button type="button" id='saveSubscriptionsButton' style='display:none;' class="btn btn-primary">Save</button>
+								</div>
+							</div>
+						</div>
+					</div>
 
 				@else
 
