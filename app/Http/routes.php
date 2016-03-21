@@ -51,6 +51,7 @@ Route::post('/useLicense','ActionController@doRedeemLicense');
 Route::post('/saveTemplate','ActionController@saveTemplate');
 Route::post('/sendFeedback','ActionController@doSendFeedback');
 Route::post('/revokeAccess','ActionController@doRevokeAccess');
+Route::post('/updateSubscription/{direction}','ActionController@doUpdateSubscription');
 
 // ajax calls
 Route::get('/getMessageStatus/{id}','ActionController@doUpdateMessageStatus');

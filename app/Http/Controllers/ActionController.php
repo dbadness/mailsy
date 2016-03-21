@@ -406,47 +406,96 @@ class ActionController extends Controller
     }
 
     // update/cancel memberships
-    public function doReduceSubscription(Request $request)
+    public function doUpdateSubscription($direction, Request $request)
     {
         // auth the user
         $user = Auth::user();
 
-        // update the subscription and decrement it by one
         // retrieve the subscription info
         // set the stripe token
         \Stripe\Stripe::setApiKey(env('STRIPE_TOKEN'));
         $customer = \Stripe\Customer::retrieve($user->stripe_id);
         $subscription = $customer->subscriptions->retrieve($customer->subscriptions->data{0}->id);
 
-        if($user->has_users > 1)
-        { 
-            // update this users expiration date and remove the relationship to this admin
-            $child = User::where('id',$child_id)->update(['expires' => $subscription->current_period_end, 'belongs_to' => NULL]);
-            // decrement the suscription
-            $subscription->quantity = $subscription->quantity - 1;
-            $subscription->save();
+        // make sure they can't have a quantity that equals zero
+        if($request->new_subs == 0)
+        {
+            return 'cant_be_zero';
         }
 
-        // send an email to the admin letting them know they're unsubscribed
+        // for decrementing the subscription quantity...
+        if($direction == 'decrease')
+        {
+            // make sure that they have licenses to deduct
+            $company = Customer::where('owner_id',$user->id)->whereNull('deleted_at')->first();
+            if($company)
+            {
+                $delta = $company->total_users - $request->new_subs;
+                if($delta > $company->users_left)
+                {
+                    // send back an error if the user messed with the JS reporting on the settings page
+                    return 'need_more_free_licenses';
+                }
+                else
+                {
+                    // make the update on the mailsy side
+                    $company->total_users = $request->new_subs;
+                    $company->users_left = $company->users_left - $delta;
+                    $company->save();
+
+                    // make the subscription update on the stripe side
+                    $subscription->quantity = $request->new_subs;
+                    $subscription->save();
+                }
+            }
+            else
+            {
+                // return an error if they're trying to make an update to something that isn't their company
+                return 'wrong_company';
+            }
+        }
+        // if they're adding more licenses....
+        elseif($direction == 'increase')
+        {
+            if($company)
+            {
+                // get the delta of new licenses
+                $delta = $request->new_subs - $company->total_users;
+
+                // make the update on the mailsy side
+                $company->total_users = $request->new_subs;
+                $company->users_left = $delta;
+                $company->save();
+
+                // make the subscription update on the stripe side
+                $subscription->quantity = $request->new_subs;
+                $subscription->save();
+            }
+            else
+            {
+                // return an error if they're trying to make an update to something that isn't their company
+                return 'wrong_company';
+            }
+        }
+
         $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
         // the email body
-        $body = 'Hi '.$user->name.',<br><br>We\'re writing to let you know that the Mailsy subscription for '.$child->name.' has been successfully cancelled but they can still use our paid features until '.date('n/d/Y', $user->expires).'.<br><br>';
-        $body .= 'If you have any feedback for us, please send an email to <a href="mailto:hello@mailsy.co">hello@mailsy.com</a> as we\'d like to learn why Mailsy wasn\'t a good fit for '.$child->name.'.<br><br>';
+        $body = 'Hi '.$user->name.',<br><br>We\'re writing to let you know that your Mailsy subscription has been successfully updated. If you\'ve reduced your number of licenses, you\'ll get a credit on your next billing cycle for the prorated amount. If you\'ve increased the number of licenses, you\'ll be charged for the prorated amount of these new licenses as part of your next payment.<br><br>';
+        $body .= 'If you have any questions, please email us at hello@mailsy.co.<br><br>';
         $body .= 'Thank you,<br>The Mailsy Team';
         $data = array(
             "id" => 5, // blank template
             "to" => $user->email,
             "attr" => array(
-                "SUBJECT" => 'Mailsy Subscription Successfully Updated',
-                "TITLE" => 'Mailsy Subscription Successfully Updated',
+                "SUBJECT" => 'Mailsy Subscription Updated',
+                "TITLE" => 'Mailsy Subscription Updated',
                 'BODY' => $body
             )
         );
         // send out the email
         $mailin->send_transactional_template($data);
 
-        // success message
-        return 'This subscription was updated on '.date('n/d/Y', time());
+        return 'success';
     }
 
     // revoke a user's access but keep their subscription intact

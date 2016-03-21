@@ -40,6 +40,13 @@
 					You've successfully downgraded an account to a free account and one license has been added back to your subscription for future use.
 				</div>
 
+			@elseif($_GET['message'] == 'subscriptionSuccessfullyUpdated')
+
+				<div class="alert alert-success alert-dismissible" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					You've successfully updated your number of paid Mailsy licenses!
+				</div>
+
 			@endif
 		@endif
 
@@ -58,6 +65,20 @@
 					Your company is out of paid Mailsy licenses. Please email {!! $company->email !!} to request more.
 				</div>
 
+			@elseif($_GET['error'] == 'notEnoughFreeLicenses')
+
+				<div class="alert alert-danger alert-dismissible" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					You can only remove licenses from your subscription that aren't being used. Please downgrade more users to free up more licenses so you can remove them from your subscription.
+				</div>
+
+			@elseif($_GET['error'] == 'cantBeZero')
+
+				<div class="alert alert-danger alert-dismissible" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					You can't have a subscription quantity of zero. If you'd like to cancel your Mailsy subscription, please do so below.
+				</div>
+				
 			@endif
 		@endif
 	@endif

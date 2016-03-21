@@ -121,52 +121,68 @@ $(document).ready(function()
 	// handle the changes if there are any
 	$('#saveSubscriptionsButton').click(function()
 	{
-		if($('#subscriptionCount').val() > $('#totalUsers').val())
+		if($('#subscriptionCount').val() == '0')
 		{
-			// find the new delta for the subscriptions
-			var newAmount = ($('#subscriptionCount').val() - $('#totalUsers').val());
-
-			// make sure they confirm but then use the card on file to update their subscription settings
-			var charge = confirm((newAmount)+' licenses will be added to your subscription.');
-
-			if(charge)
-			{
-				$.ajax({
-					url : '/updateSubscription/increase',
-					method : 'post',
-					data : {
-						'_token' : $('input[name=_token').val(),
-						'new_subs' : $('#subscriptionCount').val()
-					},
-					success : function() {
-						alert('Upgraded!');
-					},
-					error : function() {
-						alert('Something went wrong. Please email hello@mailsy.co for help.');
-					}
-				});
-			}
-
+			alert('You can\'t have a subscription quantity of zero. If you\'d like to cancel your Mailsy subscription all together, please close this window and do so below.');
 		}
 		else
 		{
-			// find the new delta for the subscriptions
-			var newAmount = ($('#totalUsers').val() - $('#subscriptionCount').val());
+			// collect your variables
+			var newSubs = parseInt($('#subscriptionCount').val());
+			var totalUsers = parseInt($('#totalUsers').val());
 
-			// make sure they confirm but then use the card on file to update their subscription settings
-			var remove = confirm((newAmount)+' licenses will be removed from your subscription.');
+			if(newSubs > totalUsers)
+			{
+				// find the new delta for the subscriptions
+				var newAmount = (newSubs - totalUsers);
 
-			if(remove)
+				// make sure they confirm but then use the card on file to update their subscription settings
+				var validated = confirm((newAmount)+' licenses will be added to your subscription.');
+
+				// set the direciton for the backend
+				var direction = 'increase';
+
+			}
+			else
+			{
+				// find the new delta for the subscriptions
+				var newAmount = ($('#totalUsers').val() - $('#subscriptionCount').val());
+
+				// make sure they confirm but then use the card on file to update their subscription settings
+				var validated = confirm((newAmount)+' licenses will be removed from your subscription.');
+
+				// set the direciton for the backend
+				var direction = 'decrease';
+
+			}
+
+			// with everything good to go, send the request
+			if(validated)
 			{
 				$.ajax({
-					url : '/updateSubscription/increase',
-					method : 'post',
+					url : '/updateSubscription/'+direction,
+					type : 'post',
 					data : {
 						'_token' : $('input[name=_token').val(),
-						'new_subs' : $('#subscriptionCount').val()
+						'new_subs' : newSubs
 					},
-					success : function() {
-						alert('Upgraded!');
+					success : function(response) {
+						if(response == 'wrong_company')
+						{
+							window.location = '/settings?error=wrongCompany';
+						}
+						else if(response == 'need_more_free_licenses')
+						{
+							window.location = '/settings?error=notEnoughFreeLicenses';
+						}
+						else if(response == 'cant_be_zero')
+						{
+							window.location = '/settings?error=cantBeZero';
+						}
+						else if(response == 'success')
+						{
+							window.location = '/settings?message=subscriptionSuccessfullyUpdated';
+						}
 					},
 					error : function() {
 						alert('Something went wrong. Please email hello@mailsy.co for help.');
