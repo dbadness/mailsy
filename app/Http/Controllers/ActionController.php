@@ -8,11 +8,11 @@ use App\User;
 use App\Email;
 use App\Message;
 use App\Customer;
+use App\Utils;
 use Redirect;
 use Log;
 use File;
-// for SendinBlue
-use \Sendinblue\Mailin as Mailin;
+
 class ActionController extends Controller
 {
     // return the fields to the new email view from the ajax call with template
@@ -245,8 +245,7 @@ class ActionController extends Controller
             $user->save();
         }
 
-        // send them a confirmation email
-        $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
+        // send confirmation email
 
         // send them to the settings page so they can see that they're signup for a paid account
         return redirect('/settings?message=upgradeSuccess');
@@ -310,7 +309,7 @@ class ActionController extends Controller
         }
 
         // send them a confirmation email
-        $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
+        
 
         return redirect('/settings?message=teamCreated');
     }
@@ -335,23 +334,14 @@ class ActionController extends Controller
         // update the 'default_source' of the customer for future invoices
         $cu->default_source = $card->id;
         $cu->save();
-        // let the user know that they've updated their card
-        $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
-        // the email body
-        $body = 'Hi '.$user->email.',<br><br>Your payment method (ending in '.$card->last4.') has been successully added to your account.<br><br>';
-        $body .= 'If you have any questions, please send an email to <a href="mailto:hello@mailsy.co">hello@mailsy.com</a> and we\'d be happy to help.<br><br>';
-        $body .= 'Thank you,<br>The Mailsy Team';
 
-        // send out the email
-        $data = array(
-            "id" => 5, // blank template
-            "to" => $user->email,
-            "attr" => array(
-                "SUBJECT" => 'Payment method updated for Mailsy',
-                'BODY' => $body
-            )
-        );
-        $mailin->send_transactional_template($data);
+        // let the user know that they've updated their card
+        $subject = 'Payment method updated for Mailsy';
+        // the email body
+        $body = 'Your payment method (ending in '.$card->last4.') has been successully added to your account.';
+
+        Utils::sendEmail($user->email,$subject,$body);
+
         return json_encode($card);
     }
 
@@ -389,21 +379,11 @@ class ActionController extends Controller
         $user->status = null;
         $user->save();
 
-        // send an email to the admin letting them know they're unsubscribed
-        $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
-        // the email body
-        $body = 'Hi '.$user->name.',<br><br>Your Mailsy subscription has been successfully canceled and use of our paid features will expire on '.date('n/d/Y', $user->expires).'.<br><br>';
-        $body .= 'If you have any feedback for us, please please reply to this email as we\'d like to learn why Mailsy wasn\'t a good fit for you.<br><br>';
-        $body .= 'Thank you,<br>The Mailsy Team';
-        $data = array(
-            "id" => 5, // blank template
-            "to" => $user->email,
-            "attr" => array(
-                "SUBJECT" => 'Mailsy Subscription Successfully Canceled',
-                'BODY' => $body
-            )
-        );
-        $mailin->send_transactional_template($data);
+        // send a confirmation email
+        $subject = 'Mailsy Subscription Successfully Canceled';
+        $body = 'Your Mailsy subscription has been successfully canceled and use of our paid features will expire on '.date('n/d/Y', $user->expires).'. If you\'d be so kind, please reply to this email and let us know why Mailsy wasn\'t a good fit for you or your team.';
+
+        Utils::sendEmail($user->email,$subject,$body);
 
         // success message
         return 'This subscription was canceled on '.date('n/d/Y', time());
@@ -427,11 +407,12 @@ class ActionController extends Controller
             return 'cant_be_zero';
         }
 
+        // make sure that they have licenses to deduct
+        $company = Customer::where('owner_id',$user->id)->whereNull('deleted_at')->first();
+
         // for decrementing the subscription quantity...
         if($direction == 'decrease')
         {
-            // make sure that they have licenses to deduct
-            $company = Customer::where('owner_id',$user->id)->whereNull('deleted_at')->first();
             if($company)
             {
                 $delta = $company->total_users - $request->new_subs;
@@ -482,22 +463,14 @@ class ActionController extends Controller
             }
         }
 
-        $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
+        // email subject
+        $subject = 'Mailsy subscription successfully updated';
         // the email body
-        $body = 'Hi '.$user->name.',<br><br>We\'re writing to let you know that your Mailsy subscription has been successfully updated. If you\'ve reduced your number of licenses, you\'ll get a credit on your next billing cycle for the prorated amount. If you\'ve increased the number of licenses, you\'ll be charged for the prorated amount of these new licenses as part of your next payment.<br><br>';
-        $body .= 'If you have any questions, please email us at hello@mailsy.co.<br><br>';
-        $body .= 'Thank you,<br>The Mailsy Team';
-        $data = array(
-            "id" => 5, // blank template
-            "to" => $user->email,
-            "attr" => array(
-                "SUBJECT" => 'Mailsy Subscription Updated',
-                'BODY' => $body
-            )
-        );
-        // send out the email
-        $mailin->send_transactional_template($data);
+        $body = 'We\'re writing to let you know that your Mailsy subscription has been successfully updated. If you\'ve reduced your number of licenses, you\'ll get a credit on your next billing cycle for the prorated amount. If you\'ve increased the number of licenses, you\'ll be charged for the prorated amount of these new licenses as part of your next payment.';
 
+        // send the confirmation email
+        Utils::sendEmail($user->email,$subject,$body);
+    
         return 'success';
     }
 
@@ -513,21 +486,11 @@ class ActionController extends Controller
 
         // send the child an email letting them know that they've been revoked
         // send an email to the admin letting them know they're unsubscribed
-        $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
+        $subject = 'Mailsy account downgraded';
         // the email body
-        $body = 'Hi '.$child->name.',<br><br>We\'re writing to let you know that your paid Mailsy subscription has been downgraded to a free account by '.$user->name.'.<br><br>';
-        $body .= 'If you have any questions about this, please send an email '.$user->name.' at '.$user->email.'.<br><br>';
-        $body .= 'Thank you,<br>The Mailsy Team';
-        $data = array(
-            "id" => 5, // blank template
-            "to" => $user->email,
-            "attr" => array(
-                "SUBJECT" => 'Mailsy Subscription Downgraded',
-                'BODY' => $body
-            )
-        );
-        // send out the email
-        $mailin->send_transactional_template($data);
+        $body = 'We\'re writing to let you know that your paid Mailsy subscription has been downgraded to a free account by '.$user->name.'. If you think this has been done in error, please email your administrator at '.$user->email.'.';
+        
+        Utils::sendEmail($child->email,$subject,$body);
 
         // return the company information
         $customer = Customer::where('owner_id',$user->id)->first();
@@ -653,24 +616,15 @@ class ActionController extends Controller
                 date_default_timezone_set('EST');
 
                 // send a confirmation email
-                $body = 'Hi there,<br><br>';
+                $subject = $message->recipient.' opened your Mailsy email!';
+
+                $body = 'Hi '.$user->name.',<br><br>';
                 $body .= 'We\'re writing to let you know that '.$message->recipient.' opened your email on '.date('D, M d, Y', $message->read_at).' at '.date('g:ia',$message->read_at).' EST.';
-                $body .= '<br><br>Best,<br>The Mailsy Team';
-                $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
-                $data = array(
-                    "id" => 5, // blank template
-                    "to" => $user->email,
-                    "attr" => array(
-                        "SUBJECT" => $message->recipient.' opened your Mailsy email!',
-                        'BODY' => $body
-                    )
-                );
-                // send out the email
-                $mailin->send_transactional_template($data);
-                
-                $mailin->send_email($data);
+
+                Utils::sendEmail($user->email,$subject,$body);
             }
         }
+
         return File::get('images/email-tracker.png');
     }
 }
