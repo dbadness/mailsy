@@ -9,6 +9,9 @@
 
 @section('content')
 
+	<!-- set the stripe token -->
+	<input type='hidden' id='stripeKey' value="{!! env('STRIPE_P_TOKEN') !!}">
+
 	<div class='page-header'>
 		<h1>Create a Team</h1>
 	</div>
@@ -26,7 +29,7 @@
 				<br>
 				<p>Custom Mailsy URL:</p>
 				<div class="input-group" style='width:100%;'>
-				  	<input type="text" class="form-control" value='https://www.mailsy.co/{!! $domain !!}' disabled>
+				  	<input type="text" class="form-control" value='https://www.mailsy.co/team/{!! $domain !!}' disabled>
 				</div>
 				<br>
 				<p>Number of Users:</p>

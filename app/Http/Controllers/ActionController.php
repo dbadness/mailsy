@@ -247,6 +247,10 @@ class ActionController extends Controller
         }
 
         // send confirmation email
+        $subject = 'You\'re cleared for takeoff...';
+        $body = 'Thank you for upgrading Mailsy to a paid account! You can now send a boatload of emails from Mailsy to increase the size and quality of your prospecting pipeline. As we develop new features for Mailsy, you\'ll get access to them automatically.';
+
+        Utils::sendEmail($user->email,$subject,$body);
 
         // send them to the settings page so they can see that they're signup for a paid account
         return redirect('/settings?message=upgradeSuccess');
@@ -301,17 +305,22 @@ class ActionController extends Controller
         {
             // return their existing stripe key and handle the 'resignup' if that's the case based on an expiration
             $customer = \Stripe\Customer::retrieve($user->stripe_id);
-            $customer->subscriptions->create(array('plan' => 'paid','quantity' => $user_count));
+            $customer->subscriptions->create(array('plan' => 'paid','quantity' => $request->user_count));
 
             // update their info in the db
             $user->status = 'paying';
+            $user->admin = 'yes';
             $user->expires = null; // in case they reupgrade before their subscription exprires
             $user->save();
         }
 
         // send them a confirmation email
-        
+        $subject = 'Mailsy team successfully created';
+        $body = 'You\'ve successfully created a team on Mailsy! You have purchased '.$request->user_count.' licenses and your team can signup to use these licenses at '.env('DOMAIN').'/team/'.$domain.'.';
 
+        Utils::sendEmail($user->email,$subject,$body);
+
+        // send them back to the settings page
         return redirect('/settings?message=teamCreated');
     }
 
@@ -587,6 +596,7 @@ class ActionController extends Controller
         $user->save();
         return 'success';
     }
+
     // send the tutorial email to the user
     public function deleteMessage($id)
     {
@@ -596,6 +606,7 @@ class ActionController extends Controller
         Session::flash('flash_message', 'Task successfully deleted!');
         return redirect()->route('tasks.index');
     }
+    
     // webhook for emails opened by the recipients (read receipts) and returns an image to fool the email
     // we'll also need the user id since this webhook is stateless
     public function doTrack($e_user_id, $e_message_id)
@@ -616,10 +627,8 @@ class ActionController extends Controller
                 // set the timezone
                 date_default_timezone_set('EST');
 
-                // send a confirmation email
+                // send a notification email
                 $subject = $message->recipient.' opened your Mailsy email!';
-
-                $body = 'Hi '.$user->name.',<br><br>';
                 $body .= 'We\'re writing to let you know that '.$message->recipient.' opened your email on '.date('D, M d, Y', $message->read_at).' at '.date('g:ia',$message->read_at).' EST.';
 
                 Utils::sendEmail($user->email,$subject,$body);

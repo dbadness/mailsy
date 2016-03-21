@@ -40,7 +40,8 @@ $(document).ready(function()
 	// build stripe button
 	var handler = StripeCheckout.configure({
 		key: stripeKey,
-		locale: 'auto'
+		image: '/images/google-logo.png', // <-- make sure to put the logo here
+		locale: 'auto',
 	});
 
 	// update the users card

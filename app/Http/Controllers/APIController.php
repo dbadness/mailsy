@@ -27,8 +27,8 @@ class APIController extends Controller
         // find the user in the DB and update their subscription id
         $user = User::where('stripe_id',$transaction['customer'])->first();
 
-        $user->subscription_id = $transaction['lines']['data'][0]['id'];
-        $user->save();
+        // send confirmation email
+        
 
         $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
         $data = array(
