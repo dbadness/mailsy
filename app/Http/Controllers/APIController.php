@@ -33,9 +33,9 @@ class APIController extends Controller
         // send confirmation email
         $subject = 'Mailsy Invoice - Paid';
         $body = 'Your Mailsy subscription has been successfully paid for. Thank you for using Mailsy!';
-        $body = '<ul><li>Transaction ID: '.$transaction['id'].'</li>';
-        $body = '<li>Date: '.date('m-d-Y',$stripe['created']).'</li>';
-        $body = '<li>Amount: '.$amount.'</li></ul>';
+        $body = '<br><br>Transaction ID: '.$transaction['id'];
+        $body = '<br>Date: '.date('m-d-Y',$stripe['created']);
+        $body = '<br>Amount: '.$amount.'<br><br>';
 
         Utils::sendEmail($user->email,$subject,$body);
 
@@ -63,9 +63,9 @@ class APIController extends Controller
         // send confirmation email
         $subject = 'Mailsy Invoice - Declined';
         $body = 'There was a problem charging your credit card for your Mailsy subscription. Please log into Mailsy and use the Settings page to update your credit card.';
-        $body = '<ul><li>Transaction ID: '.$transaction['id'].'</li>';
-        $body = '<li>Date: '.date('m-d-Y',$stripe['created']).'</li>';
-        $body = '<li>Amount: '.$amount.'</li></ul>';
+        $body = '<br><br>Transaction ID: '.$transaction['id'];
+        $body = '<br>Date: '.date('m-d-Y',$stripe['created']);
+        $body = '<br>Amount: '.$amount.'<br><br>';
 
         Utils::sendEmail($user->email,$subject,$body);
 
