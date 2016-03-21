@@ -34,12 +34,12 @@ $(document).ready(function()
 		});
 	});
 
+	// find the stripe key in the doc
 	var stripeKey = $('#stripeKey').val();
 
 	// build stripe button
 	var handler = StripeCheckout.configure({
 		key: stripeKey,
-		image: '', // <-- make sure to put the logo here
 		locale: 'auto'
 	});
 

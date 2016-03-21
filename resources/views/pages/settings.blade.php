@@ -10,7 +10,7 @@
 @section('content')
 
 	<!-- set the stripe token -->
-	<input type='hidden' id='stripeKey' value="{!! env(' ') !!}">
+	<input type='hidden' id='stripeKey' value="{!! env('STRIPE_P_TOKEN') !!}">
 
 	<script>
 		// fill in the #emailTemplate
