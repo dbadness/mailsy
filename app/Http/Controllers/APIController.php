@@ -37,11 +37,9 @@ class APIController extends Controller
         $body = '<li>Date: '.date('m-d-Y',$stripe['created']).'</li>';
         $body = '<li>Amount: '.$amount.'</li></ul>';
 
-        // Utils::sendEmail($user->email,$subject,$body);
+        Utils::sendEmail($user->email,$subject,$body);
 
-        // return 'invoice_successfully_paid';
-
-        return $transaction['id'];
+        return 'invoice_successfully_paid';
     }
 
     // handle a successful payment (the first time)
