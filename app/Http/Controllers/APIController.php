@@ -35,11 +35,13 @@ class APIController extends Controller
         $body = 'Your Mailsy subscription has been successfully paid for. Thank you for using Mailsy!';
         $body = '<ul><li>Transaction ID: '.$transaction['id'].'</li>';
         $body = '<li>Date: '.date('m-d-Y',$stripe['created']).'</li>';
-        $body = '<li>Transaction ID: '.$amount.'</li>';
+        $body = '<li>Amount: '.$amount.'</li></ul>';
 
-        Utils::sendEmail($user->email,$subject,$body);
+        // Utils::sendEmail($user->email,$subject,$body);
 
-        return 'invoice_successfully_paid';
+        // return 'invoice_successfully_paid';
+
+        return $transaction['id'];
     }
 
     // handle a successful payment (the first time)
@@ -65,7 +67,7 @@ class APIController extends Controller
         $body = 'There was a problem charging your credit card for your Mailsy subscription. Please log into Mailsy and use the Settings page to update your credit card.';
         $body = '<ul><li>Transaction ID: '.$transaction['id'].'</li>';
         $body = '<li>Date: '.date('m-d-Y',$stripe['created']).'</li>';
-        $body = '<li>Transaction ID: '.$amount.'</li>';
+        $body = '<li>Amount: '.$amount.'</li></ul>';
 
         Utils::sendEmail($user->email,$subject,$body);
 
