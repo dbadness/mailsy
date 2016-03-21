@@ -212,8 +212,6 @@ class ActionController extends Controller
         // attempt to charge their card via stripe
         // See your keys here https://dashboard.stripe.com/account/apikeys
         \Stripe\Stripe::setApiKey(env('STRIPE_TOKEN'));
-        // for the emails
-        $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
 
         // if this a new subscription...
         // make a new customer if this is their first time upgrading
@@ -246,6 +244,9 @@ class ActionController extends Controller
             $user->expires = null; // in case they reupgrade before their subscription exprires
             $user->save();
         }
+
+        // send them a confirmation email
+        $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
 
         // send them to the settings page so they can see that they're signup for a paid account
         return redirect('/settings?message=upgradeSuccess');
@@ -308,6 +309,9 @@ class ActionController extends Controller
             $user->save();
         }
 
+        // send them a confirmation email
+        $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
+
         return redirect('/settings?message=teamCreated');
     }
 
@@ -337,12 +341,13 @@ class ActionController extends Controller
         $body = 'Hi '.$user->email.',<br><br>Your payment method (ending in '.$card->last4.') has been successully added to your account.<br><br>';
         $body .= 'If you have any questions, please send an email to <a href="mailto:hello@mailsy.co">hello@mailsy.com</a> and we\'d be happy to help.<br><br>';
         $body .= 'Thank you,<br>The Mailsy Team';
+
+        // send out the email
         $data = array(
             "id" => 5, // blank template
             "to" => $user->email,
             "attr" => array(
                 "SUBJECT" => 'Payment method updated for Mailsy',
-                "TITLE" => 'Payment method successfully updated!',
                 'BODY' => $body
             )
         );
@@ -387,15 +392,14 @@ class ActionController extends Controller
         // send an email to the admin letting them know they're unsubscribed
         $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
         // the email body
-        $body = 'Hi '.$user->name.',<br><br>We\'re writing to let you know that your Mailsy subscription has been successfully canceled and use of our paid features will expire on '.date('n/d/Y', $user->expires).'.<br><br>';
-        $body .= 'If you have any feedback for us, please send an email to <a href="mailto:hello@mailsy.co">hello@mailsy.com</a> as we\'d like to learn why Mailsy wasn\'t a good fit for you.<br><br>';
+        $body = 'Hi '.$user->name.',<br><br>Your Mailsy subscription has been successfully canceled and use of our paid features will expire on '.date('n/d/Y', $user->expires).'.<br><br>';
+        $body .= 'If you have any feedback for us, please please reply to this email as we\'d like to learn why Mailsy wasn\'t a good fit for you.<br><br>';
         $body .= 'Thank you,<br>The Mailsy Team';
         $data = array(
             "id" => 5, // blank template
             "to" => $user->email,
             "attr" => array(
                 "SUBJECT" => 'Mailsy Subscription Successfully Canceled',
-                "TITLE" => 'We\'re sorry to see you go...',
                 'BODY' => $body
             )
         );
@@ -488,7 +492,6 @@ class ActionController extends Controller
             "to" => $user->email,
             "attr" => array(
                 "SUBJECT" => 'Mailsy Subscription Updated',
-                "TITLE" => 'Mailsy Subscription Updated',
                 'BODY' => $body
             )
         );
@@ -520,7 +523,6 @@ class ActionController extends Controller
             "to" => $user->email,
             "attr" => array(
                 "SUBJECT" => 'Mailsy Subscription Downgraded',
-                "TITLE" => 'Mailsy Subscription Downgraded',
                 'BODY' => $body
             )
         );
@@ -649,18 +651,22 @@ class ActionController extends Controller
             {
                 // set the timezone
                 date_default_timezone_set('EST');
-                // end a test email
-                $subject = $message->recipient.', opened your Mailsy email!';
+
+                // send a confirmation email
                 $body = 'Hi there,<br><br>';
-                $body .= 'We\'re writing to let you that '.$message->recipient.' opened your email on '.date('D, M d, Y', $message->read_at).' at '.date('g:ia',$message->read_at).' EST.';
+                $body .= 'We\'re writing to let you know that '.$message->recipient.' opened your email on '.date('D, M d, Y', $message->read_at).' at '.date('g:ia',$message->read_at).' EST.';
                 $body .= '<br><br>Best,<br>The Mailsy Team';
                 $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
-                $data = array( 
-                    "to" => array($user->email => $user->name),
-                    "from" => array('no-reply@mailsy.co','Mailsy'),
-                    "subject" => $subject,
-                    "html" => $body
+                $data = array(
+                    "id" => 5, // blank template
+                    "to" => $user->email,
+                    "attr" => array(
+                        "SUBJECT" => $message->recipient.' opened your Mailsy email!',
+                        'BODY' => $body
+                    )
                 );
+                // send out the email
+                $mailin->send_transactional_template($data);
                 
                 $mailin->send_email($data);
             }
