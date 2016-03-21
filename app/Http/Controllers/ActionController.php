@@ -71,6 +71,7 @@ class ActionController extends Controller
             return json_encode(['email' => $email->id]);
         }
     }
+    
     // save the template if the user edits it
     public function saveTemplate(Request $request)
     {

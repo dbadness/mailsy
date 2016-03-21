@@ -166,6 +166,12 @@ $(document).ready(function()
 						'_token' : $('input[name=_token').val(),
 						'new_subs' : newSubs
 					},
+					beforeSend : function() {
+						// show a loader
+						$('#saveSubscriptionsButton').hide();
+						$('#closeSubModalButton').hide();
+						$('#subModalLoader').show();
+					},
 					success : function(response) {
 						if(response == 'wrong_company')
 						{

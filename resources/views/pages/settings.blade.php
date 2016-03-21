@@ -175,7 +175,8 @@
 									<input type='hidden' id='usersLeft' value='{!! $company->users_left !!}'>
 								</div>
 								<div class="modal-footer">
-									<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+									<img id='subModalLoader' style='display:none;' src='/images/loader.gif'>
+									<button type="button" class="btn btn-default" data-dismiss="modal" id='closeSubModalButton'>Close</button>
 									<button type="button" id='saveSubscriptionsButton' style='display:none;' class="btn btn-primary">Save</button>
 								</div>
 							</div>
