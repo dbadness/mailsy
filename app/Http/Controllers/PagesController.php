@@ -11,6 +11,7 @@ use Auth;
 use App\User;
 use App\Email;
 use App\Message;
+use App\Customer;
 
 class PagesController extends Controller
 {
@@ -149,8 +150,8 @@ class PagesController extends Controller
     {
         $user = Auth::user();
 
-        // grab the card info if it's a paid user
-        if($user->stripe_id && $user->paid)
+        // grab the card info if it's a paid user that's currently paying
+        if($user->stripe_id)
         {
             \Stripe\Stripe::setApiKey(env('STRIPE_TOKEN'));
 
@@ -171,7 +172,31 @@ class PagesController extends Controller
         {
             $children = null;
         }
-        return view('pages.settings', ['user' => $user, 'children' => $children]);
+
+        // fetch their admin details if they are a part of one
+        // get the domain name for the url that we'll create
+        $domain = strstr($user->email,'@');
+        $tld = strrpos($domain, '.');
+        // strip the tld
+        $domain = substr($domain, 0, $tld);
+        // strip the @ symbol
+        $domain = substr($domain, 1, 50);
+
+        // return all the company info if they're the admin
+        $customerDetails = Customer::where('owner_id', $user->id)->whereNull('deleted_at')->first();
+
+        // return just basic info if they're a part of the company but not the admin
+        $company = Customer::where('domain',$domain)->whereNull('deleted_at')->first();
+
+        if($company)
+        {
+            $company->admin = User::where('id',$company->owner_id)->first();
+
+            $company->email = $company->admin->email;
+        }
+
+        // parse the view
+        return view('pages.settings', ['user' => $user, 'children' => $children, 'customer_details' => $customerDetails, 'company' => $company]);
     }
 
     // show the upgrade page
@@ -179,55 +204,42 @@ class PagesController extends Controller
     {
         $user = Auth::user();
 
+        if($user->paid || ($user->status == 'paying'))
+        {
+            return redirect('/settings');
+        }
+
         return view('pages.upgrade', ['user' => $user]);
     }
 
     // show a confirmation page regarding user management
-    public function showMembershipConfirm($member, $master = null)
+    public function showCancel()
     {
         // auth the user
         $user = Auth::user();
 
         // get the subscription info
         \Stripe\Stripe::setApiKey(env('STRIPE_TOKEN'));
-        $stripeUser = \Stripe\Customer::retrieve($user->stripe_id);
+        $customer = \Stripe\Customer::retrieve($user->stripe_id);
+        $subscription = $customer->subscriptions->retrieve($customer->subscriptions->data{0}->id);
 
-        if($member != 'me')
-        {
-            $member = User::find(substr(base64_decode($member),0,-5));
-            $member->endDate = $stripeUser->subscriptions->data{0}->current_period_end;
-            $member->oldAmt = '$'.substr((700 * $stripeUser->subscriptions->data{0}->quantity),0,-2);
-            $member->newAmt = '$'.substr(((700 * $stripeUser->subscriptions->data{0}->quantity)-700),0,-2);
-        }
-        else
-        {
-            $user->endDate = $stripeUser->subscriptions->data{0}->current_period_end;
-            $user->oldAmt = '$'.substr(700 * $stripeUser->subscriptions->data{0}->quantity,0,-2);
-            $user->newAmt = '$'.substr(((700 * $stripeUser->subscriptions->data{0}->quantity)-700),0,-2);
-        }
-        
-
-        return view('pages.confirm', ['user' => $user, 'member' => $member, 'master' => $master]);
+        return view('pages.confirm', ['user' => $user, 'end_date' => $subscription->current_period_end]);
     }
 
     // page to add users
-    public function showAddUsers()
+    public function showCreateTeam()
     {
         // auth the user
         $user = Auth::user();
 
-        // get the prorated amount of a new user based on the current subscription
-        \Stripe\Stripe::setApiKey(env('STRIPE_TOKEN'));
-        $stripeUser = \Stripe\Customer::retrieve($user->stripe_id);
-        $endingTime = $stripeUser->subscriptions->data{0}->current_period_end;
-        $deltaSeconds = $endingTime - time();
-        $deltaDays = round($deltaSeconds/(60*60*24)); // turns the seconds into days
-        $increment = 7/date('t'); // date('t') return the days in the current months
-        $prorated_amount = round(($increment * $deltaDays),2);
+        // get the domain name for the url that we'll create
+        $domain = strstr($user->email,'@');
+        $tld = strrpos($domain, '.');
+        // strip the tld
+        $domain = substr($domain, 0, $tld);
+        // strip the @ symbol
+        $domain = substr($domain, 1, 50);
 
-        // get the last four
-        $lastFour = $stripeUser->sources->data{0}->last4;
-
-        return view('pages.newusers',['user' => $user, 'prorated_amount' => $prorated_amount, 'lastFour' => $lastFour]);
+        return view('pages.createTeam',['user' => $user, 'domain' => $domain]);
     }
 }

@@ -4,11 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Recipient extends Model
+class Customer extends Model
 {
     // set the table
-    protected $table = 'recipients';
-
+    protected $table = 'customers';
+    
     // don't automitically add timestamps to new/updated records
     public $timestamps = false;
 }

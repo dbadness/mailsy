@@ -17,6 +17,7 @@
         <link href="/css/summernote.css" rel="stylesheet">
         <script src="/js/summernote.js"></script>
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+        <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
         @yield('PageJS')
 
@@ -79,8 +80,8 @@
                             <li style="float:left;">
                                 <a href="/logout">Log Out</a>
                             </li>
-                            <li style="float:left;background:#00EE76;border-radius:5px;">
-                                <a href="/tutorial/step1" style='color:#2E8B57;'>Tutorial</a>
+                            <li style="float:left;background:#FF6A6A;border-radius:5px;margin-left:10px">
+                                <a href="/tutorial/step1" style='color:white;'>Tutorial</a>
                             </li>
                             <div style="clear:both;"></div>
                         </ul>
@@ -88,8 +89,8 @@
                             Signed in as {!! $user->email !!} 
                             @if(!$user->paid)
                                 ({!! App\User::howManyEmailsLeft() !!} emails left today)
-                                @if($user->status == 'paying')
-                                    <a href='/membership/add'>Upgrade Myself</a>
+                                @if(App\User::domainCheck($user->email))
+                                    <a href='/settings'>Join Your Team</a>
                                 @else
                                     <a href='/upgrade'>Upgrade</a>
                                 @endif

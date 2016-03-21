@@ -11,10 +11,10 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
   margin: 30px 0 15px; }
 
 h1, .h1 {
-  font-size: 4.5em; }
+  font-size: 3em; }
 
 h2, .h2 {
-  font-size: 3em; }
+  font-size: 2em; }
 
 h3, .h3 {
   font-size: 1.825em;
@@ -38,7 +38,7 @@ h6, .h6 {
   text-transform: uppercase; }
 
 p {
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.4em; }
 
 h1 small, h2 small, h3 small, h4 small, h5 small, h6 small, .h1 small, .h2 small, .h3 small, .h4 small, .h5 small, .h6 small, h1 .small, h2 .small, h3 .small, h4 .small, h5 .small, h6 .small, .h1 .small, .h2 .small, .h3 .small, .h4 .small, .h5 .small, .h6 .small {
@@ -91,17 +91,18 @@ Color stuff
 
 body {
   color: #66615b;
-  font-size: 16px;
+  font-size: 14px;
   font-family: 'Montserrat', "Helvetica", Arial, sans-serif; }
 
-a {
+a, .a{
   color: #68B3C8;
   -webkit-transition: all 150ms linear;
   -moz-transition: all 150ms linear;
   -o-transition: all 150ms linear;
   -ms-transition: all 150ms linear;
-  transition: all 150ms linear; }
-  a:hover, a:focus {
+  transition: all 150ms linear;
+  cursor:pointer; }
+  a:hover, a:focus, .a:hover, .a:focus {
     color: #3091B2;
     text-decoration: none; }
 
@@ -169,6 +170,12 @@ hr {
 	font-size:21px;
 	cursor:pointer;
 	color:lightgray;
+}
+
+.spanLink
+{
+  cursor:pointer;
+  color:lightblue;
 }
 
 /* ----------- Home Page CSS ------------- */
@@ -318,7 +325,7 @@ hr {
 	margin:0 20px 0 0;
 }
 
-.cancelLink
+.cancelLink, .revokeAccessLink
 {
 	float:right;
 	color:red;

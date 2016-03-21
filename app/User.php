@@ -87,10 +87,11 @@ class User extends Model implements AuthenticatableContract,
     // find out how many emails this user has left today if their not a paid member
     public static function howManyEmailsLeft()
     {
-        // in EST
-        date_default_timezone_set('EST');
         // auth the user
         $user = Auth::user();
+
+        // set the timezone
+        date_default_timezone_set($user->timezone);
 
         // initate the count
         $left = 10;
@@ -107,5 +108,29 @@ class User extends Model implements AuthenticatableContract,
         }
 
         return $left;
+    }
+
+    // check if this user is a part of the domain that's in the system
+    public static function domainCheck($email)
+    {
+        // get the domain name for the url that we'll create
+        $domain = strstr($email,'@');
+        $tld = strrpos($domain, '.');
+        // strip the tld
+        $domain = substr($domain, 0, $tld);
+        // strip the @ symbol
+        $domain = substr($domain, 1, 50);
+
+        // return just basic info if they're a part of the company but not the admin
+        $companyDetails = Customer::where('domain',$domain)->whereNull('deleted_at')->first();
+
+        if($companyDetails)
+        {
+            return $companyDetails;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

@@ -19,7 +19,8 @@ $(document).ready(function()
 				'name': $('input[name=name').val(),
 				'sf_address' : $('input[name=sf_address]').val(),
 				'signature' : $('#signature').code(),
-				'track_email' : $('#trackEmail').val()
+				'track_email' : $('#trackEmail').val(),
+				'timezone' : $('#timezone').val()
 			},
 			error: function()
 			{
@@ -34,11 +35,14 @@ $(document).ready(function()
 		});
 	});
 
+	// find the stripe key in the doc
+	var stripeKey = $('#stripeKey').val();
+
 	// build stripe button
 	var handler = StripeCheckout.configure({
-		key: 'pk_live_mk4MY5ZqkgdzuRT3uWK1kLtJ',
-		image: '', // <-- make sure to put the logo here
-		locale: 'auto'
+		key: stripeKey,
+		image: '/images/google-logo.png', // <-- make sure to put the logo here
+		locale: 'auto',
 	});
 
 	// update the users card
@@ -77,7 +81,124 @@ $(document).ready(function()
 				});
 			}
 		});
-	});		
+	});
+
+	// downgrade a user if you're an admin
+	$('.revokeAccessLink').click(function()
+	{
+		$.ajax({
+			method: 'post',
+			url: '/revokeAccess',
+			data: {
+				'_token' : $('input[name=_token').val(),
+				'child_id' : $(this).attr('member')
+			},
+			error: function()
+			{
+				alert('Something went wrong. Please try again later or email hello@mailsy.co for help.');
+			},
+			success: function()
+			{
+				window.location = '/settings?message=downgradeSuccess';
+			}
+		});
+
+	});
+
+	/* ---------------------- Subscription modification handling ---------------------- */
+
+	// show the save button if there are changes
+	$('#subscriptionCount').on('change',function()
+	{
+		if($(this).val() != totalUsers)
+		{
+			$('#saveSubscriptionsButton').show();
+		}
+		else
+		{
+			$('#saveSubscriptionsButton').hide();
+		}
+	});
+
+	// handle the changes if there are any
+	$('#saveSubscriptionsButton').click(function()
+	{
+		if($('#subscriptionCount').val() == '0')
+		{
+			alert('You can\'t have a subscription quantity of zero. If you\'d like to cancel your Mailsy subscription all together, please close this window and do so below.');
+		}
+		else
+		{
+			// collect your variables
+			var newSubs = parseInt($('#subscriptionCount').val());
+			var totalUsers = parseInt($('#totalUsers').val());
+
+			if(newSubs > totalUsers)
+			{
+				// find the new delta for the subscriptions
+				var newAmount = (newSubs - totalUsers);
+
+				// make sure they confirm but then use the card on file to update their subscription settings
+				var validated = confirm((newAmount)+' licenses will be added to your subscription.');
+
+				// set the direciton for the backend
+				var direction = 'increase';
+
+			}
+			else
+			{
+				// find the new delta for the subscriptions
+				var newAmount = ($('#totalUsers').val() - $('#subscriptionCount').val());
+
+				// make sure they confirm but then use the card on file to update their subscription settings
+				var validated = confirm((newAmount)+' licenses will be removed from your subscription.');
+
+				// set the direciton for the backend
+				var direction = 'decrease';
+
+			}
+
+			// with everything good to go, send the request
+			if(validated)
+			{
+				$.ajax({
+					url : '/updateSubscription/'+direction,
+					type : 'post',
+					data : {
+						'_token' : $('input[name=_token').val(),
+						'new_subs' : newSubs
+					},
+					beforeSend : function() {
+						// show a loader
+						$('#saveSubscriptionsButton').hide();
+						$('#closeSubModalButton').hide();
+						$('#subModalLoader').show();
+					},
+					success : function(response) {
+						if(response == 'wrong_company')
+						{
+							window.location = '/settings?error=wrongCompany';
+						}
+						else if(response == 'need_more_free_licenses')
+						{
+							window.location = '/settings?error=notEnoughFreeLicenses';
+						}
+						else if(response == 'cant_be_zero')
+						{
+							window.location = '/settings?error=cantBeZero';
+						}
+						else if(response == 'success')
+						{
+							window.location = '/settings?message=subscriptionSuccessfullyUpdated';
+						}
+					},
+					error : function() {
+						alert('Something went wrong. Please email hello@mailsy.co for help.');
+					}
+				});
+			}
+		}
+	});
 
 	// Close Checkout on page navigation
 	$(window).on('popstate', function() {
