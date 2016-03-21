@@ -4,7 +4,7 @@
 
 @section('content')
 
-	<?php date_default_timezone_set('EST'); ?>
+	<?php date_default_timezone_set($user->timezone); ?>
 
 	@if($_GET)
 		@if($_GET['message'] == 'success')

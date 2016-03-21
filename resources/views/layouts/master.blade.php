@@ -80,8 +80,8 @@
                             <li style="float:left;">
                                 <a href="/logout">Log Out</a>
                             </li>
-                            <li style="float:left;background:#00EE76;border-radius:5px;">
-                                <a href="/tutorial/step1" style='color:#2E8B57;'>Tutorial</a>
+                            <li style="float:left;background:#FF6A6A;border-radius:5px;margin-left:10px">
+                                <a href="/tutorial/step1" style='color:white;'>Tutorial</a>
                             </li>
                             <div style="clear:both;"></div>
                         </ul>

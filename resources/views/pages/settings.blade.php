@@ -134,6 +134,23 @@
 			  	<input type="text" name='name' class="form-control" aria-describedby="basic-addon1" value='{!! $user->name !!}'>
 			</div>
 			<br>
+			<p>Timezone:</p>
+
+			<select id='timezone' name='timezone' style='width:200px;'>
+				<option value='America/New_York' <?php if($user->timezone == 'America/New_York'){echo 'selected';}?>>Eastern</option>
+				<option value='America/Chicago' <?php if($user->timezone == 'America/Chicago'){echo 'selected';}?>>Central</option>
+				<option value='America/Denver' <?php if($user->timezone == 'America/New_York'){echo 'selected';}?>>Mountain</option>
+				<option value='America/Phoenix' <?php if($user->timezone == 'America/Denver'){echo 'selected';}?>>Mountain no DST</option>
+				<option value='America/Los_Angeles' <?php if($user->timezone == 'America/Los_Angeles'){echo 'selected';}?>>Pacific</option>
+				<option value='America/Anchorage' <?php if($user->timezone == 'America/Anchorage'){echo 'selected';}?>>Alaska</option>
+				<option value='America/Adak' <?php if($user->timezone == 'America/Adak'){echo 'selected';}?>>Hawaii</option>
+				<option value='Pacific/Honolulu' <?php if($user->timezone == 'Pacific/Honolulu'){echo 'selected';}?>>Hawaii no DST</option>
+				<option value='Europe/London' <?php if($user->timezone == 'Europe/London'){echo 'selected';}?>>London</option>
+				<option value='Europe/Berlin' <?php if($user->timezone == 'Europe/Berlin'){echo 'selected';}?>>Berlin</option>
+			</select>
+			<br>
+			<br>
+			<br>
 			<p>Signature to be appended to the end of your emails:</p>
 			<div id="signature"></div>
 			<textarea name='_email_template' id='emailTemplateHolder'></textarea>

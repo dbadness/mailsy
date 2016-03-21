@@ -19,7 +19,8 @@ $(document).ready(function()
 				'name': $('input[name=name').val(),
 				'sf_address' : $('input[name=sf_address]').val(),
 				'signature' : $('#signature').code(),
-				'track_email' : $('#trackEmail').val()
+				'track_email' : $('#trackEmail').val(),
+				'timezone' : $('#timezone').val()
 			},
 			error: function()
 			{

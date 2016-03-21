@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Utils;
 
 use App\User;
-use \Sendinblue\Mailin as Mailin;
 
 class APIController extends Controller
 {
@@ -27,22 +27,17 @@ class APIController extends Controller
         // find the user in the DB and update their subscription id
         $user = User::where('stripe_id',$transaction['customer'])->first();
 
+        // make the amount a string with the appropriate decimals
+        $amount = '$'.($transaction['amount_due'] / 100);
+
         // send confirmation email
-        
+        $subject = 'Mailsy Invoice - Paid';
+        $body = 'Your Mailsy subscription has been successfully paid for. Thank you for using Mailsy!';
+        $body = '<ul><li>Transaction ID: '.$transaction['id'].'</li>';
+        $body = '<li>Date: '.date('m-d-Y',$stripe['created']).'</li>';
+        $body = '<li>Transaction ID: '.$amount.'</li>';
 
-        $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
-        $data = array(
-            "id" => 3,
-            "to" => $user->email,
-            "attr" => array(
-                'CUSTOMER' => $user->email,
-                'TRANSID' => $transaction['id'],
-                'DATE' => date('m-d-Y',$stripe['created']), 
-                'AMOUNT' => '$'.substr($transaction['amount_due'],0,-2)
-            )
-        );
-
-        $mailin->send_transactional_template($data);
+        Utils::sendEmail($user->email,$subject,$body);
 
         return 'invoice_successfully_paid';
     }
@@ -62,19 +57,17 @@ class APIController extends Controller
         // Do something with $event_json
         $user = User::where('stripe_id',$transaction['customer'])->first();
 
-        $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
-        $data = array(
-            "id" => 3,
-            "to" => $user->email,
-            "attr" => array(
-                'CUSTOMER' => $user->email,
-                'TRANSID' => $transaction['id'],
-                'DATE' => date('m-d-Y',$stripe['created']), 
-                'AMOUNT' => '$'.substr($transaction['amount_due'],0,-2)
-            )
-        );
+        // make the amount a string with the appropriate decimals
+        $amount = '$'.($transaction['amount_due'] / 100);
 
-        $mailin->send_transactional_template($data);
+        // send confirmation email
+        $subject = 'Mailsy Invoice - Declined';
+        $body = 'There was a problem charging your credit card for your Mailsy subscription. Please log into Mailsy and use the Settings page to update your credit card.';
+        $body = '<ul><li>Transaction ID: '.$transaction['id'].'</li>';
+        $body = '<li>Date: '.date('m-d-Y',$stripe['created']).'</li>';
+        $body = '<li>Transaction ID: '.$amount.'</li>';
+
+        Utils::sendEmail($user->email,$subject,$body);
 
         return 'invoice_payment_failed';
     }
