@@ -137,12 +137,16 @@ class PagesController extends Controller
     // show the messages for an email
     public function showEmail($eid)
     {
+        // make sure this email belongs to this user
         $email = User::verifyUser($eid);
+
+        // auth the user
+        $user = Auth::user();
 
         // go through the messages and set the statuses of the messages
         $messages = Message::where('email_id',$email->id)->whereNull('deleted_at')->get();
 
-        return view('pages.email', ['email' => $email, 'messages' => $messages]);
+        return view('pages.email', ['user' => $user, 'email' => $email, 'messages' => $messages]);
     }
 
     // the settings page
