@@ -19,7 +19,7 @@
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<h4><strong>Reduce time prospecting while increasing the effectiveness of your cold emails with Mailsy.</strong></h4>
-			<p>By signing up for a Mailsy membership, you'll be able to send an unlimited number of emails through the service per day. 
+			<p>By signing up for a Mailsy membership, you'll be able to send 2000 emails through the service per day (that's the limit Google sets on your email account). 
 			You can either become an individual paid member or, if you're a leader on your team, you can sign your entire team up all at once making
 			billing and membership administration very easy. Don't worry, you can always change these settings later!</p>
 			<p>If you have any questions about billing, membership administration, or anything else, please visit the <a href='/faq'>FAQ page</a>
