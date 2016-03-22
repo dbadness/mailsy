@@ -139,7 +139,11 @@ class PagesController extends Controller
     {
         $user = Auth::user();
 
+        // make sure this email belongs to this user
         $email = User::verifyUser($eid);
+
+        // auth the user
+        $user = Auth::user();
 
         // go through the messages and set the statuses of the messages
         $messages = Message::where('email_id',$email->id)->whereNull('deleted_at')->get();

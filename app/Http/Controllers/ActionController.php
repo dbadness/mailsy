@@ -237,6 +237,8 @@ class ActionController extends Controller
         $user->name = $request->name;
         $user->sf_address = $request->sf_address;
         $user->signature = $request->signature;
+        $user->timezone = $request->timezone;
+
         if($request->track_email == 'yes')
         {
             $user->track_email = 'yes';
@@ -481,7 +483,7 @@ class ActionController extends Controller
                 {
                     // make the update on the mailsy side
                     $company->total_users = $request->new_subs;
-                    $company->users_left = $company->users_left - $delta;
+                    $company->users_left = $request->new_subs - User::where('belongs_to',$user->id)->whereNull('deleted_at')->count();
                     $company->save();
 
                     // make the subscription update on the stripe side
@@ -500,12 +502,9 @@ class ActionController extends Controller
         {
             if($company)
             {
-                // get the delta of new licenses
-                $delta = $request->new_subs - $company->total_users;
-
-                // make the update on the mailsy side
+                 // make the update on the mailsy side
                 $company->total_users = $request->new_subs;
-                $company->users_left = $delta;
+                $company->users_left = $request->new_subs - User::where('belongs_to',$user->id)->whereNull('deleted_at')->count();
                 $company->save();
 
                 // make the subscription update on the stripe side
@@ -671,7 +670,7 @@ class ActionController extends Controller
             if($user->track_email)
             {
                 // set the timezone
-                date_default_timezone_set('EST');
+                date_default_timezone_set($user->timezone);
 
                 // send a notification email
                 $subject = $message->recipient.' opened your Mailsy email!';

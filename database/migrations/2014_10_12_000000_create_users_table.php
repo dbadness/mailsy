@@ -36,6 +36,7 @@ class CreateUsersTable extends Migration
             $table->string('referer')->nullable();
             $table->string('track_email',3)->nullable();
             $table->string('admin',3)->nullable();
+            $table->string('timezone')->nullable();
         });
     }
 

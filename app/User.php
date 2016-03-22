@@ -87,10 +87,11 @@ class User extends Model implements AuthenticatableContract,
     // find out how many emails this user has left today if their not a paid member
     public static function howManyEmailsLeft()
     {
-        // in EST
-        date_default_timezone_set('EST');
         // auth the user
         $user = Auth::user();
+
+        // set the timezone
+        date_default_timezone_set($user->timezone);
 
         // initate the count
         $left = 10;

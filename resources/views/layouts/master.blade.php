@@ -94,6 +94,7 @@
                         <li><a href="/settings">{!! $user->email !!}</a>
                         </li>
                         <li>
+
                             @if(!$user->paid)
                             <a href='/upgrade'>({!! App\User::howManyEmailsLeft() !!} emails left today)</a> @if(App\User::domainCheck($user->email))
                             <a href='/settings'>Join Your Team</a> @endif @else

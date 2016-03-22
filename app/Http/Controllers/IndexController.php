@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 
 use App\User;
 use App\Customer;
+use App\Utils;
 use Auth;
 
 use \Sendinblue\Mailin as Mailin;
@@ -118,9 +119,17 @@ class IndexController extends Controller
                     $existingUser->paid = null;
                 }
             }
-            $existingUser->track_email = 'yes';
+
+            // add the timezone if there isn't one in the DB yet
+            if(!$existingUser->timezone)
+            {
+                $existingUser->timezone = 'America/New_York';
+            }
+
             $existingUser->name = $name;
             $existingUser->save();
+
+            // send them home
             return redirect('/home');
         }
         else
@@ -143,6 +152,7 @@ class IndexController extends Controller
             $user->gmail_token = $accessToken;
             $user->created_at = time();
             $user->track_email = 'yes';
+            $user->timezone = 'America/New_York';
             $user->referer = $referer;
 
             // check if they're using a license
