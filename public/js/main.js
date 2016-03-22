@@ -289,6 +289,40 @@ $(document).ready(function(){
 		$('csvFileUpload').val(null);
 	});
 
+	// archive email template
+	$('#archiveEmail').click(function()
+	{
+		console.log('test');
+		// var id = i;
+		// $.ajax({
+		// 	method: 'get',
+		// 	url: '/archiveTemplate' + id,
+		// 	error: function()
+		// 	{
+		// 		alert('Something went wrong archiving this.');
+		// 	},
+		// 	success: function(response) {
+		// 		//
+		// 	}
+		// });
+	});
+
+	// dearchive email template
+	$('#dearchiveEmail').click(function()
+	{
+		var id = i;
+		$.ajax({
+			method: 'get',
+			url: '/dearchiveTemplate/' + id,
+			error: function()
+			{
+				alert('Something went wrong archiving this.');
+			},
+			success: function(response) {
+				//
+			}
+		});
+	});
 	
 }); // end doc ready
 

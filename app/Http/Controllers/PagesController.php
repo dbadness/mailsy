@@ -27,8 +27,8 @@ class PagesController extends Controller
         // auth the user
         $user = Auth::user();
 
-        //return their emails and it's metadata
-        $emails = Email::where('user_id',$user->id)->get();
+        //return their emails and it's metadata if not archived
+        $emails = Email::where('user_id',$user->id)->whereNull('deleted_at')->get();
 
         return view('pages.home', ['user' => $user, 'emails' => $emails]);
     }
@@ -137,12 +137,14 @@ class PagesController extends Controller
     // show the messages for an email
     public function showEmail($eid)
     {
+        $user = Auth::user();
+
         $email = User::verifyUser($eid);
 
         // go through the messages and set the statuses of the messages
         $messages = Message::where('email_id',$email->id)->whereNull('deleted_at')->get();
 
-        return view('pages.email', ['email' => $email, 'messages' => $messages]);
+        return view('pages.email', ['user' => $user, 'email' => $email, 'messages' => $messages]);
     }
 
     // the settings page
@@ -242,4 +244,27 @@ class PagesController extends Controller
 
         return view('pages.createTeam',['user' => $user, 'domain' => $domain]);
     }
+
+    // show archived templates
+    public function showArchive()
+    {
+        // auth the user
+        $user = Auth::user();
+
+        //return their emails and it's metadata if archived
+        $emails = Email::where('user_id',$user->id)->whereNotNull('deleted_at')->get();
+
+        return view('pages.archives', ['user' => $user, 'emails' => $emails]);
+    }
+
+    // show an edit page for the email that has been created
+    public function showCopy($eid)
+    {
+        $user = Auth::user();
+
+        $email = User::verifyUser($eid);
+        
+        return view('pages.copy', ['email' => $email, 'user' => $user]);
+    }
+
 }
