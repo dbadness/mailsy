@@ -111,8 +111,8 @@
                                 <li>
                                     @if(!$user->paid)
                                     <a href='/upgrade'>Upgrade</a> @if(App\User::domainCheck($user->email))
-                                    <a href='/settings'>Join Your Team</a> @endif @else
-                                    <a href='/settings/'>(Upgraded Account!)</a> @endif
+                                    <a href='/useLicense'>Join Your Team</a> @endif @else
+                                    <a href='#'>(Upgraded Account!)</a> @endif
                                 </li>
                                 <li role="separator" class="divider"></li>
                                 <li><a href="/logout">Logout</a>

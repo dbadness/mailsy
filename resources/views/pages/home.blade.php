@@ -32,7 +32,7 @@
 							<span><strong>{!! $email->name !!}</strong></span>
 							<span class="pull-right">
 								<a class="btn btn-primary" href='/use/{!! base64_encode($email->id) !!}'>use</a>
-								<a class="btn btn-info" href='/email/{!! base64_encode($email->id) !!}'>info</a>
+								<a class="btn btn-info" href='/email/{!! base64_encode($email->id) !!}'>messages</a>
 								<a class="btn btn-info" href='/edit/{!! base64_encode($email->id) !!}'>edit</a>
 								<a class="btn btn-info" href='/copy/{!! base64_encode($email->id) !!}'>copy</a>
 								<input type="hidden" name="_token" value="{{ csrf_token() }}">
