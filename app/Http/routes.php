@@ -43,6 +43,7 @@ Route::get('/copy/{id}','PagesController@showCopy');
 
 // actions
 Route::post('/returnFields', 'ActionController@returnFields');
+Route::post('/createTemplate', 'ActionController@createTemplate');
 Route::post('/makePreviews', 'ActionController@makePreviews');
 Route::post('/updatePreviews', 'ActionController@updatePreviews');
 Route::get('/sendEmail/{email_id}/{message_id}', 'ActionController@sendEmail');
