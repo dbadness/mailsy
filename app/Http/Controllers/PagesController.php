@@ -186,8 +186,8 @@ class PagesController extends Controller
         // strip the @ symbol
         $domain = substr($domain, 1, 50);
 
-        // return just basic info if they're a part of the company but not the admin
-        $company = Customer::where('domain',$domain)->whereNull('deleted_at')->first();
+        // return the comapny info
+        $company = User::domainCheck($user->email);
 
         if($company)
         {
