@@ -179,20 +179,8 @@ class PagesController extends Controller
             $children = null;
         }
 
-        // fetch their admin details if they are a part of one
-        // get the domain name for the url that we'll create
-        $domain = strstr($user->email,'@');
-        $tld = strrpos($domain, '.');
-        // strip the tld
-        $domain = substr($domain, 0, $tld);
-        // strip the @ symbol
-        $domain = substr($domain, 1, 50);
-
-        // return all the company info if they're the admin
-        $customerDetails = Customer::where('owner_id', $user->id)->whereNull('deleted_at')->first();
-
-        // return just basic info if they're a part of the company but not the admin
-        $company = Customer::where('domain',$domain)->whereNull('deleted_at')->first();
+        // return the company info
+        $company = User::domainCheck($user->email);
 
         if($company)
         {
@@ -202,7 +190,7 @@ class PagesController extends Controller
         }
 
         // parse the view
-        return view('pages.settings', ['user' => $user, 'children' => $children, 'customer_details' => $customerDetails, 'company' => $company]);
+        return view('pages.settings', ['user' => $user, 'children' => $children, 'company' => $company]);
     }
 
     // show the upgrade page
