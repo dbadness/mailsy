@@ -8,10 +8,15 @@ $(document).ready(function()
 	var emailId = $('input[name=email_id]').val();
 	var total = 0;
 	var count = 0;
+	var minutes = Math.floor(( ( length * .5 ) / 60 ));
+	var seconds = Math.ceil( ( length * .5 ) % 60 );
 
 	$('#sendButton').click(function()
 	{
+
 		// open the modal
+		$('.timerMinu').text(String(minutes));
+		$('.timerSecu').text(String(seconds));
 		$('#emailModal').modal('show');
 
 		// go through each mesage and send that email

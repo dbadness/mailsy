@@ -127,7 +127,7 @@
     <div style="margin:20px 0 0 0;"></div>
     <div class="container">
         <!-- if they're out of emails... -->
-        @if($user && (App\User::howManyEmailsLeft() == 0))
+        @if($user && (App\User::howManyEmailsLeft() <= 0))
         <div class="alert alert-warning alert-dismissible" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
             </button>
