@@ -47,6 +47,13 @@
 					You've successfully updated your number of paid Mailsy licenses!
 				</div>
 
+			@elseif($_GET['message'] == 'subscriptionCancelled')
+
+				<div class="alert alert-success alert-dismissible" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					You've successfully cancelled your subscription.
+				</div>
+
 			@endif
 		@endif
 

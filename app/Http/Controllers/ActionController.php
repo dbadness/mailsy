@@ -444,7 +444,7 @@ class ActionController extends Controller
         Utils::sendEmail($user->email,$subject,$body);
 
         // success message
-        return 'This subscription was canceled on '.date('n/d/Y', time());
+        return 'true';
     }
 
     // update/cancel memberships
