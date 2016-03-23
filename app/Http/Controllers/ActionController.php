@@ -429,6 +429,15 @@ class ActionController extends Controller
             } 
         }
 
+        // if the user has a company team, delete it
+        $company = Customer::where('owner_id',$user->id)->whereNull('deleted_at')->first();
+
+        if($company)
+        {
+            $company->deleted_at = time();
+            $company->save();
+        }
+
         // cancel the subscription
         $canceledSubscription = $subscription->cancel(['at_period_end' => true]);
         $user->expires = $subscription->current_period_end;
@@ -548,7 +557,7 @@ class ActionController extends Controller
         Utils::sendEmail($child->email,$subject,$body);
 
         // return the company information
-        $customer = Customer::where('owner_id',$user->id)->first();
+        $customer = Customer::where('owner_id',$user->id)->whereNull('deleted_at')->first();
 
         // if the admin has licenses to get back....
         if($customer->total_users > $customer->users_left)

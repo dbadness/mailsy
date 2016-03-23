@@ -33,7 +33,7 @@ class IndexController extends Controller
     // display a login page
     public function showCompanyPage($customer_url)
     {
-        $customer = Customer::where('domain',$customer_url)->first();
+        $customer = Customer::where('domain',$customer_url)->whereNull('deleted_at')->first();
 
         if($customer)
         {
