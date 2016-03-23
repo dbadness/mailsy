@@ -177,16 +177,7 @@ class PagesController extends Controller
             $children = null;
         }
 
-        // fetch their admin details if they are a part of one
-        // get the domain name for the url that we'll create
-        $domain = strstr($user->email,'@');
-        $tld = strrpos($domain, '.');
-        // strip the tld
-        $domain = substr($domain, 0, $tld);
-        // strip the @ symbol
-        $domain = substr($domain, 1, 50);
-
-        // return the comapny info
+        // return the company info
         $company = User::domainCheck($user->email);
 
         if($company)
