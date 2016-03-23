@@ -74,57 +74,57 @@ $(document).ready(function(){
 		// take the markup from the email and put it into the hidden textarea
 		$('#emailTemplateHolder').val($('#emailTemplate').code());
 
-		$.ajax({
-			method: 'post',
-			url: '/createTemplate',
-			data: 
-			{
-				'_email_template' : $('#emailTemplateHolder').val(),
-				'_name' : $('input[name=_name]').val(),
-				'_subject' : $('#subject').val(),
-				'_token' : $('input[name=_token]').val(),
-				'_email_id' : $('input[name=_email_id]').val()
-			},
-			error: function()
-			{
-				alert('Something went wrong.');
-			},
-			beforeSend: function() {
-				$('#addContacts').html('Loading...');
-			},
-			success: function(response) {
+		// $.ajax({
+		// 	method: 'post',
+		// 	url: '/createTemplate',
+		// 	data: 
+		// 	{
+		// 		'_email_template' : $('#emailTemplateHolder').val(),
+		// 		'_name' : $('input[name=_name]').val(),
+		// 		'_subject' : $('#subject').val(),
+		// 		'_token' : $('input[name=_token]').val(),
+		// 		'_email_id' : $('input[name=_email_id]').val()
+		// 	},
+		// 	error: function()
+		// 	{
+		// 		alert('Something went wrong.');
+		// 	},
+		// 	beforeSend: function() {
+		// 		$('#addContacts').html('Loading...');
+		// 	},
+		// 	success: function(response) {
 
-				// error reporting
-				if(response == 'no main content')
-				{
-					$('#noContent').show();
-					$('#addContacts').html('Save Template and Add Contacts');
-				}
-				else
-				{
-					// $('#addContacts').hide();
-					// $('#refreshFields').show();
-					var data = $.parseJSON(response);
-					var count = 0;
-					// set up the headers
-					$('#recipientList').html('<tr id=\'headers\'><td style=\'width:40px;\'></td><td class=\'field\'><b>Email</b></td></tr><tr class=\'recipient\'><td class=\'removeRow\'><div style=\'height:5px;\'></div><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td><td class=\'field\'><input type="text" name=\'_email[]\' class="form-control"></td></tr>');
-					$.each(data.fields,function(k,v)
-					{
-						$('#headers').append('<td class=\'field\'><b>'+v+'</b></td>');
-					});
-					$.each(data.fields,function(k,v)
-					{
-						$('.recipient').append('<td class=\'field\'><input type="text" name="'+v+'[]" class="form-control"></td>');
-					});
-					$('#fields').show();
-					// make a global variable to duplicate the rows later
-					row = $('#recipient').wrap('<p/>').parent().html();
-					$('#recipient').unwrap();
-					$('#saved').show();
-					$('#fields').append('<input type="hidden" name="_email_id" value="'+data.email+'">');
-				}
-			}
-		});
+		// 		// error reporting
+		// 		if(response == 'no main content')
+		// 		{
+		// 			$('#noContent').show();
+		// 			$('#addContacts').html('Save Template and Add Contacts');
+		// 		}
+		// 		else
+		// 		{
+		// 			// $('#addContacts').hide();
+		// 			// $('#refreshFields').show();
+		// 			var data = $.parseJSON(response);
+		// 			var count = 0;
+		// 			// set up the headers
+		// 			$('#recipientList').html('<tr id=\'headers\'><td style=\'width:40px;\'></td><td class=\'field\'><b>Email</b></td></tr><tr class=\'recipient\'><td class=\'removeRow\'><div style=\'height:5px;\'></div><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td><td class=\'field\'><input type="text" name=\'_email[]\' class="form-control"></td></tr>');
+		// 			$.each(data.fields,function(k,v)
+		// 			{
+		// 				$('#headers').append('<td class=\'field\'><b>'+v+'</b></td>');
+		// 			});
+		// 			$.each(data.fields,function(k,v)
+		// 			{
+		// 				$('.recipient').append('<td class=\'field\'><input type="text" name="'+v+'[]" class="form-control"></td>');
+		// 			});
+		// 			$('#fields').show();
+		// 			// make a global variable to duplicate the rows later
+		// 			row = $('#recipient').wrap('<p/>').parent().html();
+		// 			$('#recipient').unwrap();
+		// 			$('#saved').show();
+		// 			$('#fields').append('<input type="hidden" name="_email_id" value="'+data.email+'">');
+		// 		}
+		// 	}
+		// });
 	});
 
 	// // refresh the fields when the user hits the button "again"
