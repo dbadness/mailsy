@@ -186,9 +186,6 @@ class PagesController extends Controller
         // strip the @ symbol
         $domain = substr($domain, 1, 50);
 
-        // return all the company info if they're the admin
-        $customerDetails = Customer::where('owner_id', $user->id)->whereNull('deleted_at')->first();
-
         // return just basic info if they're a part of the company but not the admin
         $company = Customer::where('domain',$domain)->whereNull('deleted_at')->first();
 
@@ -200,7 +197,7 @@ class PagesController extends Controller
         }
 
         // parse the view
-        return view('pages.settings', ['user' => $user, 'children' => $children, 'customer_details' => $customerDetails, 'company' => $company]);
+        return view('pages.settings', ['user' => $user, 'children' => $children, 'company' => $company]);
     }
 
     // show the upgrade page
