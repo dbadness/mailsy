@@ -16,24 +16,26 @@ $(document).ready(function()
 
 		// go through each mesage and send that email
 		$.each(messages, function(i,id)
-		{	
-			$.ajax({
-				url: '/sendEmail/'+emailId+'/'+id.value,
-				success: function(response){
-					// increment the progress bar
-					total += increment;
-					$('.progress-bar').css('width',total.toFixed(0)+'%');
-					$('#progressText').html(total.toFixed(0)+'% Complete');
-					// update the view with the status
-					$('#status'+id.value).html(response);
+		{
+			setTimeout(function(){
+				$.ajax({
+					url: '/sendEmail/'+emailId+'/'+id.value,
+					success: function(response){
+						// increment the progress bar
+						total += increment;
+						$('.progress-bar').css('width',total.toFixed(0)+'%');
+						$('#progressText').html(total.toFixed(0)+'% Complete');
+						// update the view with the status
+						$('#status'+id.value).html(response);
 
-					// show the close button
-					$('#closeEmailModal').show();
-				},
-				error: function(){
-					alert('Something went wrong. Please log out of Mailsy, log back in, and try again.');
-				}
-			});
+						// show the close button
+						$('#closeEmailModal').show();
+					},
+					error: function(response){
+						alert('Something went wrong. Please log out of Mailsy, log back in, and try again.');
+					}
+				});
+			}, (i*500))
 
 		});
 	});

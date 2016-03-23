@@ -146,7 +146,7 @@ class PagesController extends Controller
         $user = Auth::user();
 
         // go through the messages and set the statuses of the messages
-        $messages = Message::where('email_id',$email->id)->whereNull('deleted_at')->get();
+        $messages = Message::where('email_id',$email->id)->where('status', 'sent')->whereNull('deleted_at')->get();
 
         return view('pages.email', ['user' => $user, 'email' => $email, 'messages' => $messages]);
     }

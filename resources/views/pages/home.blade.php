@@ -57,7 +57,7 @@
 			@if(!$user->paid)
 				<a href='/create' class='alert-link'>Create a template</a> and send up to 10 emails per today on the free account.
 			@else
-				<a href='/create' class='alert-link'>Create a template</a> and send unlimited emails per day since you have an upgraded account!
+				<a href='/create' class='alert-link'>Create a template</a> and send hundreds of emails per day since you have an upgraded account!
 			@endif
 		</div>
 

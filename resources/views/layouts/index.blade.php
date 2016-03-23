@@ -23,6 +23,7 @@
     <!-- Custom Fonts -->
     <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -107,7 +108,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="intro-message">
-                        <h1>Less time emailing customers. <br>More time working with them.</h1>
+                        <h1>Grow your sales funnel with better conversations from the start.</h1>
                         <h3>Send and track many emails at once with Mailsy.</h3>
                         <hr class="intro-divider">
                         <ul class="list-inline intro-social-buttons">
@@ -135,9 +136,9 @@
                 <div class="col-lg-5 col-sm-6">
                     <hr class="section-heading-spacer">
                     <div class="clearfix"></div>
-                    <h2 class="section-heading">What the heck is Mailsy?</h2>
+                    <h2 class="section-heading">Better prospecting emails means more sales.</h2>
                     <p class="lead">
-                        Mailsy is an email tool that allows you to reach out to more people to sell, market, and advocate your brand. We save you time by sending the emails out all at once while keeping the authenticity that comes from sending emails one at a time.<br><br>Create email templates with a basic message, input details into those messages to make each email unique for your recipients, and then send 'em off. Mailsy even tracks those emails so you know when your recipient opens them.
+                        Mailsy allows you to send hundreds of prospecting emails directly from your email account in seconds. Recipients are far more likely to reply to a personalized email that came from you - not some thoughtless email marketing service.
                     </p>
                 </div>
                 <div class="col-lg-5 col-lg-offset-2 col-sm-6">
@@ -160,7 +161,17 @@
                 <div class="col-lg-5 col-lg-offset-1 col-sm-push-6  col-sm-6">
                     <hr class="section-heading-spacer">
                     <div class="clearfix"></div>
-                    <h2 class="section-heading">Mailsy keeps it simple, but gives you what you need to reach people more effectively.</h2>
+                    <h2 class="section-heading">
+                        <ol>
+                            <li>Create a template</li>
+                            <br>
+                            <li>Add recipients</li>
+                            <br>
+                            <li>Send your emails</li>
+                            <br>
+                            <li>Close the deals</li>
+                        </ol>
+                    </h2>
                 </div>
                 <div class="col-lg-5 col-sm-pull-6  col-sm-6">
                     <img class="img-responsive" src="/images/recipients.png" alt="">
@@ -179,7 +190,7 @@
                 Email Templates
             </h4>
             <p class="text">
-                Using a simple yet powerful templating technology, you can create a template to use over and over again while still being able to define peices of information for each recipient to increase the chance of a reply.
+                Using a simple yet powerful templating technology, you can create a template to use over and over again while still being able to define pieces of information for each recipient.
             </p>
         </div>
         <div class="col-md-3">
@@ -285,6 +296,17 @@
                         </tr>
                         <tr>
                             <td>
+                                <strong>CSV List Uploads</strong>
+                            </td>
+                            <td>
+                                <h3><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></h3>
+                            </td>
+                            <td>
+                                <h3><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></h3>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
                                 <strong>Unlimited Support</strong>
                             </td>
                             <td>
@@ -302,12 +324,12 @@
                                 <h3>10</h3>
                             </td>
                             <td>
-                                <h3>Unlimited</h3>
+                                <h3>2000</h3>(Google limit)
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <strong>Pay for Other Users<br>(Simple Billing)</strong>
+                                <strong>Create Teams<br>(Simple Billing)</strong>
                             </td>
                             <td>
                                 <h3></h3>
@@ -330,11 +352,11 @@
                 <div class="col-lg-5 col-sm-pull-6  col-sm-6">
                     <hr class="section-heading-spacer">
                     <div class="clearfix"></div>
-                    <h2 class="section-heading">Free to use with no trail periods.</h2>
+                    <h2 class="section-heading">Free to use with no trial periods.</h2>
                     <p class="lead">
-                        You can use your Google credentials to sign up for Mailsy and send 10 emails per day with all of the features on a free account. There are no trial periods so you can use a free account as long as you'd like.
+                        You can use your Google credentials to sign up for Mailsy and send 10 emails per day with a free account. There are no trial periods so you can use a free account as long as you'd like.
                         <br><br>
-                        If you want to send unlimited emails per day, you can upgrade to a paid account for only $10 per month. If you're a team leader, you can even pay for multiple accounts all at once which makes administration and billing incredibly simple. 
+                        If you want to send up to 2000 emails per day (the daily limit allowed by Google), you can upgrade to a paid account for only $10 per month. If you're a team leader, you can set up a team on Mailsy which makes user signup, administration, and billing incredibly simple. 
                         <br><br>
                         As always, you can cancel or go back down to a free account whenever you'd like - there are no yearly contracts or anything like that.
                     </p>

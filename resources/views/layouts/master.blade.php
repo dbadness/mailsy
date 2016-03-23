@@ -122,10 +122,6 @@
                     </ul>
                 </ul>
             </div>
-            <!-- /.navbar-collapse -->
-        </div>
-        <!-- /.container-fluid -->
-
 
     </nav>
     <div style="margin:20px 0 0 0;"></div>
@@ -137,7 +133,8 @@
             </button>
             <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> You've reached the maximum number of emails you can send per day on a free account. If you love Mailsy, why not <a class='alert-link' href='/upgrade'>upgrade</a> so you can send unlimited emails per day?
         </div>
-        @endif @yield('content')
+        @endif
+        @yield('content')
     </div>
     <div style="height:100px;"></div>
     <nav class="navbar navbar-default navbar-fixed-bottom">

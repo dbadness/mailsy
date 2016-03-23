@@ -224,7 +224,7 @@ class ActionController extends Controller
         else
         {
             // delete all unsent emails (the user has been warned)
-            Message::where('id',$id)->update(['deleted_at' => time()]);
+            Message::where('id',$email->id)->update(['deleted_at' => time()]);
         }
 
         return redirect('/email/'.base64_encode($email->id));

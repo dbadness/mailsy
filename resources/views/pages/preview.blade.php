@@ -22,7 +22,7 @@
             <br>
             <br>
             If you love Mailsy, why not <a class='alert-link' href='/upgrade'>upgrade</a> so you can send 
-            unlimited emails per day?
+            tons of emails per day?
         </div>
 	@endif
 
