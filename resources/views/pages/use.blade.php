@@ -80,7 +80,7 @@
 			</div>
 			@if(!$user->sf_address || !$user->signature)
 				<div class='checkHolder'>
-					<p style='font-size:80%;'>Head to <a href='/settings'>the settings page</a> to add your signature and Salesforce email address</p>
+					<p>Head to <a href='/settings'>the settings page</a> to add your signature and CRM BCC email address</p>
 				</div>
 			@endif
 			<div class='clear'></div>
