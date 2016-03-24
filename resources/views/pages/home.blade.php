@@ -22,6 +22,13 @@
 			@endif
 		</div>
 
+		<!-- show the archived emails if there are any -->
+		@if($archived > 0)
+
+			<a href='/archives'>Archived Templates</a>
+
+		@endif
+		
 	@else
 
 		<div class="panel panel-success">

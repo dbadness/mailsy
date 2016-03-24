@@ -33,6 +33,4 @@
 		</table>
 	</div>
 
-	<a href="/home">Dashboard</a>
-
 @endsection

@@ -30,7 +30,10 @@ class PagesController extends Controller
         //return their emails and it's metadata if not archived
         $emails = Email::where('user_id',$user->id)->whereNull('deleted_at')->get();
 
-        return view('pages.home', ['user' => $user, 'emails' => $emails]);
+        //return their emails and it's metadata if not archived
+        $archived = Email::where('user_id',$user->id)->whereNotNull('deleted_at')->count();
+
+        return view('pages.home', ['user' => $user, 'emails' => $emails, 'archived' => $archived]);
     }
 
     // for the first time user, show them a tutorial page
