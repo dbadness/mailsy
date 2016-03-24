@@ -27,8 +27,8 @@ class PagesController extends Controller
         // auth the user
         $user = Auth::user();
 
-        //return their emails and it's metadata
-        $emails = Email::where('user_id',$user->id)->get();
+        //return their emails and it's metadata if not archived
+        $emails = Email::where('user_id',$user->id)->whereNull('deleted_at')->get();
 
         return view('pages.home', ['user' => $user, 'emails' => $emails]);
     }
@@ -137,6 +137,8 @@ class PagesController extends Controller
     // show the messages for an email
     public function showEmail($eid)
     {
+        $user = Auth::user();
+
         // make sure this email belongs to this user
         $email = User::verifyUser($eid);
 
@@ -144,7 +146,7 @@ class PagesController extends Controller
         $user = Auth::user();
 
         // go through the messages and set the statuses of the messages
-        $messages = Message::where('email_id',$email->id)->whereNull('deleted_at')->get();
+        $messages = Message::where('email_id',$email->id)->where('status', 'sent')->whereNotNull('status')->whereNull('deleted_at')->get();
 
         return view('pages.email', ['user' => $user, 'email' => $email, 'messages' => $messages]);
     }
@@ -177,20 +179,8 @@ class PagesController extends Controller
             $children = null;
         }
 
-        // fetch their admin details if they are a part of one
-        // get the domain name for the url that we'll create
-        $domain = strstr($user->email,'@');
-        $tld = strrpos($domain, '.');
-        // strip the tld
-        $domain = substr($domain, 0, $tld);
-        // strip the @ symbol
-        $domain = substr($domain, 1, 50);
-
-        // return all the company info if they're the admin
-        $customerDetails = Customer::where('owner_id', $user->id)->whereNull('deleted_at')->first();
-
-        // return just basic info if they're a part of the company but not the admin
-        $company = Customer::where('domain',$domain)->whereNull('deleted_at')->first();
+        // return the company info
+        $company = User::domainCheck($user->email);
 
         if($company)
         {
@@ -200,7 +190,7 @@ class PagesController extends Controller
         }
 
         // parse the view
-        return view('pages.settings', ['user' => $user, 'children' => $children, 'customer_details' => $customerDetails, 'company' => $company]);
+        return view('pages.settings', ['user' => $user, 'children' => $children, 'company' => $company]);
     }
 
     // show the upgrade page
@@ -246,4 +236,27 @@ class PagesController extends Controller
 
         return view('pages.createTeam',['user' => $user, 'domain' => $domain]);
     }
+
+    // show archived templates
+    public function showArchive()
+    {
+        // auth the user
+        $user = Auth::user();
+
+        //return their emails and it's metadata if archived
+        $emails = Email::where('user_id',$user->id)->whereNotNull('deleted_at')->get();
+
+        return view('pages.archives', ['user' => $user, 'emails' => $emails]);
+    }
+
+    // show an edit page for the email that has been created
+    public function showCopy($eid)
+    {
+        $user = Auth::user();
+
+        $email = User::verifyUser($eid);
+        
+        return view('pages.copy', ['email' => $email, 'user' => $user]);
+    }
+
 }

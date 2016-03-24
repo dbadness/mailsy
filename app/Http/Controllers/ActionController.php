@@ -71,7 +71,53 @@ class ActionController extends Controller
             return json_encode(['email' => $email->id]);
         }
     }
-    
+
+    public function createTemplate(Request $request)
+    {
+        // make sure that all the fields are accounted for and are alphanumeric
+        if(!$request->_name || !$request->_subject || !$request->_email_template)
+        {
+            return 'no main content';
+        }
+        // save the email template
+        $user = Auth::user();
+
+        // create the email object
+        $email = new Email;
+        $email->user_id = $user->id;
+        $email->name = $request->_name;
+        $email->subject = $request->_subject;
+        $email->template = $request->_email_template;
+        $email->created_at = time();
+        $email->save();
+
+        // combine the subject and template for regex matching
+        $content = $request->_subject.' '.$request->_email_template;
+        // find the variables in the email and return them to the view        
+        preg_match_all('/@@[a-zA-Z0-9]*/',$content,$matches);
+        if($matches)
+        {
+            foreach($matches as $k => $v)
+            {
+                $fields = [];
+                foreach($v as $match)
+                {
+                    // shave the delimiters
+                    $field = trim($match,'@@');
+                    $fields[] = $field;
+                }
+                // save the fields to the DB
+                $email->fields = json_encode($fields);
+                $email->save();
+            }
+            return redirect('/use/'.base64_encode($email->id));
+        }
+        else
+        {
+            return redirect('/use/'.base64_encode($email->id));
+        }
+    }
+
     // save the template if the user edits it
     public function saveTemplate(Request $request)
     {
@@ -178,7 +224,7 @@ class ActionController extends Controller
         else
         {
             // delete all unsent emails (the user has been warned)
-            Message::where('id',$id)->update(['deleted_at' => time()]);
+            Message::where('id',$email->id)->update(['deleted_at' => time()]);
         }
 
         return redirect('/email/'.base64_encode($email->id));
@@ -398,7 +444,7 @@ class ActionController extends Controller
         Utils::sendEmail($user->email,$subject,$body);
 
         // success message
-        return 'This subscription was canceled on '.date('n/d/Y', time());
+        return 'true';
     }
 
     // update/cancel memberships
@@ -636,4 +682,63 @@ class ActionController extends Controller
 
         return File::get('images/email-tracker.png');
     }
+
+    public function doArchiveTemplate($id)
+    {
+        $user = Auth::user();
+
+        $email = Email::find($id);
+        $email->deleted_at = time();
+        $email->save();
+
+        return redirect('/home');
+    }
+
+    public function doDearchiveTemplate($id)
+    {
+        $user = Auth::user();
+
+        $email = Email::find($id);
+        $email->deleted_at = null;
+        $email->save();
+
+        return redirect('/home');
+    }
+
+    public function copyTemplate(Request $request)
+    {
+        $user = Auth::user();
+
+        // combine the subject and template for regex matching
+        $content = $request->_subject.' '.$request->_email_template;
+        // find the variables in the email and return them to the view        
+        preg_match_all('/@@[a-zA-Z0-9]*/',$content,$matches);
+        if($matches)
+        {
+            foreach($matches as $k => $v)
+            {
+                $fields = [];
+                foreach($v as $match)
+                {
+                    // shave the delimiters
+                    $field = trim($match,'@@');
+                    $fields[] = strtolower($field);
+                }
+            }
+        }
+        
+        // save the email template
+        $email = new Email;
+        $email->user_id = $user->id;
+        $email->name = $request->_name;
+        $email->subject = $request->_subject;
+        $email->template = $request->_email_template;
+        $email->fields = json_encode($fields);
+        $email->created_at = time();
+        $email->save();
+
+        // send the user to the 'use' view
+        return redirect('/home');
+    }
+
 }

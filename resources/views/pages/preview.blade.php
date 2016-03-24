@@ -22,7 +22,7 @@
             <br>
             <br>
             If you love Mailsy, why not <a class='alert-link' href='/upgrade'>upgrade</a> so you can send 
-            unlimited emails per day?
+            tons of emails per day?
         </div>
 	@endif
 
@@ -68,7 +68,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title">You're emails are being sent to their recipients!</h4>
+					<h4 class="modal-title">Your emails are being sent to their recipients!</h4>
 				</div>
 				<div class="modal-body">
 					<!-- Toggle the view based on how many emails they are sending -->
@@ -76,6 +76,7 @@
 					<div class="progress">
 						<div class="progress-bar" style="width:0%;"></div>
 					</div>
+					<strong>Estimated Time: <span class='timerMinu'></span> Minutes and <span class='timerSecu'></span> Seconds</strong>
 				</div>
 				<div class="modal-footer" id='closeEmailModal' style='display:none;'>
 					<button type="button" class="btn btn-default" data-dismiss="modal" id='closeEmailModalButton'>Close</button>

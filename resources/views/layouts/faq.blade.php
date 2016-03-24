@@ -21,6 +21,7 @@
     <!-- Custom Fonts -->
     <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -131,7 +132,7 @@
                                 Click on "Save Template" and you'll those names become fields right below the message. Super easy.
                             </li>
                             <li>
-                                Fill in the information (or make edits to the message and click "Refresh Fields") for your recipients and then click to "View Previews" to see the messages that are now ready to go.
+                                Fill in or upload the information for your recipients and then click "View Previews" to see the messages that are now ready to go.
                             </li>
                             <li>
                                 View the previews and, if they look good, send 'em out!
@@ -141,7 +142,7 @@
                     <br><br>
                     <i><h4><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Tip:</h4></i>
                     <p class="lead">
-                        Also, don't forget to add a signature and Salesforce email address to fully integrate Mailsy! (You can just copy and paste your Gmail signature.)
+                        Don't forget to add a signature and Salesforce email address to fully integrate Mailsy! (You can just copy and paste your Gmail signature.)
                     </p>
 
                 </div>
@@ -183,7 +184,7 @@
                         When you sign up for a subscription, we'll charge your card immediately and then again for that amount ($10 per user) every month on that date (or thereabouts). If you ever cancel a subscription
                         (either yours or anyone that you're paying for), the paid version of Mailsy will be available to those people for the duration of that monthly billing period.
                         <br><br>
-                        If you add anyone to your subscription plan, Mailsy will prorate the amount that's owed for the remainder of the billing period for that user (or users) and charge that amount to the card on your account immediately. 
+                        If you add anyone to your subscription plan, Mailsy will prorate the amount that's owed for the remainder of the billing period for that user (or users) and charge that amount to the card on your next scheduled payment. 
                         <br><br>
                         If you cancel your account while you're paying for other users, both you and the users you're paying for will have access to the paid version of Mailsy until the end of that billing period. At that time,
                         everyone will be downgraded to a free plan.

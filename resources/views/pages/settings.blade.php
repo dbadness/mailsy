@@ -30,7 +30,7 @@
 
 				<div class="alert alert-success alert-dismissible" role="alert">
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					You've successfully created your team! You can send people to www.mailsy.co/team/{!! $customer_details->domain !!} to have them signup for their paid versions of Mailsy.
+					You've successfully created your team! You can send people to www.mailsy.co/team/{!! $company->domain !!} to have them signup for their paid versions of Mailsy.
 				</div>
 
 			@elseif($_GET['message'] == 'downgradeSuccess')
@@ -45,6 +45,13 @@
 				<div class="alert alert-success alert-dismissible" role="alert">
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 					You've successfully updated your number of paid Mailsy licenses!
+				</div>
+
+			@elseif($_GET['message'] == 'subscriptionCancelled')
+
+				<div class="alert alert-success alert-dismissible" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					You've successfully cancelled your subscription.
 				</div>
 
 			@endif
@@ -173,7 +180,7 @@
 				<br>
 				@if($user->admin)
 			
-					<p>You have <b>{!! $customer_details->users_left !!}</b> licenses left out of the <b>{!! $customer_details->total_users !!}</b> in your subscription. <span class='a' id='subscriptionModalButton' data-toggle="modal" data-target="#subscriptionModal">Add/Remove Licenses</span><br><br>Remember that you can invite people to join Mailsy at <a href='/team/{!! $customer_details->domain !!}' target='_blank'>www.mailsy.co/team/{!! $customer_details->domain !!}</a> to use your licenses!</p>
+					<p>You have <b>{!! $company->users_left !!}</b> licenses left out of the <b>{!! $company->total_users !!}</b> in your subscription. <span class='a' id='subscriptionModalButton' data-toggle="modal" data-target="#subscriptionModal">Add/Remove Licenses</span><br><br>Remember that you can invite people to join Mailsy at <a href='/team/{!! $company->domain !!}' target='_blank'>www.mailsy.co/team/{!! $company->domain !!}</a> to use your licenses!</p>
 
 					<!-- Make a modal for subscription handling -->
 					<!-- Modal -->

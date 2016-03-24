@@ -38,9 +38,12 @@ Route::get('/upgrade/createTeam', 'PagesController@showCreateTeam');
 Route::get('/membership/cancel', 'PagesController@showCancel');
 Route::get('/use/{eid}', 'PagesController@showUseEmail');
 Route::get('/team/{customer}','IndexController@showCompanyPage');
+Route::get('/archives','PagesController@showArchive');
+Route::get('/copy/{id}','PagesController@showCopy');
 
 // actions
 Route::post('/returnFields', 'ActionController@returnFields');
+Route::post('/createTemplate', 'ActionController@createTemplate');
 Route::post('/makePreviews', 'ActionController@makePreviews');
 Route::post('/updatePreviews', 'ActionController@updatePreviews');
 Route::get('/sendEmail/{email_id}/{message_id}', 'ActionController@sendEmail');
@@ -49,9 +52,12 @@ Route::post('/upgrade', 'ActionController@doUpgrade');
 Route::post('/createTeam', 'ActionController@doTeamUpgrade');
 Route::post('/useLicense','ActionController@doRedeemLicense');
 Route::post('/saveTemplate','ActionController@saveTemplate');
+Route::post('/copyTemplate','ActionController@copyTemplate');
 Route::post('/sendFeedback','ActionController@doSendFeedback');
 Route::post('/revokeAccess','ActionController@doRevokeAccess');
 Route::post('/updateSubscription/{direction}','ActionController@doUpdateSubscription');
+Route::get('/archive/{id}','ActionController@doArchiveTemplate');
+Route::get('/dearchive/{id}','ActionController@doDearchiveTemplate');
 
 // ajax calls
 Route::get('/getMessageStatus/{id}','ActionController@doUpdateMessageStatus');
