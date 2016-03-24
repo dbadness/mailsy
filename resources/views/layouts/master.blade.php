@@ -96,7 +96,12 @@
                                 @if(!$user->paid)
                                     <a href='/upgrade'>({!! App\User::howManyEmailsLeft() !!} emails left today)</a>
                                 @else
-                                    <a href='/settings'>(Upgraded Account!)</a> 
+                                    <a href='/settings'>
+                                        Upgraded Account!
+                                        @if($user->expires)
+                                            (until {!! date('m-d-Y',$user->expires) !!})
+                                        @endif
+                                    </a> 
                                 @endif
                             </li>
                             <li class="dropdown">
@@ -115,7 +120,7 @@
                                                 <a href='/upgrade'>Upgrade</a>
                                             @endif
                                         @else
-                                            (Upgraded Account!)
+                                            <a href='/settings'>Upgraded Account!</a>
                                         @endif
                                     </li>
                                     <li role="separator" class="divider"></li>

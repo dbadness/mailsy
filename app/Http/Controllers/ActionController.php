@@ -692,9 +692,12 @@ class ActionController extends Controller
         return File::get('images/email-tracker.png');
     }
 
-    public function doArchiveTemplate($id)
+    public function doArchiveTemplate($eid)
     {
         $user = Auth::user();
+
+        // decrypt the id
+        $id = base64_decode($eid);
 
         $email = Email::find($id);
         $email->deleted_at = time();
@@ -703,9 +706,12 @@ class ActionController extends Controller
         return redirect('/home');
     }
 
-    public function doDearchiveTemplate($id)
+    public function doDearchiveTemplate($eid)
     {
         $user = Auth::user();
+
+        // decrypt the id
+        $id = base64_decode($eid);
 
         $email = Email::find($id);
         $email->deleted_at = null;
