@@ -40,6 +40,7 @@ Route::get('/use/{eid}', 'PagesController@showUseEmail');
 Route::get('/team/{customer}','IndexController@showCompanyPage');
 Route::get('/archives','PagesController@showArchive');
 Route::get('/copy/{id}','PagesController@showCopy');
+Route::get('/view/{id}','PagesController@showView');
 
 // actions
 Route::post('/returnFields', 'ActionController@returnFields');

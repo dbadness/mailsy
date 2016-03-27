@@ -23,6 +23,8 @@ class CreateEmailsTable extends Migration
             $table->integer('created_at');
             $table->integer('updated_at')->nullable();
             $table->integer('deleted_at')->nullable();
+            $table->integer('owner_id'); //id of original creator
+            $table->integer('shared'); //0 = no, 1 = cust_published, 2 = team_published 3 = public
         });
     }
 
