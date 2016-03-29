@@ -282,7 +282,13 @@ class PagesController extends Controller
         }
 
         //return the emails that have been marked for the hub
-        $compEmails = Email::where('shared',1)->get();
+        if($user->admin)
+        {
+            $compEmails = Email::where('shared',1)->where('creator_company',$user->id)->get();
+        } else
+        {
+            $compEmails = Email::where('shared',1)->where('creator_company',$user->belongs_to)->get();
+        }
         $pubEmails = Email::where('shared',2)->get();
 
         return view('pages.templatehub', ['user' => $user, 'compEmails' => $compEmails, 'pubEmails' => $pubEmails]);

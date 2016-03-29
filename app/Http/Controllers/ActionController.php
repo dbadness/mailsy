@@ -38,6 +38,13 @@ class ActionController extends Controller
             $email->created_at = time();
             $email->shared = 0;
             $email->copies = 0;
+            if($user->admin)
+            {
+                $email->creator_company = $user->id;
+            } else
+            {
+                $email->creator_company = $user->belongs_to;
+            }
             $email->save();
         }
         else
@@ -95,6 +102,13 @@ class ActionController extends Controller
         $email->creator_name = $user->name;
         $email->shared = 0;
         $email->copies = 0;
+        if($user->admin)
+        {
+            $email->creator_company = $user->id;
+        } else
+        {
+            $email->creator_company = $user->belongs_to;
+        }
         $email->save();
 
         // combine the subject and template for regex matching
@@ -744,6 +758,13 @@ class ActionController extends Controller
         $email->creator_name = Email::find($request->_email_id)->name;
         $email->shared = 0;
         $email->copies = 0;
+        if($user->admin)
+        {
+            $email->creator_company = $user->id;
+        } else
+        {
+            $email->creator_company = $user->belongs_to;
+        }
         $email->save();
 
         Email::find($request->_email_id)->copies++;
