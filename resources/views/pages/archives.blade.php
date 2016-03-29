@@ -8,7 +8,7 @@
 		<!-- Table -->
 		<table class="table">
 			<tr>
-				<td><b>Email Name</b></td>
+				<td><b>Template Name</b></td>
 				<td class='emailListRight'><b>Emails Sent</b></td>
 			</tr>
 			@if($emails != '[]')

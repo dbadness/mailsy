@@ -84,10 +84,17 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li><a href="/home">Dashboard <span class="sr-only">(current)</span></a>
+                    <li>
+                        <a href="/home">Dashboard <span class="sr-only">(current)</span></a>
                     </li>
-                    <li><a href="/create">New Template</a>
+                    <li>
+                        <a href="/create">New Template</a>
                     </li>
+                    @if($user->paid && ($user->has_users == "yes" || $user->belongs_to != null))
+                        <li>
+                            <a href="/templatehub">Template Hub</a>
+                        </li>
+                    @endif
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <ul class="nav navbar-nav">
@@ -96,9 +103,10 @@
                         <li>
 
                             @if(!$user->paid)
-                            <a href='/upgrade'>({!! App\User::howManyEmailsLeft() !!} emails left today)</a> @if(App\User::domainCheck($user->email))
-                            <a href='/settings'>Join Your Team</a> @endif @else
-                            <a href='/settings/'>(Upgraded Account!)</a> @endif
+                                <a href='/upgrade'>({!! App\User::howManyEmailsLeft() !!} emails left today)</a>
+                            @else
+                                <a href='/settings/'>(Upgraded Account!)</a>
+                            @endif
                         </li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">More <span class="caret"></span></a>
@@ -110,12 +118,17 @@
                                 <li role="separator" class="divider"></li>
                                 <li>
                                     @if(!$user->paid)
-                                    <a href='/upgrade'>Upgrade</a> @if(App\User::domainCheck($user->email))
-                                    <a href='/useLicense'>Join Your Team</a> @endif @else
-                                    <a href='#'>(Upgraded Account!)</a> @endif
+                                        <a href='/upgrade'>Upgrade</a>
+                                    @if(App\User::domainCheck($user->email))
+                                        <a href='/settings'>Join Your Team</a>
+                                    @endif
+                                    @else
+                                        <a href='/settings'>(Upgraded Account!)</a>
+                                    @endif
                                 </li>
                                 <li role="separator" class="divider"></li>
-                                <li><a href="/logout">Logout</a>
+                                <li>
+                                    <a href="/logout">Logout</a>
                                 </li>
                             </ul>
                         </li>

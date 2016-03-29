@@ -34,7 +34,10 @@ class ActionController extends Controller
             $email->name = $request->_name;
             $email->subject = $request->_subject;
             $email->template = $request->_email_template;
+            $email->creator_name = $user->name;
             $email->created_at = time();
+            $email->shared = 0;
+            $email->copies = 0;
             $email->save();
         }
         else
@@ -89,6 +92,9 @@ class ActionController extends Controller
         $email->subject = $request->_subject;
         $email->template = $request->_email_template;
         $email->created_at = time();
+        $email->creator_name = $user->name;
+        $email->shared = 0;
+        $email->copies = 0;
         $email->save();
 
         // combine the subject and template for regex matching
@@ -735,6 +741,24 @@ class ActionController extends Controller
         $email->template = $request->_email_template;
         $email->fields = json_encode($fields);
         $email->created_at = time();
+        $email->creator_name = Email::find($request->_email_id)->name;
+        $email->shared = 0;
+        $email->copies = 0;
+        $email->save();
+
+        Email::find($request->_email_id)->copies++;
+        Email::find($request->_email_id)->save();
+
+        // send the user to the 'use' view
+        return redirect('/home');
+    }
+
+    public function doHubifyTemplate($eid, $status)
+    {
+        $user = Auth::user();
+
+        $email = User::verifyUser($eid);
+        $email->shared = intval($status);
         $email->save();
 
         // send the user to the 'use' view

@@ -127,7 +127,7 @@ class PagesController extends Controller
     {
         $user = Auth::user();
 
-        $email = Email::verifyUser(base64_decode($eid));
+        $email = User::verifyUser($eid);
 
         // if there are messages that are 'in the queue', make sure they're deleted as the user is about to enter more
         Message::where('email_id',$email->id)->whereNull('deleted_at')->whereNull('status')->update(['deleted_at' => time()]);
@@ -268,6 +268,24 @@ class PagesController extends Controller
         $email = User::verifyUser($eid);
         
         return view('pages.view', ['email' => $email, 'user' => $user]);
+    }
+
+    // show the template hub
+    public function showTemplateHub()
+    {
+        // auth the user
+        $user = Auth::user();
+
+        if(!$user->paid || ($user->has_users == null && $user->belongs_to == null))
+        {
+            return redirect('/home');
+        }
+
+        //return the emails that have been marked for the hub
+        $compEmails = Email::where('shared',1)->get();
+        $pubEmails = Email::where('shared',2)->get();
+
+        return view('pages.templatehub', ['user' => $user, 'compEmails' => $compEmails, 'pubEmails' => $pubEmails]);
     }
 
 }
