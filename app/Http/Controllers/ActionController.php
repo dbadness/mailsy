@@ -778,12 +778,19 @@ class ActionController extends Controller
     {
         $user = Auth::user();
 
-        $email = User::verifyUser($eid);
-        $email->shared = intval($status);
-        $email->save();
+        if(intval($status) != 1 && intval($status) != 2 && intval($status) != 0)
+        {
+            return redirect('/home');
+        } else
+        {
+            $email = User::verifyUser($eid);
+            $email->shared = intval($status);
+            $email->save();
 
-        // send the user to the 'use' view
-        return redirect('/home');
+            // send the user to the 'use' view
+            return redirect('/home');
+        }
+
     }
 
 }

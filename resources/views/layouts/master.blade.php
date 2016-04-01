@@ -90,7 +90,7 @@
                     <li>
                         <a href="/create">New Template</a>
                     </li>
-                    @if($user->paid && ($user->has_users == "yes" || $user->belongs_to != null))
+                    @if($user->paid)
                         <li>
                             <a href="/templatehub">Template Hub</a>
                         </li>

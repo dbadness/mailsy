@@ -35,7 +35,7 @@
 								<a class="btn btn-secondary" href='/email/{!! base64_encode($email->id) !!}'>messages</a>
 								<a class="btn btn-secondary" href='/edit/{!! base64_encode($email->id) !!}'>edit</a>
 								<a class="btn btn-secondary" href='/copy/{!! base64_encode($email->id) !!}'>copy</a>
-								@if($user->paid && ($user->has_users == "yes" || $user->belongs_to != null))
+								@if($user->paid)
 									<span class="dropdown">
 										<button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown">Hub
 										<span class="caret"></span></button>
@@ -45,10 +45,12 @@
 											@else
 												<li><a href="/hubify/{!! base64_encode($email->id) !!}/0">Private</a></li>
 											@endif
-											@if($email->shared == 1)
-												<li class="active"><a href="/hubify/{!! base64_encode($email->id) !!}/1">Company Hub</a></li>
-											@else
-												<li><a href="/hubify/{!! base64_encode($email->id) !!}/1">Company Hub</a></li>
+											@if($user->paid && ($user->has_users == "yes" || $user->belongs_to != null))
+												@if($email->shared == 1)
+													<li class="active"><a href="/hubify/{!! base64_encode($email->id) !!}/1">Company Hub</a></li>
+												@else
+													<li><a href="/hubify/{!! base64_encode($email->id) !!}/1">Company Hub</a></li>
+												@endif
 											@endif
 											@if($email->shared == 2)
 												<li class="active"><a href="/hubify/{!! base64_encode($email->id) !!}/2">Public Hub</a></li>

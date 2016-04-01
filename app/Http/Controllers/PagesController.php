@@ -276,7 +276,7 @@ class PagesController extends Controller
         // auth the user
         $user = Auth::user();
 
-        if(!$user->paid || ($user->has_users == null && $user->belongs_to == null))
+        if(!$user->paid)
         {
             return redirect('/home');
         }
