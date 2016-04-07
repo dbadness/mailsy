@@ -12,6 +12,7 @@ use App\Utils;
 use Redirect;
 use Log;
 use File;
+use Response;
 
 class ActionController extends Controller
 {
@@ -198,7 +199,7 @@ class ActionController extends Controller
         {
             $message = Message::find($message_id);
             // prepend the read receipt callback webhook to the message
-            $full_body = $message->message.'<img src="'.env('DOMAIN').'/track/'.base64_encode($user->id).'/'.base64_encode($message->id).'">';
+            $full_body = $message->message.'<img src="'.env('DOMAIN').'/track/'.base64_encode($user->id).'/'.base64_encode($message->id).'" alt="tracker" title="tracker" style="display:block" width="1" height="1">';
             // use swift mailer to build the mime
             $mail = new \Swift_Message;
             $mail->setFrom(array($user->email => $user->name));
@@ -674,13 +675,15 @@ class ActionController extends Controller
 
                 // send a notification email
                 $subject = $message->recipient.' opened your Mailsy email!';
-                $body .= 'We\'re writing to let you know that '.$message->recipient.' opened your email on '.date('D, M d, Y', $message->read_at).' at '.date('g:ia',$message->read_at).' EST.';
+                $body = 'We\'re writing to let you know that '.$message->recipient.' opened your email on '.date('D, M d, Y', $message->read_at).' at '.date('g:ia',$message->read_at).' EST.';
 
                 Utils::sendEmail($user->email,$subject,$body);
             }
         }
 
-        return File::get('images/email-tracker.png');
+        $response = Response::make(File::get("images/email-tracker.png"));
+        $response->header('Content-Type', 'image/png');
+        return $response;
     }
 
     public function doArchiveTemplate($id)
