@@ -56,25 +56,25 @@ class PageTest extends TestCase
         // $this->visit('/view/{id}')->assertResponseOk();
 
 		//Test that auth blocks things
-        // $this->visit('/tutorial/step1')->assertRedirectedTo('/');
+        $this->visit('/tutorial/step1')->assertRedirectedTo('/');
 
-        // $this->visit('/tutorial/step2')->assertRedirectedTo('/');
+        $this->visit('/tutorial/step2')->assertRedirectedTo('/');
 
-        // $this->visit('/tutorial/step3')->assertRedirectedTo('/');
+        $this->visit('/tutorial/step3')->assertRedirectedTo('/');
 
-        // $this->visit('/create')->assertRedirectedTo('/');
+        $this->visit('/create')->assertRedirectedTo('/');
 
-        // $this->visit('/home')->assertRedirectedTo('/');
+        $this->visit('/home')->assertRedirectedTo('/');
 
-        // $this->visit('/settings')->assertRedirectedTo('/');
+        $this->visit('/settings')->assertRedirectedTo('/');
 
-        // $this->visit('/upgrade')->assertRedirectedTo('/');
+        $this->visit('/upgrade')->assertRedirectedTo('/');
 
-        // $this->visit('/upgrade/createTeam')->assertRedirectedTo('/');
+        $this->visit('/upgrade/createTeam')->assertRedirectedTo('/');
 
-        // $this->visit('/membership/cancel')->assertRedirectedTo('/');
+        $this->visit('/membership/cancel')->assertRedirectedTo('/');
 
-        // $this->visit('/archives')->assertRedirectedTo('/');
+        $this->visit('/archives')->assertRedirectedTo('/');
 
         // $this->visit('/templatehub')->assertRedirectedTo('/');
 
