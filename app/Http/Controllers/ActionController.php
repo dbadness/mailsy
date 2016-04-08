@@ -674,7 +674,7 @@ class ActionController extends Controller
 
                 // send a notification email
                 $subject = $message->recipient.' opened your Mailsy email!';
-                $body .= 'We\'re writing to let you know that '.$message->recipient.' opened your email on '.date('D, M d, Y', $message->read_at).' at '.date('g:ia',$message->read_at).' EST.';
+                $body = 'We\'re writing to let you know that '.$message->recipient.' opened your email on '.date('D, M d, Y', $message->read_at).' at '.date('g:ia',$message->read_at).' EST.';
 
                 Utils::sendEmail($user->email,$subject,$body);
             }
