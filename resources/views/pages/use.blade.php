@@ -65,7 +65,7 @@
 		<br>
 		<div class="input-group">
 			<span class="input-group-addon" id="basic-addon4">Subject</span>
-			<input type="text" id='subject' class="form-control" aria-describedby="basic-addon4" disabled value='{!! $email->subject !!}'>
+			<input type="text" id='subject' class="form-control" aria-describedby="basic-addon4" disabled value='{{ $email->subject }}'>
 		</div>
 		<br>
 		<div class="well">

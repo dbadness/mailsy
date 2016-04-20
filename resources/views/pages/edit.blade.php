@@ -29,12 +29,12 @@
 		<input type='hidden' name='_email_id' value='{!! $email->id !!}'>
 		<div class="input-group">
 			<span class="input-group-addon" id="basic-addon3">Template Name</span>
-			<input type='text' name='_name' class="form-control" aria-describedby="basic-addon3" value='{!! $email->name !!}'>
+			<input type='text' name='_name' class="form-control" aria-describedby="basic-addon3" value='{{ $email->name }}'>
 		</div>
 		<br>
 		<div class="input-group">
 			<span class="input-group-addon" id="basic-addon4">Subject</span>
-			<input type="text" name='_subject' id='subject' class="form-control" aria-describedby="basic-addon4" value="{!! $email->subject !!}">
+			<input type="text" name='_subject' id='subject' class="form-control" aria-describedby="basic-addon4" value="{{ $email->subject }}">
 		</div>
 		<br>
 		<div id="emailTemplate"></div>
@@ -65,7 +65,7 @@
 						@foreach(json_decode($recipients[0]->_fields) as $k => $v)
 							@foreach($v as $field => $value)
 								<td class='field'>
-									<b>{!! $field !!}</b>
+									<b>{{ $field }}</b>
 								</td>
 							@endforeach
 						@endforeach
@@ -74,7 +74,7 @@
 				@foreach($recipients as $recipient)
 					<tr class='recipient'>
 						<td class='field'>
-							<input type="text" name='_email[]' class="form-control" value='{!! $recipient->_email !!}'>
+							<input type="text" name='_email[]' class="form-control" value='{{ $recipient->_email }}'>
 						</td>
 						<?php $fields = json_decode($recipient->_fields); ?>
 						@foreach($fields as $field)
