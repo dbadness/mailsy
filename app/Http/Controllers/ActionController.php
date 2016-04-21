@@ -166,16 +166,11 @@ class ActionController extends Controller
         if($request->csvFile)
         {
             return $response = Email::processCSV($request, $email, $user);
-        } else
+        } 
+        else
         {
             return Email::processManualData($request, $email, $user);
         }
-        
-        if($request->csvFile){
-            return Email::processCSV($request, $email, $user);
-        } else{
-            return Email::processManualData($request, $email, $user);
-        };
     }
     
     // send the emails
