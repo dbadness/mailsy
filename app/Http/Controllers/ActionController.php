@@ -60,6 +60,7 @@ class ActionController extends Controller
                     $field = trim($match,'@@');
                     $fields[] = $field;
                 }
+                $fields = array_unique($fields, SORT_REGULAR);
                 // save the fields to the DB
                 $email->fields = json_encode($fields);
                 $email->save();
@@ -106,6 +107,7 @@ class ActionController extends Controller
                     $field = trim($match,'@@');
                     $fields[] = $field;
                 }
+                $fields = array_unique($fields, SORT_REGULAR);
                 // save the fields to the DB
                 $email->fields = json_encode($fields);
                 $email->save();
@@ -136,6 +138,7 @@ class ActionController extends Controller
                     $field = trim($match,'@@');
                     $fields[] = strtolower($field);
                 }
+                $fields = array_unique($fields, SORT_REGULAR);
             }
         }
         
@@ -719,6 +722,7 @@ class ActionController extends Controller
                     $field = trim($match,'@@');
                     $fields[] = strtolower($field);
                 }
+                $fields = array_unique($fields, SORT_REGULAR);
             }
         }
         
