@@ -252,9 +252,13 @@ class Email extends Model
                 // set up an entry for the recipients list later on
                 $fieldEntries[] = [$field => $_POST[$field][$key]];
             }
-            // trim the <p> tags off the messageText
-            $messageText = substr($messageText,0,-4);
-            $messageText = substr($messageText,3);
+            // trim the <p> tags off the messageText if the used DIDN'T paste a match styles
+            // (this needs to be fixed with a new JS editor that doesn't automatically insert <p> tags)
+            if(substr($messageText,0,3) == '<p>')
+            {
+                $messageText = substr($messageText,0,-4);
+                $messageText = substr($messageText,3);
+            }
             // make a message to throw into the DB
             $message = new Message;
             $message->user_id = $user->id;
