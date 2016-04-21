@@ -79,7 +79,7 @@
 						<?php $fields = json_decode($recipient->_fields); ?>
 						@foreach($fields as $field)
 							<td class='field'>
-								<input type="text" name='{!! key((array)$field) !!}[]' class="form-control" value='{!! current((array)$field) !!}'>
+								<input type="text" name='{{ key((array)$field) }}[]' class="form-control" value='{{ current((array)$field) }}'>
 							</td>
 						@endforeach
 					</tr>
