@@ -3557,5 +3557,103 @@
             "logging",
             "tracking"
         ]
+    },
+    {
+        "name": "ckeditor/ckeditor",
+        "version": "4.5.8",
+        "version_normalized": "4.5.8.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/ckeditor/ckeditor-releases.git",
+            "reference": "6345bc8f142bb72ffb83b4a964be4d88ad3905c8"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/ckeditor/ckeditor-releases/zipball/6345bc8f142bb72ffb83b4a964be4d88ad3905c8",
+            "reference": "6345bc8f142bb72ffb83b4a964be4d88ad3905c8",
+            "shasum": ""
+        },
+        "time": "2016-03-31 16:23:17",
+        "type": "library",
+        "installation-source": "dist",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "GPL-2.0+",
+            "LGPL-2.1+",
+            "MPL-1.1+"
+        ],
+        "authors": [
+            {
+                "name": "CKSource",
+                "homepage": "http://cksource.com"
+            }
+        ],
+        "description": "JavaScript WYSIWYG web text editor.",
+        "homepage": "http://ckeditor.com",
+        "keywords": [
+            "CKEditor",
+            "editor",
+            "fckeditor",
+            "html",
+            "javascript",
+            "richtext",
+            "text",
+            "wysiwyg"
+        ]
+    },
+    {
+        "name": "frozennode/administrator",
+        "version": "v5.0.11",
+        "version_normalized": "5.0.11.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/FrozenNode/Laravel-Administrator.git",
+            "reference": "b5b59c41c37f8879ce033fd4744c183484c5ac1e"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/FrozenNode/Laravel-Administrator/zipball/b5b59c41c37f8879ce033fd4744c183484c5ac1e",
+            "reference": "b5b59c41c37f8879ce033fd4744c183484c5ac1e",
+            "shasum": ""
+        },
+        "require": {
+            "ckeditor/ckeditor": "4.*",
+            "laravel/framework": "5.*",
+            "php": ">=5.4.0"
+        },
+        "require-dev": {
+            "mockery/mockery": "~0.9"
+        },
+        "time": "2015-12-26 22:22:06",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/controllers"
+            ],
+            "psr-0": {
+                "Frozennode\\Administrator": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Jan Hartigan",
+                "email": "jan@frozennode.com"
+            }
+        ],
+        "description": "A database interface package for Laravel",
+        "homepage": "http://administrator.frozennode.com",
+        "keywords": [
+            "admin",
+            "administrator",
+            "cms",
+            "database",
+            "laravel",
+            "laravel-administrator"
+        ]
     }
 ]

@@ -12,6 +12,7 @@ use App\User;
 use App\Email;
 use App\Message;
 use App\Customer;
+use Log;
 
 class PagesController extends Controller
 {
@@ -257,6 +258,14 @@ class PagesController extends Controller
         $email = User::verifyUser($eid);
         
         return view('pages.copy', ['email' => $email, 'user' => $user]);
+    }
+
+    // show super-secret stats page
+    public function showStats()
+    {
+        $user = Auth::user();
+
+        return view('pages.stats', ['user' => $user]);
     }
 
 }

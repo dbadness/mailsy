@@ -146,6 +146,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Bugsnag\BugsnagLaravel\BugsnagLaravelServiceProvider::class,
+        Frozennode\Administrator\AdministratorServiceProvider::class,
 
     ],
 

@@ -31,7 +31,7 @@ class User extends Model implements AuthenticatableContract,
      *
      * @var array
      */
-    protected $visible = ['id','email'];
+    // protected $visible = ['id','email'];
 
     // allow the app to fill the fields in the DB
     protected $fillable = ['sf_address', 'signature'];
