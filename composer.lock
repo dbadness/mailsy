@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "af58226c84039f20d96c24fadf35f860",
-    "content-hash": "08cb210e0861509f39c75b9de87fb998",
+    "hash": "81a0815de783830a3dc106a34bd7bea6",
+    "content-hash": "6cb758ffc89f2a3a5bd5999b85d4113e",
     "packages": [
         {
             "name": "bugsnag/bugsnag",
@@ -101,6 +101,47 @@
                 "tracking"
             ],
             "time": "2016-03-09 19:00:14"
+        },
+        {
+            "name": "ckeditor/ckeditor",
+            "version": "4.5.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ckeditor/ckeditor-releases.git",
+                "reference": "6345bc8f142bb72ffb83b4a964be4d88ad3905c8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ckeditor/ckeditor-releases/zipball/6345bc8f142bb72ffb83b4a964be4d88ad3905c8",
+                "reference": "6345bc8f142bb72ffb83b4a964be4d88ad3905c8",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0+",
+                "LGPL-2.1+",
+                "MPL-1.1+"
+            ],
+            "authors": [
+                {
+                    "name": "CKSource",
+                    "homepage": "http://cksource.com"
+                }
+            ],
+            "description": "JavaScript WYSIWYG web text editor.",
+            "homepage": "http://ckeditor.com",
+            "keywords": [
+                "CKEditor",
+                "editor",
+                "fckeditor",
+                "html",
+                "javascript",
+                "richtext",
+                "text",
+                "wysiwyg"
+            ],
+            "time": "2016-03-31 16:23:17"
         },
         {
             "name": "classpreloader/classpreloader",
@@ -311,6 +352,59 @@
                 "string"
             ],
             "time": "2015-11-06 14:35:42"
+        },
+        {
+            "name": "frozennode/administrator",
+            "version": "v5.0.11",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FrozenNode/Laravel-Administrator.git",
+                "reference": "b5b59c41c37f8879ce033fd4744c183484c5ac1e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/FrozenNode/Laravel-Administrator/zipball/b5b59c41c37f8879ce033fd4744c183484c5ac1e",
+                "reference": "b5b59c41c37f8879ce033fd4744c183484c5ac1e",
+                "shasum": ""
+            },
+            "require": {
+                "ckeditor/ckeditor": "4.*",
+                "laravel/framework": "5.*",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "~0.9"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/controllers"
+                ],
+                "psr-0": {
+                    "Frozennode\\Administrator": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jan Hartigan",
+                    "email": "jan@frozennode.com"
+                }
+            ],
+            "description": "A database interface package for Laravel",
+            "homepage": "http://administrator.frozennode.com",
+            "keywords": [
+                "admin",
+                "administrator",
+                "cms",
+                "database",
+                "laravel",
+                "laravel-administrator"
+            ],
+            "time": "2015-12-26 22:22:06"
         },
         {
             "name": "google/apiclient",

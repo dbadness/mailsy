@@ -127,6 +127,7 @@ class IndexController extends Controller
             }
 
             $existingUser->name = $name;
+            $existingUser->last_login = time();
             $existingUser->save();
 
             // send them home
@@ -174,7 +175,7 @@ class IndexController extends Controller
             );
             $mailin->create_update_user($data);
 
-            // now logthe user in
+            // now log the user in
             $user = Auth::loginUsingId($user->id);
 
             // send them to their dashboard
