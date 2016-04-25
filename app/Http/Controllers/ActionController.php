@@ -157,7 +157,7 @@ class ActionController extends Controller
                 {
                     // shave the delimiters
                     $field = trim($match,'@@');
-                    $fields[] = strtolower($field);
+                    $fields[] = $field;
                 }
                 $fields = array_unique($fields, SORT_REGULAR);
             }
@@ -745,7 +745,7 @@ class ActionController extends Controller
                 {
                     // shave the delimiters
                     $field = trim($match,'@@');
-                    $fields[] = strtolower($field);
+                    $fields[] = $field;
                 }
                 $fields = array_unique($fields, SORT_REGULAR);
             }
