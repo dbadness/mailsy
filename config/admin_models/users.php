@@ -60,10 +60,10 @@ return array(
 			'title' => 'stripe_id',
 			'type' => 'text',
 		),
-		'status' => array(
-			'title' => 'status',
-			'type' => 'text',
-		),
+		// 'status' => array(
+		// 	'title' => 'status',
+		// 	'type' => 'text',
+		// ),
 		'gmail_token' => array(
 			'title' => 'gmail_token',
 			'type' => 'text',
