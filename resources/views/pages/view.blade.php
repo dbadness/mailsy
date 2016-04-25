@@ -12,7 +12,7 @@
 	</div>
 	<br>
 	<div class="well">
-		{{ $email->template }}
+		{!! $email->template !!}
 	</div>
 
 @endsection
