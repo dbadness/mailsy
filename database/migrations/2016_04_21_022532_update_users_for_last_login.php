@@ -19,6 +19,8 @@ class UpdateUsersForLastLogin extends Migration
         Schema::table('emails', function ($table) {
             $table->integer('shared'); //0 = no, 1 = cust_published, 2 = team_published 3 = public
             $table->string('creator_company');
+            $table->string('creator_name');
+            $table->string('copies');
 
         });
 
@@ -38,7 +40,9 @@ class UpdateUsersForLastLogin extends Migration
         });
         Schema::table('emails', function ($table) {
             $table->dropColumn(['shared',
-                'creator_company'
+                'creator_company',
+                'creator_name',
+                'copies'
                 ]);
         });
     }

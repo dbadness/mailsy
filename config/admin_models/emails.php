@@ -21,6 +21,7 @@ return array(
 		// 'updated_at',
 		// 'deleted_at',
 		// 'shared',
+		//'creator_company',
 	),
 
 	/**
@@ -70,6 +71,10 @@ return array(
 		'shared' => array(
 			'title' => 'shared',
 			'type' => 'number',
+		),
+		'creator_company' => array(
+			'title' => 'creator_company',
+			'type' => 'text',
 		),
 
 	),
