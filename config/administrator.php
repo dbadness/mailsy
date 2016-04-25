@@ -66,10 +66,10 @@ return array(
 	 *	)
 	 */
 	'menu' => array(
-			'Users',
-			'Emails',
-			'Customers',
-			'Messages',
+			'users',
+			'emails',
+			'customers',
+			'messages',
 			// 'Analytics' => array('Analytics' => ''),
 		),
 
@@ -119,7 +119,7 @@ return array(
 	 *
 	 * @type string
 	 */
-	'home_page' => 'Users',
+	'home_page' => 'customers',
 
 	/**
 	 * The route to which the user will be taken when they click the "back to site" button
