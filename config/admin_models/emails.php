@@ -20,6 +20,7 @@ return array(
 		// 'created_at',
 		// 'updated_at',
 		// 'deleted_at',
+		// 'shared',
 	),
 
 	/**
@@ -65,6 +66,10 @@ return array(
 		'deleted_at' => array(
 			'title' => 'deleted_at',
 			'type' => 'text',
+		),
+		'shared' => array(
+			'title' => 'shared',
+			'type' => 'number',
 		),
 
 	),
