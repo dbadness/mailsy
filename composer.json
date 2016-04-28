@@ -13,7 +13,8 @@
         "mailin-api/mailin-api-php": "dev-master",
         "league/csv": "^8.0",
         "bugsnag/bugsnag": "2.*",
-        "bugsnag/bugsnag-laravel": "1.*"
+        "bugsnag/bugsnag-laravel": "1.*",
+        "frozennode/administrator": " 5.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

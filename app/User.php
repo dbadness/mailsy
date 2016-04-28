@@ -12,6 +12,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
 use Auth;
 use App\Message;
+use Log;
 
 class User extends Model implements AuthenticatableContract,
                                     AuthorizableContract,
@@ -31,7 +32,7 @@ class User extends Model implements AuthenticatableContract,
      *
      * @var array
      */
-    protected $visible = ['id','email'];
+    // protected $visible = ['id','email'];
 
     // allow the app to fill the fields in the DB
     protected $fillable = ['sf_address', 'signature'];

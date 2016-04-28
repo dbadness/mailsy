@@ -45,6 +45,7 @@
 					<?php
 						$messageCount = App\Message::where('email_id',$email->id)->whereNotNull('status')->whereNull('deleted_at')->count();
 					?>
+
 					<tr>
 						<td>
 							<span><strong>{!! $email->name !!}</strong></span>
@@ -54,10 +55,39 @@
 								<a class="btn btn-info" href='/edit/{!! base64_encode($email->id) !!}'>edit</a>
 								<a class="btn btn-info" href='/copy/{!! base64_encode($email->id) !!}'>copy</a>
 								<a class="btn btn-danger" href='/archive/{!! base64_encode($email->id) !!}'>archive</a>
+
+								@if($user->paid)
+									<span class="dropdown">
+										<button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown">Hub
+										<span class="caret"></span></button>
+										<ul class="dropdown-menu">
+											@if($email->shared == 0)
+												<li class="active"><a href="/hubify/{!! base64_encode($email->id) !!}/0">Private</a></li>
+											@else
+												<li><a href="/hubify/{!! base64_encode($email->id) !!}/0">Private</a></li>
+											@endif
+											@if($user->paid && ($user->has_users == "yes" || $user->belongs_to != null))
+												@if($email->shared == 1)
+													<li class="active"><a href="/hubify/{!! base64_encode($email->id) !!}/1">Company Hub</a></li>
+												@else
+													<li><a href="/hubify/{!! base64_encode($email->id) !!}/1">Company Hub</a></li>
+												@endif
+											@endif
+											@if($email->shared == 2)
+												<li class="active"><a href="/hubify/{!! base64_encode($email->id) !!}/2">Public Hub</a></li>
+											@else
+												<li><a href="/hubify/{!! base64_encode($email->id) !!}/2">Public Hub</a></li>
+											@endif
+										</ul>
+									</span>
+								@endif
+								<input type="hidden" name="_token" value="{{ csrf_token() }}">
+								<button class="btn btn-danger" id='archiveEmail'>archive</button>
 							</span>
 						</td>
 						<td class='emailListRight'>{!! $messageCount !!}</td>
 					</tr>
+					
 				@endforeach
 
 			</table>

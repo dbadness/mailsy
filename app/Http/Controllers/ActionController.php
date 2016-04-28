@@ -12,6 +12,7 @@ use App\Utils;
 use Redirect;
 use Log;
 use File;
+use Response;
 
 class ActionController extends Controller
 {
@@ -34,7 +35,17 @@ class ActionController extends Controller
             $email->name = $request->_name;
             $email->subject = $request->_subject;
             $email->template = $request->_email_template;
+            $email->creator_name = $user->name;
             $email->created_at = time();
+            $email->shared = 0;
+            $email->copies = 0;
+            if($user->admin)
+            {
+                $email->creator_company = $user->id;
+            } else
+            {
+                $email->creator_company = $user->belongs_to;
+            }
             $email->save();
         }
         else
@@ -60,6 +71,7 @@ class ActionController extends Controller
                     $field = trim($match,'@@');
                     $fields[] = $field;
                 }
+                $fields = array_unique($fields, SORT_REGULAR);
                 // save the fields to the DB
                 $email->fields = json_encode($fields);
                 $email->save();
@@ -89,6 +101,16 @@ class ActionController extends Controller
         $email->subject = $request->_subject;
         $email->template = $request->_email_template;
         $email->created_at = time();
+        $email->creator_name = $user->name;
+        $email->shared = 0;
+        $email->copies = 0;
+        if($user->admin)
+        {
+            $email->creator_company = $user->id;
+        } else
+        {
+            $email->creator_company = $user->belongs_to;
+        }
         $email->save();
 
         // combine the subject and template for regex matching
@@ -106,6 +128,7 @@ class ActionController extends Controller
                     $field = trim($match,'@@');
                     $fields[] = $field;
                 }
+                $fields = array_unique($fields, SORT_REGULAR);
                 // save the fields to the DB
                 $email->fields = json_encode($fields);
                 $email->save();
@@ -136,6 +159,7 @@ class ActionController extends Controller
                     $field = trim($match,'@@');
                     $fields[] = strtolower($field);
                 }
+                $fields = array_unique($fields, SORT_REGULAR);
             }
         }
         
@@ -163,16 +187,11 @@ class ActionController extends Controller
         if($request->csvFile)
         {
             return $response = Email::processCSV($request, $email, $user);
-        } else
+        } 
+        else
         {
             return Email::processManualData($request, $email, $user);
         }
-        
-        if($request->csvFile){
-            return Email::processCSV($request, $email, $user);
-        } else{
-            return Email::processManualData($request, $email, $user);
-        };
     }
     
     // send the emails
@@ -198,7 +217,9 @@ class ActionController extends Controller
         {
             $message = Message::find($message_id);
             // prepend the read receipt callback webhook to the message
-            $full_body = $message->message.'<img src="'.env('DOMAIN').'/track/'.base64_encode($user->id).'/'.base64_encode($message->id).'">';
+
+            $full_body = $message->message.'<img src="'.env('DOMAIN').'/track/'.base64_encode($user->id).'/'.base64_encode($message->id).'" alt="tracker" title="tracker" style="display:block" width="1" height="1">';
+
             // use swift mailer to build the mime
             $mail = new \Swift_Message;
             $mail->setFrom(array($user->email => $user->name));
@@ -689,7 +710,9 @@ class ActionController extends Controller
             }
         }
 
-        return File::get('images/email-tracker.png');
+        $response = Response::make(File::get("images/email-tracker.png"));
+        $response->header('Content-Type', 'image/png');
+        return $response;
     }
 
     public function doArchiveTemplate($eid)
@@ -739,6 +762,7 @@ class ActionController extends Controller
                     $field = trim($match,'@@');
                     $fields[] = strtolower($field);
                 }
+                $fields = array_unique($fields, SORT_REGULAR);
             }
         }
         
@@ -750,10 +774,42 @@ class ActionController extends Controller
         $email->template = $request->_email_template;
         $email->fields = json_encode($fields);
         $email->created_at = time();
+        $email->creator_name = Email::find($request->_email_id)->name;
+        $email->shared = 0;
+        $email->copies = 0;
+        if($user->admin)
+        {
+            $email->creator_company = $user->id;
+        } else
+        {
+            $email->creator_company = $user->belongs_to;
+        }
         $email->save();
+
+        Email::find($request->_email_id)->copies++;
+        Email::find($request->_email_id)->save();
 
         // send the user to the 'use' view
         return redirect('/home');
+    }
+
+    public function doHubifyTemplate($eid, $status)
+    {
+        $user = Auth::user();
+
+        if(intval($status) != 1 && intval($status) != 2 && intval($status) != 0)
+        {
+            return redirect('/home');
+        } else
+        {
+            $email = User::verifyUser($eid);
+            $email->shared = intval($status);
+            $email->save();
+
+            // send the user to the 'use' view
+            return redirect('/home');
+        }
+
     }
 
 }

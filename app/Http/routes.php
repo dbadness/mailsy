@@ -40,6 +40,8 @@ Route::get('/use/{eid}', 'PagesController@showUseEmail');
 Route::get('/team/{customer}','IndexController@showCompanyPage');
 Route::get('/archives','PagesController@showArchive');
 Route::get('/copy/{id}','PagesController@showCopy');
+Route::get('/view/{id}','PagesController@showView');
+Route::get('/templatehub','PagesController@showTemplateHub');
 
 // actions
 Route::post('/returnFields', 'ActionController@returnFields');
@@ -58,6 +60,7 @@ Route::post('/revokeAccess','ActionController@doRevokeAccess');
 Route::post('/updateSubscription/{direction}','ActionController@doUpdateSubscription');
 Route::get('/archive/{eid}','ActionController@doArchiveTemplate');
 Route::get('/dearchive/{eid}','ActionController@doDearchiveTemplate');
+Route::get('/hubify/{id}/{status}','ActionController@doHubifyTemplate');
 
 // ajax calls
 Route::get('/getMessageStatus/{id}','ActionController@doUpdateMessageStatus');

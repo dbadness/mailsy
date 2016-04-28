@@ -12,6 +12,7 @@ use App\User;
 use App\Email;
 use App\Message;
 use App\Customer;
+use Log;
 
 class PagesController extends Controller
 {
@@ -129,7 +130,7 @@ class PagesController extends Controller
     {
         $user = Auth::user();
 
-        $email = Email::find(base64_decode($eid));
+        $email = User::verifyUser($eid);
 
         // if there are messages that are 'in the queue', make sure they're deleted as the user is about to enter more
         Message::where('email_id',$email->id)->whereNull('deleted_at')->whereNull('status')->update(['deleted_at' => time()]);
@@ -260,6 +261,40 @@ class PagesController extends Controller
         $email = User::verifyUser($eid);
         
         return view('pages.copy', ['email' => $email, 'user' => $user]);
+    }
+
+    // show an edit page for the email that has been created
+    public function showView($eid)
+    {
+        $user = Auth::user();
+
+        $email = User::verifyUser($eid);
+        
+        return view('pages.view', ['email' => $email, 'user' => $user]);
+    }
+
+    // show the template hub
+    public function showTemplateHub()
+    {
+        // auth the user
+        $user = Auth::user();
+
+        if(!$user->paid)
+        {
+            return redirect('/home');
+        }
+
+        //return the emails that have been marked for the hub
+        if($user->admin)
+        {
+            $compEmails = Email::where('shared',1)->where('creator_company',$user->id)->get();
+        } else
+        {
+            $compEmails = Email::where('shared',1)->where('creator_company',$user->belongs_to)->get();
+        }
+        $pubEmails = Email::where('shared',2)->get();
+
+        return view('pages.templatehub', ['user' => $user, 'compEmails' => $compEmails, 'pubEmails' => $pubEmails]);
     }
 
 }
