@@ -29,7 +29,7 @@ class PagesController extends Controller
         $user = Auth::user();
 
         //return their emails and it's metadata if not archived
-        $emails = Email::where('user_id',$user->id)->whereNull('deleted_at')->get();
+        $emails = Email::where('user_id',$user->id)->whereNull('deleted_at')->paginate(10);
 
         return view('pages.home', ['user' => $user, 'emails' => $emails]);
     }
@@ -245,7 +245,7 @@ class PagesController extends Controller
         $user = Auth::user();
 
         //return their emails and it's metadata if archived
-        $emails = Email::where('user_id',$user->id)->whereNotNull('deleted_at')->get();
+        $emails = Email::where('user_id',$user->id)->whereNotNull('deleted_at')->paginate(10);
 
         return view('pages.archives', ['user' => $user, 'emails' => $emails]);
     }
@@ -271,7 +271,24 @@ class PagesController extends Controller
     }
 
     // show the template hub
-    public function showTemplateHub()
+    public function showPublicTemplates()
+    {
+        // auth the user
+        $user = Auth::user();
+
+        if(!$user->paid)
+        {
+            return redirect('/home');
+        }
+
+        //return the emails that have been marked for the hub
+        $emails = Email::where('shared',2)->paginate(10);
+
+        return view('pages.publictemplates', ['user' => $user, 'emails' => $emails]);
+    }
+
+    // show the template hub
+    public function showPrivateTemplates()
     {
         // auth the user
         $user = Auth::user();
@@ -284,14 +301,13 @@ class PagesController extends Controller
         //return the emails that have been marked for the hub
         if($user->admin)
         {
-            $compEmails = Email::where('shared',1)->where('creator_company',$user->id)->get();
+            $emails = Email::where('shared',1)->where('creator_company',$user->id)->paginate(10);
         } else
         {
-            $compEmails = Email::where('shared',1)->where('creator_company',$user->belongs_to)->get();
+            $emails = Email::where('shared',1)->where('creator_company',$user->belongs_to)->paginate(10);
         }
-        $pubEmails = Email::where('shared',2)->get();
 
-        return view('pages.templatehub', ['user' => $user, 'compEmails' => $compEmails, 'pubEmails' => $pubEmails]);
+        return view('pages.privatetemplates', ['user' => $user, 'emails' => $emails]);
     }
 
     // show an edit page for the email that has been created

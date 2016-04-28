@@ -37,6 +37,8 @@
 		</table>
 	</div>
 
-	<a href="/home">Dashboard</a>
+	<span class="pull-right">{!! $emails->render() !!}</span>
+	<br>
+	<a href="/home" class="btn btn-primary">Dashboard</a>
 
 @endsection

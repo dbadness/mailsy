@@ -73,7 +73,11 @@
 		</table>
 	</div>
 
-	<a href="/archives">Archived templates</a>
+
+	<span class="pull-right">{!! $emails->render() !!}</span>
+	<br>
+	<a href="/archives" class="btn btn-primary">Archived templates</a>
+
 
 	@if($emails == '[]')
 
@@ -87,5 +91,9 @@
 		</div>
 
 	@endif
+
+	<br>
+	<br>
+	<hr>
 
 @endsection

@@ -191,14 +191,6 @@
 
 				@if($user->admin)
 
-					<p>Make a team</p>
-					{!! Form::token() !!}
-					<div class="input-group">
-					  	<span class="input-group-addon" id="basic-addon1">Team Name</span>
-				  		<input type="text" name='sf_address' class="form-control" aria-describedby="basic-addon1" value='{!! $user->sf_address !!}'>
-				  		<span><button class="btn">Add A New Team</button></span>
-					</div>
-
 					@if($user->has_users)
 
 						<table style='width:100%;'>

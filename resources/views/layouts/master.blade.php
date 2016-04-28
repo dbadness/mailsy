@@ -92,7 +92,12 @@
                     </li>
                     @if($user->paid)
                         <li>
-                            <a href="/templatehub">Template Hub</a>
+                            <a href="/publictemplates">Public Templates</a>
+                        </li>
+                    @endif
+                    @if($user->paid && ($user->belongs_to || $user->has_users))
+                        <li>
+                            <a href="/privatetemplates">Private Templates</a>
                         </li>
                     @endif
                     @if($user->paid && $user->admin == 'yes')
