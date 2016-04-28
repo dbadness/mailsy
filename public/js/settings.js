@@ -192,7 +192,8 @@ $(document).ready(function()
 							window.location = '/settings?message=subscriptionSuccessfullyUpdated';
 						}
 					},
-					error : function() {
+					error : function(response) {
+						console.log(response.responseText);
 						alert('Something went wrong. Please email hello@mailsy.co for help.');
 					}
 				});

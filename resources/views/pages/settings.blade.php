@@ -175,37 +175,10 @@
 
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<strong>User Management</strong>
+				<strong>Admin Management</strong>
 				<br>
 				<br>
 				@if($user->admin)
-			
-					<p>You have <b>{!! $company->users_left !!}</b> licenses left out of the <b>{!! $company->total_users !!}</b> in your subscription. <span class='a' id='subscriptionModalButton' data-toggle="modal" data-target="#subscriptionModal">Add/Remove Licenses</span><br><br>Remember that you can invite people to join Mailsy at <a href='/team/{!! $company->domain !!}' target='_blank'>www.mailsy.co/team/{!! $company->domain !!}</a> to use your licenses!</p>
-
-					<!-- Make a modal for subscription handling -->
-					<!-- Modal -->
-					<div id="subscriptionModal" class="modal fade" role="dialog">
-						<div class="modal-dialog">
-							<!-- Modal content-->
-							<div class="modal-content">
-								<div class="modal-header">
-									<button type="button" class="close" data-dismiss="modal">&times;</button>
-									<h4 class="modal-title">Manage Subscriptions</h4>
-								</div>
-								<div class="modal-body">
-									<p>Your subscriptions: <input type='number' id='subscriptionCount' min='0' style='width:60px;' value='{!! $company->total_users !!}'></p>
-									<p><b>Note: You can only decrease your subscriptions if you have unused licenses (you have {!! $company->users_left !!} unused licenses). If you don't have any unused licenses, you can downgrade users on the Settings page and then come back here to reduce your licenses.</b></p>
-									<input type='hidden' id='totalUsers' value='{!! $company->total_users !!}'>
-									<input type='hidden' id='usersLeft' value='{!! $company->users_left !!}'>
-								</div>
-								<div class="modal-footer">
-									<img id='subModalLoader' style='display:none;' src='/images/loader.gif'>
-									<button type="button" class="btn btn-default" data-dismiss="modal" id='closeSubModalButton'>Close</button>
-									<button type="button" id='saveSubscriptionsButton' style='display:none;' class="btn btn-primary">Save</button>
-								</div>
-							</div>
-						</div>
-					</div>
 
 				@else
 
@@ -216,18 +189,30 @@
 			</div>
 			<div class="panel-body">
 
-			@if($user->has_users)
+				@if($user->admin)
 
-				<table style='width:100%;'>
+					<p>Make a team</p>
 					{!! Form::token() !!}
-				    @foreach($children as $child)
-				    	<tr>
-				    		<td><p>{!! $child->email !!} <a member='{!! $child->id !!}' class='revokeAccessLink'>Downgrade to Free Account</a></p></td>
-				    	</tr>
-				    @endforeach
-				</table>
+					<div class="input-group">
+					  	<span class="input-group-addon" id="basic-addon1">Team Name</span>
+				  		<input type="text" name='sf_address' class="form-control" aria-describedby="basic-addon1" value='{!! $user->sf_address !!}'>
+				  		<span><button class="btn">Add A New Team</button></span>
+					</div>
 
-			@endif
+					@if($user->has_users)
+
+						<table style='width:100%;'>
+							{!! Form::token() !!}
+						    @foreach($children as $child)
+						    	<tr>
+				    				<td><p>{!! $child->email !!} <a member='{!! $child->id !!}' class='revokeAccessLink'>Downgrade to Free Account</a></p></td>
+				    			</tr>
+					    	@endforeach
+						</table>
+
+					@endif
+
+				@endif
 
 			</div>
 		</div>

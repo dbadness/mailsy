@@ -23,8 +23,6 @@ class UpdateUsersForLastLogin extends Migration
             $table->string('copies');
 
         });
-
-
     }
 
     /**

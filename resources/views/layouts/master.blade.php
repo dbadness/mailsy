@@ -95,6 +95,12 @@
                             <a href="/templatehub">Template Hub</a>
                         </li>
                     @endif
+                    @if($user->paid && $user->admin == 'yes')
+                        <li>
+                            <a href="/admin">Team Admin</a>
+                        </li>
+                    @endif
+
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <ul class="nav navbar-nav">

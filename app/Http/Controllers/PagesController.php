@@ -294,4 +294,33 @@ class PagesController extends Controller
         return view('pages.templatehub', ['user' => $user, 'compEmails' => $compEmails, 'pubEmails' => $pubEmails]);
     }
 
+    // show an edit page for the email that has been created
+    public function showAdmin()
+    {
+        $user = Auth::user();
+
+        // if the user has paid for other users
+        if($user->has_users)
+        {
+            // get the users that this user has paid for
+            $children = User::where('belongs_to',$user->id)->whereNull('deleted_at')->get();
+        }
+        else
+        {
+            $children = null;
+        }
+
+        // return the company info
+        $company = User::domainCheck($user->email);
+
+        if($company)
+        {
+            $company->admin = User::where('id',$company->owner_id)->first();
+
+            $company->email = $company->admin->email;
+        }
+        
+        return view('pages.admin', ['user' => $user, 'company' => $company]);
+    }
+
 }

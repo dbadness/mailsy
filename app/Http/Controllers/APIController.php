@@ -39,7 +39,10 @@ class APIController extends Controller
 
         Utils::sendEmail($user->email,$subject,$body);
 
-        return 'invoice_successfully_paid';
+        return Response::json([
+            'msg' => 'invoice_successfully_paid'
+        ], 200);
+
     }
 
     // handle a successful payment (the first time)
@@ -69,6 +72,9 @@ class APIController extends Controller
 
         Utils::sendEmail($user->email,$subject,$body);
 
-        return 'invoice_payment_failed';
+        return Response::json([
+            'msg' => 'invoice_payment_failed'
+        ], 200);
+
     }
 }

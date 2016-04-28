@@ -42,6 +42,7 @@ Route::get('/archives','PagesController@showArchive');
 Route::get('/copy/{id}','PagesController@showCopy');
 Route::get('/view/{id}','PagesController@showView');
 Route::get('/templatehub','PagesController@showTemplateHub');
+Route::get('/admin','PagesController@showAdmin');
 
 // actions
 Route::post('/returnFields', 'ActionController@returnFields');

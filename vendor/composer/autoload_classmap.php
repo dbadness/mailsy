@@ -4078,7 +4078,9 @@ return array(
     'SebastianBergmann\\RecursionContext\\InvalidArgumentException' => $vendorDir . '/sebastian/recursion-context/src/InvalidArgumentException.php',
     'SebastianBergmann\\Version' => $vendorDir . '/sebastian/version/src/Version.php',
     'SessionHandlerInterface' => $vendorDir . '/symfony/http-foundation/Resources/stubs/SessionHandlerInterface.php',
+    'TemplateUpgradeForSharing' => $baseDir . '/database/migrations/2016_04_25_210244_template_upgrade_for_sharing.php',
     'TestCase' => $baseDir . '/tests/TestCase.php',
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/src/Template.php',
     'UpdateUsersForLastLogin' => $baseDir . '/database/migrations/2016_04_21_022532_update_users_for_last_login.php',
+    'UserUpgradeForTeams' => $baseDir . '/database/migrations/2016_04_25_210306_user_upgrade_for_teams.php',
 );
