@@ -396,8 +396,25 @@ class ActionController extends Controller
     // requests, updates, and return the message status
     public function doUpdateMessageStatus($id)
     {
+        // auth the user
+        $user = Auth::user();
+
         // get the message object
         $message = Message::find($id);
+
+        // check to see if the message was replied to by counting the messages in the thread
+        $client = User::googleClient();
+        $gmail = new \Google_Service_Gmail($client);
+        $thread = $gmail->users_threads->get('me',$message->google_message_id);
+        $messages = $thread->getMessages();
+        $messageCount = count($messages);
+
+        if($messageCount > 1)
+        {
+            $message->status = 'replied';
+            $message->save();
+        }
+
         return ucfirst($message->status);
     }
 

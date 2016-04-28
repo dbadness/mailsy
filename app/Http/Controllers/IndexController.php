@@ -66,10 +66,12 @@ class IndexController extends Controller
         {
             $client->setRedirectURI(env('GOOGLE_URI_REDIRECT'));
         }      
-        $client->setScopes(['https://www.googleapis.com/auth/gmail.send', 'profile', 'email']);
+        $client->setScopes(['https://www.googleapis.com/auth/gmail.send', 'https://www.googleapis.com/auth/gmail.readonly', 'profile', 'email']);
+        // $client->setScopes(['https://mail.google.com/']);
         $client->setAccessType('offline');
+        // eventually we'll need to figure out a way to accept the refresh token below so the user never has to reauth
         // $client->setApprovalPrompt('force'); // so we're sure to show the screen to the user (and get a refresh token)
-
+        
         $url = $client->createAuthUrl();
 
         return redirect($url);

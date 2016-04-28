@@ -15,6 +15,7 @@
 
 		<div class="alert alert-info" role="alert">
 			No emails to report yet...
+			
 			@if(!$user->paid)
 				<a href='/create' class='alert-link'>Create a template</a> and send up to 10 emails per today on the free account.
 			@else
@@ -81,13 +82,15 @@
 										</ul>
 									</span>
 								@endif
+
 								<input type="hidden" name="_token" value="{{ csrf_token() }}">
-								<button class="btn btn-danger" id='archiveEmail'>archive</button>
 							</span>
 						</td>
+
 						<td class='emailListRight'>{!! $messageCount !!}</td>
+
 					</tr>
-					
+
 				@endforeach
 
 			</table>
