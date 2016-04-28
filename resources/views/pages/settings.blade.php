@@ -146,8 +146,8 @@
 			<select id='timezone' name='timezone' style='width:200px;'>
 				<option value='America/New_York' <?php if($user->timezone == 'America/New_York'){echo 'selected';}?>>Eastern</option>
 				<option value='America/Chicago' <?php if($user->timezone == 'America/Chicago'){echo 'selected';}?>>Central</option>
-				<option value='America/Denver' <?php if($user->timezone == 'America/New_York'){echo 'selected';}?>>Mountain</option>
-				<option value='America/Phoenix' <?php if($user->timezone == 'America/Denver'){echo 'selected';}?>>Mountain no DST</option>
+				<option value='America/Denver' <?php if($user->timezone == 'America/Denver'){echo 'selected';}?>>Mountain</option>
+				<option value='America/Phoenix' <?php if($user->timezone == 'America/Phoenix'){echo 'selected';}?>>Mountain no DST</option>
 				<option value='America/Los_Angeles' <?php if($user->timezone == 'America/Los_Angeles'){echo 'selected';}?>>Pacific</option>
 				<option value='America/Anchorage' <?php if($user->timezone == 'America/Anchorage'){echo 'selected';}?>>Alaska</option>
 				<option value='America/Adak' <?php if($user->timezone == 'America/Adak'){echo 'selected';}?>>Hawaii</option>

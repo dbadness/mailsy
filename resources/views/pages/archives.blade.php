@@ -18,16 +18,12 @@
 					?>
 					<tr>
 						<td>
-							<form method='get' action='/dearchive/{!! $email->id !!}' enctype="multipart/form-data">
-								<span><strong>{!! $email->name !!}</strong></span>
-								<span class="pull-right">
-									<a class="btn btn-info" href='/email/{!! base64_encode($email->id) !!}'>info</a>
-									<a class="btn btn-info" href='/copy/{!! base64_encode($email->id) !!}'>copy</a>
-									<input type="hidden" name="_token" value="{{ csrf_token() }}">
-									<button class="btn btn-danger" id='dearchiveEmail'>dearchive</button>
-								</span>
-							</form>
-
+							<span><strong>{!! $email->name !!}</strong></span>
+							<span class="pull-right">
+								<a class="btn btn-info" href='/email/{!! base64_encode($email->id) !!}'>messages</a>
+								<a class="btn btn-info" href='/copy/{!! base64_encode($email->id) !!}'>copy</a>
+								<a class='btn btn-success' href='/dearchive/{!! base64_encode($email->id) !!}'>restore</a>
+							</span>
 						</td>
 						<td class='emailListRight'>{!! $messageCount !!}
 						</td>
@@ -40,5 +36,4 @@
 	<span class="pull-right">{!! $emails->render() !!}</span>
 	<br>
 	<a href="/home" class="btn btn-primary">Dashboard</a>
-
 @endsection
