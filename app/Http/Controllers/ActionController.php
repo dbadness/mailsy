@@ -396,8 +396,25 @@ class ActionController extends Controller
     // requests, updates, and return the message status
     public function doUpdateMessageStatus($id)
     {
+        // auth the user
+        $user = Auth::user();
+
         // get the message object
         $message = Message::find($id);
+
+        // check to see if the message was replied to by counting the messages in the thread
+        $client = User::googleClient();
+        $gmail = new \Google_Service_Gmail($client);
+        $thread = $gmail->users_threads->get('me',$message->google_message_id);
+        $messages = $thread->getMessages();
+        $messageCount = count($messages);
+
+        if($messageCount > 1)
+        {
+            $message->status = 'replied';
+            $message->save();
+        }
+
         return ucfirst($message->status);
     }
 
@@ -448,6 +465,15 @@ class ActionController extends Controller
                 $success = User::where('id',$child->id)->update(['expires' => $subscription->current_period_end, 'belongs_to' => NULL]);
                 // send the child an email letting them know that their admin cancelled their subscription
             } 
+        }
+
+        // if the user has a company team, delete it
+        $company = Customer::where('owner_id',$user->id)->whereNull('deleted_at')->first();
+
+        if($company)
+        {
+            $company->deleted_at = time();
+            $company->save();
         }
 
         // cancel the subscription
@@ -569,7 +595,7 @@ class ActionController extends Controller
         Utils::sendEmail($child->email,$subject,$body);
 
         // return the company information
-        $customer = Customer::where('owner_id',$user->id)->first();
+        $customer = Customer::where('owner_id',$user->id)->whereNull('deleted_at')->first();
 
         // if the admin has licenses to get back....
         if($customer->total_users > $customer->users_left)
@@ -706,9 +732,12 @@ class ActionController extends Controller
         return $response;
     }
 
-    public function doArchiveTemplate($id)
+    public function doArchiveTemplate($eid)
     {
         $user = Auth::user();
+
+        // decrypt the id
+        $id = base64_decode($eid);
 
         $email = Email::find($id);
         $email->deleted_at = time();
@@ -717,9 +746,12 @@ class ActionController extends Controller
         return redirect('/home');
     }
 
-    public function doDearchiveTemplate($id)
+    public function doDearchiveTemplate($eid)
     {
         $user = Auth::user();
+
+        // decrypt the id
+        $id = base64_decode($eid);
 
         $email = Email::find($id);
         $email->deleted_at = null;

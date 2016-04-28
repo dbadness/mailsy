@@ -58,8 +58,8 @@ Route::post('/copyTemplate','ActionController@copyTemplate');
 Route::post('/sendFeedback','ActionController@doSendFeedback');
 Route::post('/revokeAccess','ActionController@doRevokeAccess');
 Route::post('/updateSubscription/{direction}','ActionController@doUpdateSubscription');
-Route::get('/archive/{id}','ActionController@doArchiveTemplate');
-Route::get('/dearchive/{id}','ActionController@doDearchiveTemplate');
+Route::get('/archive/{eid}','ActionController@doArchiveTemplate');
+Route::get('/dearchive/{eid}','ActionController@doDearchiveTemplate');
 Route::get('/hubify/{id}/{status}','ActionController@doHubifyTemplate');
 
 // ajax calls
