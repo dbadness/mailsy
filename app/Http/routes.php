@@ -67,6 +67,7 @@ Route::get('/getMessageStatus/{id}','ActionController@doUpdateMessageStatus');
 Route::post('/updateCard','ActionController@doUpdateCard');
 Route::post('/membership/cancel','ActionController@doCancelMembership');
 Route::get('/sendFirstEmail','ActionController@doSendFirstEmail');
+Route::get('/getReplyRate/{email_id}','ActionController@doReturnReplyRate');
 
 // webhooks
 Route::post('/payment/paid','APIController@doInvoicePaid'); // successful invoice payment
