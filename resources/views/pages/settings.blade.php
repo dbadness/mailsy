@@ -176,8 +176,6 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<strong>Admin Management</strong>
-				<br>
-				<br>
 				@if($user->admin)
 
 				@else
@@ -197,7 +195,11 @@
 							{!! Form::token() !!}
 						    @foreach($children as $child)
 						    	<tr>
-				    				<td><p>{!! $child->email !!} <a member='{!! $child->id !!}' class='revokeAccessLink'>Downgrade to Free Account</a></p></td>
+				    				<td>
+				    					<p>{!! $child->email !!} 
+				    						<a member='{!! $child->id !!}' class='revokeAccessLink'>Make a Team Admin</a>
+				    					</p>
+				    				</td>
 				    			</tr>
 					    	@endforeach
 						</table>
