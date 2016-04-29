@@ -113,14 +113,17 @@
 
                     <ul class="nav navbar-nav navbar-right">
                         <ul class="nav navbar-nav">
-                            <li><a href="/settings">{!! $user->email !!}</a>
-                            </li>
+                            <li><a href='/settings'>{!! $user->email !!}</a></li>
                             <li>
-
                                 @if(!$user->paid)
                                     <a href='/upgrade'>({!! App\User::howManyEmailsLeft() !!} emails left today)</a>
                                 @else
-                                    <a href='/settings/'>(Upgraded Account!)</a>
+                                    <a href='/settings'>
+                                        Upgraded Account!
+                                        @if($user->expires)
+                                            (until {!! date('m-d-Y',$user->expires) !!})
+                                        @endif
+                                    </a> 
                                 @endif
                             </li>
                             <li class="dropdown">
@@ -133,22 +136,20 @@
                                     <li role="separator" class="divider"></li>
                                     <li>
                                         @if(!$user->paid)
-                                            <a href='/upgrade'>Upgrade</a>
-                                        @if(App\User::domainCheck($user->email))
-                                            <a href='/settings'>Join Your Team</a>
-                                        @endif
+                                            @if(App\User::domainCheck($user->email))
+                                                <a href='/settings'>Join Your Team</a>
+                                            @else
+                                                <a href='/upgrade'>Upgrade</a>
+                                            @endif
                                         @else
-                                            <a href='/settings'>(Upgraded Account!)</a>
+                                            <a href='/settings'>Upgraded Account!</a>
                                         @endif
                                     </li>
                                     <li role="separator" class="divider"></li>
-                                    <li>
-                                        <a href="/logout">Logout</a>
-                                    </li>
+                                    <li><a href="/logout">Logout</a></li>
                                 </ul>
                             </li>
                         </ul>
-
                     </ul>
                 </div>
             </div>

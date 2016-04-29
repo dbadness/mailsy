@@ -31,6 +31,23 @@ class PagesController extends Controller
         //return their emails and it's metadata if not archived
         $emails = Email::where('user_id',$user->id)->whereNull('deleted_at')->paginate(10);
 
+        // if there are emails to show, update their message statuses so the reply rates are accurate
+        if($emails != '[]')
+        {
+            foreach($emails as $email)
+            {
+                $messages = Message::where('email_id',$email->id)->whereNull('deleted_at')->get();
+
+                if($messages != '[]')
+                {
+                    foreach($messages as $message)
+                    {
+                        Message::updateMessageStatus($message->id);
+                    }
+                }
+            }
+        }
+
         //return their emails and it's metadata if not archived
         $archived = Email::where('user_id',$user->id)->whereNotNull('deleted_at')->count();
 

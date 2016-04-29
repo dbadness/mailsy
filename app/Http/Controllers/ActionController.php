@@ -399,23 +399,24 @@ class ActionController extends Controller
         // auth the user
         $user = Auth::user();
 
-        // get the message object
-        $message = Message::find($id);
+        $status = Message::updateMessageStatus($id);
 
-        // check to see if the message was replied to by counting the messages in the thread
-        $client = User::googleClient();
-        $gmail = new \Google_Service_Gmail($client);
-        $thread = $gmail->users_threads->get('me',$message->google_message_id);
-        $messages = $thread->getMessages();
-        $messageCount = count($messages);
+        return ucfirst($status);
+    }
 
-        if($messageCount > 1)
-        {
-            $message->status = 'replied';
-            $message->save();
-        }
+    // ajax route to return reply rate on home page (so the page doesn't take forever to load since this has to make a call to google for each message)
+    public function doReturnReplyRate($email_id)
+    {
+        // find the messages for this email
+        $messageCount = Message::where('email_id',$email_id)->whereNull('deleted_at')->count();
 
-        return ucfirst($message->status);
+        // return the reply count
+        $replyCount = Message::where('email_id',$email_id)->where('status','replied')->whereNull('deleted_at')->count();
+
+        // find the reply percentage
+        $replyRate = round(($replyCount / $messageCount) * 100);
+
+        return $replyRate;
     }
 
     // update a customer card
@@ -447,7 +448,7 @@ class ActionController extends Controller
         // auth the user
         $user = Auth::user();
 
-        // since their an admin cancel their's and everyone they're paying f
+        // since their an admin cancel their's and everyone they're paying for
         // retrieve the subscription info
         // set the stripe token
         \Stripe\Stripe::setApiKey(env('STRIPE_TOKEN'));

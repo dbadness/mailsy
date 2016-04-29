@@ -1,5 +1,9 @@
 @extends('layouts.master')
 
+@section('PageJS')
+	<script src='/js/home.js'></script>
+@endsection
+
 @section('content')
 	<br>
 	<br>
@@ -25,31 +29,52 @@
 		
 	@else
 
-		<div class="panel panel-success">
+		<!-- show the archived emails if there are any -->
+		@if($archived > 0)
 
-			<!-- Table -->
-			<table class="table">
+			<a href='/archives'>Archived Templates</a>
 
-				<tr>
-					<td><b>Email Name</b></td>
-					<td class='emailListRight'><b>Emails Sent</b></td>
-				</tr>
+		@endif
 
-				@foreach($emails as $email)
-					<?php
-						$messageCount = App\Message::where('email_id',$email->id)->whereNotNull('status')->whereNull('deleted_at')->count();
-					?>
+		<!-- show the reponse rates for the emails -->
 
-					<tr>
-						<td>
-							<span><strong>{!! $email->name !!}</strong></span>
-							<span class="pull-right">
-								<a class="btn btn-primary" href='/use/{!! base64_encode($email->id) !!}'>use</a>
-								<a class="btn btn-info" href='/email/{!! base64_encode($email->id) !!}'>messages</a>
-								<a class="btn btn-info" href='/edit/{!! base64_encode($email->id) !!}'>edit</a>
-								<a class="btn btn-info" href='/copy/{!! base64_encode($email->id) !!}'>copy</a>
-								<a class="btn btn-danger" href='/archive/{!! base64_encode($email->id) !!}'>archive</a>
+		<div class="row" id='emails'>
+			@foreach($emails as $email)
 
+				<?php
+					// get the total message count
+					$messageCount = App\Message::where('email_id',$email->id)->whereNotNull('status')->whereNull('deleted_at')->count();
+				?>
+
+				<div class="col-sm-6 col-md-4">
+					<input type='hidden' name='email' value='{!! $email->id !!}'>
+					<div class="thumbnail">
+						<div class="caption">
+							<h3>{!! $email->name !!}</h3>
+
+							<div class='messageInfoWrapper'>
+								<div class='messageInfo'>
+									Reply Rate: <span id='replyRateForEmail{!! $email->id !!}'></span>%
+								</div>
+								<div class='messageInfo' style='border-right:solid 1px gray;'>
+									{!! $messageCount !!} Messages
+								</div>
+								<div class='clear'></div>
+							</div>
+
+							<div class='templateWrapper'>
+								{!! $email->template !!}
+							</div>
+
+							<!-- action buttons -->
+							<a class="btn btn-primary" href='/use/{!! base64_encode($email->id) !!}'>use</a>
+							<a class="btn btn-info" href='/email/{!! base64_encode($email->id) !!}'>messages</a>
+							<a class="btn btn-info" href='/edit/{!! base64_encode($email->id) !!}'>edit</a>
+							<a class="btn btn-info" href='/copy/{!! base64_encode($email->id) !!}'>copy</a>
+							<a class="btn btn-danger" href='/archive/{!! base64_encode($email->id) !!}'>archive</a>
+							
+							@if($user->can_see_secrets == 1)
+								<!-- actions for the hub -->
 								@if($user->paid)
 									<span class="dropdown">
 										<button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown">Hub
@@ -75,29 +100,15 @@
 										</ul>
 									</span>
 								@endif
-
-								<input type="hidden" name="_token" value="{{ csrf_token() }}">
-							</span>
-						</td>
-
-						<td class='emailListRight'>{!! $messageCount !!}</td>
-
-					</tr>
-
-				@endforeach
-
-			</table>
-
+							@endif
+							
+						</div>
+					</div>
+				</div>
+			@endforeach
 		</div>
 
 	<span class="pull-right">{!! $emails->render() !!}</span>
-	<br>
-		<!-- show the archived emails if there are any -->
-		@if($archived > 0)
-
-			<a href='/archives'>Archived Templates</a>
-
-		@endif
 
 	@endif
 
