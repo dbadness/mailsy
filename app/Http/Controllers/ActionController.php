@@ -410,6 +410,11 @@ class ActionController extends Controller
         // find the messages for this email
         $messageCount = Message::where('email_id',$email_id)->whereNull('deleted_at')->count();
 
+        if($messageCount < 1)
+        {
+            $messageCount = 1;
+        }
+
         // return the reply count
         $replyCount = Message::where('email_id',$email_id)->where('status','replied')->whereNull('deleted_at')->count();
 
