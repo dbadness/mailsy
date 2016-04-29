@@ -76,7 +76,7 @@ class IndexController extends Controller
         return redirect($url);
     }
 
-    // if the gmail auth was sucessful, this adds them to the DB
+    // if the gmail auth was successful, this adds them to the DB
     public function doAddUser($license = null)
     {
         // find the user's email in the Google API
@@ -181,6 +181,45 @@ class IndexController extends Controller
 
             // send them to their dashboard
             return redirect('/tutorial/step1');
+        }
+    }
+
+    // for testing an agnostic smtp system
+    public function showSmtpTester()
+    {
+        return view('testing.smtp-tester');
+    }
+
+    // send the email from the tester
+    public function doSmtpTester(Request $request)
+    {
+        // Create the Transport
+        $transport = \Swift_SmtpTransport::newInstance($request->smtp_server, 587, 'tls')
+          ->setUsername($request->username)
+          ->setPassword($request->password)
+          ;
+
+        // Create the Mailer using your created Transport
+        $mailer = \Swift_Mailer::newInstance($transport);
+
+        $mail = new \Swift_Message;
+
+        // Create a message
+        $mail->setFrom(array($request->username));
+        $mail->setTo([$request->recipient]);
+        $mail->setBody($request->body, 'text/html');
+        $mail->setSubject($request->subject);
+
+        // Send the message
+        $result = $mailer->send($mail);
+
+        if($result)
+        {
+            return redirect('/smtp-tester?message=success');
+        }
+        else
+        {
+            return redirect('/smtp-tester?message=error');
         }
     }
 }
