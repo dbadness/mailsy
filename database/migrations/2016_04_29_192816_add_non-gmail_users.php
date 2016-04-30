@@ -13,11 +13,11 @@ class AddNonGmailUsers extends Migration
      public function up()
     {
         Schema::table('users', function ($table) {
-            $table->string('password');
-            $table->string('smtp_server');
-            $table->string('smtp_uname');
-            $table->string('smtp_port');
-            $table->string('smtp_protocol');
+            $table->string('password')->nullable();
+            $table->string('smtp_server')->nullable();
+            $table->string('smtp_uname')->nullable();
+            $table->string('smtp_port')->nullable();
+            $table->string('smtp_protocol')->nullable();
             $table->text('gmail_token')->nullable()->change();
         });
     }

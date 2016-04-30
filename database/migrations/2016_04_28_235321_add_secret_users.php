@@ -13,7 +13,7 @@ class AddSecretUsers extends Migration
     public function up()
     {
         Schema::table('users', function ($table) {
-            $table->integer('can_see_secrets');
+            $table->integer('can_see_secrets')->nullable();
         });
     }
 

@@ -10,8 +10,7 @@ use App\Http\Controllers\Controller;
 use App\User;
 use App\Customer;
 use App\Utils;
-use Auth;
-use Hash;
+use Auth;   
 
 use \Sendinblue\Mailin as Mailin;
 
@@ -204,7 +203,7 @@ class IndexController extends Controller
             {
                 $referer = 'NA';
             }
-            $password = Hash::make($request->password);
+            $password = sha1($request->password);
             $user = User::createUser($request->email, $password, $request->name, $referer, null, $license);
 
             // log them in and send them to the smtp set up page
@@ -216,8 +215,12 @@ class IndexController extends Controller
     // authenticate the user with an email and password
     public function doLogin(Request $request)
     {
-        if(Auth::attempt(['email' => $request->email, 'password' => Hash::make($request->password)]))
+
+        $user = User::where('email',$request->email)->where('password',sha1($request->password))->first();
+
+        if($user)
         {
+            Auth::loginUsingId($user['id']);
             return redirect('/home');
         }
         else
