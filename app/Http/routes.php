@@ -16,9 +16,10 @@ Route::get('/faq', 'IndexController@showFaq');
 Route::get('/signup','IndexController@showSignup');
 Route::post('/signup','IndexController@doSignup');
 Route::get('/login','IndexController@showLogin');
+Route::post('/login','IndexController@doLogin');
 
 // auth stuff
-Route::get('/auth/{license?}', 'IndexController@doAuth');
+Route::get('/auth/{signup?}/{license?}', 'IndexController@doAuth'); // signup and license are boolean values, 0 and 1
 Route::get('/gmail/{license?}', 'IndexController@doAddGmailUser');
 Route::get('/logout', function(){
 	Auth::logout();

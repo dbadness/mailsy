@@ -66,14 +66,16 @@ class IndexController extends Controller
     }
 
     // send the user through oauth2 process for the Gmail API
-    public function doAuth($license = null)
+    // @param $signup bool forces the google approval page to get the refresh token
+    // @param $license bool if this user is using a license to signup
+    public function doAuth($signup, $license)
     {
         $client = new \Google_Client();
         $client->setDeveloperKey(env('GOOGLE_KEY'));
         $client->setClientID(env('GOOGLE_CLIENT_ID'));
         $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
         // send a flag to return to the app so we know to pull a license
-        if($license)
+        if($license == 1)
         {
             $client->setRedirectURI(env('GOOGLE_URI_REDIRECT').'/license'); 
         }
@@ -83,8 +85,12 @@ class IndexController extends Controller
         }      
         $client->setScopes(['https://www.googleapis.com/auth/gmail.readonly', 'profile', 'email']);
         $client->setAccessType('offline');
-        // if they haven't logged in since we changed the scope, force the screen so we can set a refresh token
-        $client->setApprovalPrompt('force'); // so we're sure to show the screen to the user (and get a refresh token)
+
+        // if they're signing up for the first time, force the prompt so we can get a refresh token
+        if($signup == 1)
+        {
+            $client->setApprovalPrompt('force'); // so we're sure to show the screen to the user (and get a refresh token)
+        }
         
         $url = $client->createAuthUrl();
 
@@ -113,6 +119,7 @@ class IndexController extends Controller
 
         $client->setAccessToken($accessToken);
 
+        // return the google user's name and email for our DB
         $googlePlus = new \Google_Service_Plus($client);
         $userProfile = $googlePlus->people->get('me');
         $name = $userProfile->displayName;
@@ -163,7 +170,7 @@ class IndexController extends Controller
                 $referer = 'NA';
             }
 
-            // write the user the the DB
+            // write the user the the DB (minus the PW since they don't need one)
             $user = User::createUser($email, null, $name, $referer, $accessToken, $license);
 
             // now log the user in
@@ -177,25 +184,46 @@ class IndexController extends Controller
     // if this isn't a google signup, create the user manually
     public function doSignup(Request $request, $license = null)
     {
-        // make a new user and return that object
-        // set the variables and write the user to the DB
-        // get the referer and throw them in the DB
-        if(isset($_COOKIE['mailsy_referer']))
+        // make sure they're not signing up twice
+        $existingUser = User::where('email',$request->email)->first();
+        if($existingUser)
         {
-            $referer = $_COOKIE['mailsy_referer'];
+            // redirect to the log in page
+            return redirect('/login');
         }
         else
         {
-            $referer = 'NA';
+            // make a new user and return that object
+            // set the variables and write the user to the DB
+            // get the referer and throw them in the DB
+            if(isset($_COOKIE['mailsy_referer']))
+            {
+                $referer = $_COOKIE['mailsy_referer'];
+            }
+            else
+            {
+                $referer = 'NA';
+            }
+            $password = Hash::make($request->password);
+            $user = User::createUser($request->email, $password, $request->name, $referer, null, $license);
+
+            // log them in and send them to the smtp set up page
+            $user = Auth::loginUsingId($user->id);
+            return redirect('/smtp-setup');
         }
-        $email = $request->email;
-        $password = Hash::make($request->password);
-        $user = User::createUser($email, $password, null, $referer, null, $license);
+    }
 
-        // log them in and send them to the smtp set up page
-        $user = Auth::loginUsingId($user->id);
-        return redirect('/smtp-setup');
-
+    // authenticate the user with an email and password
+    public function doLogin(Request $request)
+    {
+        if(Auth::attempt(['email' => $request->email, 'password' => Hash::make($request->password)]))
+        {
+            return redirect('/home');
+        }
+        else
+        {
+            return redirect('/login?email='.$request->email);
+        }
     }
 
     // for testing an agnostic smtp system

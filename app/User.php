@@ -53,7 +53,7 @@ class User extends Model implements AuthenticatableContract,
      * @param $license bool flag if the new user is using a license to signup
      * @return $email Object the id of the email object
      */
-    public static function createUser($email, $password = null, $name = null, $referer, $googleToken = null, $license = null)
+    public static function createUser($email, $password = null, $name, $referer, $googleToken = null, $license = null)
     {
         // create a new user
         $user = new User;

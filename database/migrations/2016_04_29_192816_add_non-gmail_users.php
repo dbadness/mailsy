@@ -18,7 +18,7 @@ class AddNonGmailUsers extends Migration
             $table->string('smtp_uname');
             $table->string('smtp_port');
             $table->string('smtp_protocol');
-            $table->string('gmail_token')->nullable()->change();
+            $table->text('gmail_token')->nullable()->change();
         });
     }
 

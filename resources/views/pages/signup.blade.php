@@ -23,7 +23,7 @@
 						<h3>Use Mailsy with Google Account</h3>
 						<p>Select this option if you use Google Apps for Work in your company.</p>
 						<p>
-							<a href="/auth" class="btn btn-primary" role="button">Sign Up</a> 
+							<a href="/auth/1/0" class="btn btn-primary" role="button">Sign Up</a> 
 						</p>
 					</div>
 				</div>
@@ -39,12 +39,14 @@
 							{!! Form::open(array('url' => '/signup'))!!}
 								{!! Form::token() !!}
 								<div class="input-group">
-									<span>Your Email:</span>
-								  	<input type="text" name='email' class="form-control" aria-describedby="basic-addon1">
+									<span>Full Name:</span>
+								  	<input type="text" name='name' class="form-control">
 								  	<br>
+									<span>Your Email:</span>
+								  	<input type="text" name='email' class="form-control">
 								  	<br>
 								  	<span>A Password for Mailsy:</span>
-								  	<input type="password" name='password' class="form-control" aria-describedby="basic-addon1">
+								  	<input type="password" name='password' class="form-control">
 								</div>
 						</div>
 						<p>
