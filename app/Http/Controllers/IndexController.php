@@ -11,6 +11,7 @@ use App\User;
 use App\Customer;
 use App\Utils;
 use Auth;
+use Hash;
 
 use \Sendinblue\Mailin as Mailin;
 
@@ -28,7 +29,21 @@ class IndexController extends Controller
         return view('layouts.index');
     }
 
+    // show the signup page
+    public function showSignup()
+    {
+        $user = Auth::user();
 
+        return view('pages.signup',['user' => $user]);
+    }
+
+    // show the signup page
+    public function showLogin()
+    {
+        $user = Auth::user();
+
+        return view('pages.login',['user' => $user]);
+    }
 
     // display a login page
     public function showCompanyPage($customer_url)
@@ -77,7 +92,7 @@ class IndexController extends Controller
     }
 
     // if the gmail auth was successful, this adds them to the DB
-    public function doAddUser($license = null)
+    public function doAddGmailUser($license = null)
     {
         // find the user's email in the Google API
         $client = new \Google_Client();
@@ -110,6 +125,7 @@ class IndexController extends Controller
         {
             // log the user in and send them to the home page
             $success = Auth::loginUsingId($existingUser->id);
+
             // update the user's google_token
             $existingUser->gmail_token = $accessToken;
             // update their status if they have an expiration date
@@ -131,14 +147,12 @@ class IndexController extends Controller
             $existingUser->last_login = time();
             $existingUser->save();
 
-            // send them home
+            // send them to the dashboard
             return redirect('/home');
         }
         else
         {
-            // create a new user
-            $user = new User;
-
+            // make a new user and return that object
             // get the referer and throw them in the DB
             if(isset($_COOKIE['mailsy_referer']))
             {
@@ -149,32 +163,8 @@ class IndexController extends Controller
                 $referer = 'NA';
             }
 
-            $user->email = $email;
-            $user->name = $name;
-            $user->gmail_token = $accessToken;
-            $user->created_at = time();
-            $user->track_email = 'yes';
-            $user->timezone = 'America/New_York';
-            $user->referer = $referer;
-
-            // check if they're using a license
-            $domainDetails = User::domainCheck($email);
-            if($domainDetails && $license)
-            {
-                $user->paid = 'yes';
-                $user->belongs_to = $domainDetails->owner_id;
-            }
-
-            // save it to the DB
-            $user->save();
-
-            // add them to the marketing database
-            $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
-            $data = array(
-              "email" => $user->email,
-              "listid" => array(2)
-            );
-            $mailin->create_update_user($data);
+            // write the user the the DB
+            $user = User::createUser($email, null, $name, $referer, $accessToken, $license);
 
             // now log the user in
             $user = Auth::loginUsingId($user->id);
@@ -182,6 +172,30 @@ class IndexController extends Controller
             // send them to their dashboard
             return redirect('/tutorial/step1');
         }
+    }
+
+    // if this isn't a google signup, create the user manually
+    public function doSignup(Request $request, $license = null)
+    {
+        // make a new user and return that object
+        // set the variables and write the user to the DB
+        // get the referer and throw them in the DB
+        if(isset($_COOKIE['mailsy_referer']))
+        {
+            $referer = $_COOKIE['mailsy_referer'];
+        }
+        else
+        {
+            $referer = 'NA';
+        }
+        $email = $request->email;
+        $password = Hash::make($request->password);
+        $user = User::createUser($email, $password, null, $referer, null, $license);
+
+        // log them in and send them to the smtp set up page
+        $user = Auth::loginUsingId($user->id);
+        return redirect('/smtp-setup');
+
     }
 
     // for testing an agnostic smtp system

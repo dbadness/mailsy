@@ -14,6 +14,9 @@ use Auth;
 use App\Message;
 use Log;
 
+// for Sendinblue
+use \Sendinblue\Mailin as Mailin;
+
 class User extends Model implements AuthenticatableContract,
                                     AuthorizableContract,
                                     CanResetPasswordContract
@@ -39,6 +42,54 @@ class User extends Model implements AuthenticatableContract,
 
     // don't automatically add timestamps to new/updated records
     public $timestamps = false;
+
+    /** filter the page for this specific user.
+     *
+     * @param $email id str email of new user
+     * @param $name str user's name (if given from google)
+     * @param $password str user's password (if they're not using google)
+     * @param $referer str refering website preceding signup
+     * @param $googleToken str google token if it's a google signup
+     * @param $license bool flag if the new user is using a license to signup
+     * @return $email Object the id of the email object
+     */
+    public static function createUser($email, $password = null, $name = null, $referer, $googleToken = null, $license = null)
+    {
+        // create a new user
+        $user = new User;
+
+        $user->email = $email;
+        $user->password = $password;
+        $user->name = $name;
+        $user->gmail_token = $googleToken;
+        $user->created_at = time();
+        $user->track_email = 'yes';
+        $user->timezone = 'America/New_York';
+        $user->referer = $referer;
+
+        // check if they're using up a license for this signup
+        $domainDetails = User::domainCheck($email);
+        if($domainDetails && $license)
+        {
+            $user->paid = 'yes';
+            $user->belongs_to = $domainDetails->owner_id;
+        }
+
+        // add them to the marketing database
+        $mailin = new Mailin("https://api.sendinblue.com/v2.0",env('SENDINBLUE_KEY'));
+        $data = array(
+          "email" => $user->email,
+          "listid" => array(2)
+        );
+        $mailin->create_update_user($data);
+
+        // save it to the DB
+        $user->save();
+
+        // return the user object
+        return $user;
+    }
+
 
     /** filter the page for this specific user.
      *
