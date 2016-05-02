@@ -4,10 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Customer extends Model
+class Team extends Model
 {
     // set the table
-    protected $table = 'customers';
+    protected $table = 'teams';
     
     // don't automitically add timestamps to new/updated records
     public $timestamps = false;

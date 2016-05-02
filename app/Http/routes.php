@@ -37,13 +37,14 @@ Route::get('/upgrade', 'PagesController@showUpgrade');
 Route::get('/upgrade/createTeam', 'PagesController@showCreateTeam');
 Route::get('/membership/cancel', 'PagesController@showCancel');
 Route::get('/use/{eid}', 'PagesController@showUseEmail');
-Route::get('/team/{customer}','IndexController@showCompanyPage');
+Route::get('/join/{customer}','IndexController@showCompanyPage');
 Route::get('/archives','PagesController@showArchive');
 Route::get('/copy/{id}','PagesController@showCopy');
 Route::get('/view/{id}','PagesController@showView');
 // Route::get('/publictemplates','PagesController@showPublicTemplates');
 // Route::get('/privatetemplates','PagesController@showPrivateTemplates');
 Route::get('/admin','PagesController@showAdmin');
+Route::get('/team/{id}','PagesController@showTeam');
 
 // actions
 Route::post('/returnFields', 'ActionController@returnFields');
@@ -64,6 +65,12 @@ Route::get('/archive/{eid}','ActionController@doArchiveTemplate');
 Route::get('/dearchive/{eid}','ActionController@doDearchiveTemplate');
 Route::get('/hubify/{id}/{status}','ActionController@doHubifyTemplate');
 
+Route::post('/makeTeam','ActionController@doMakeTeam');
+Route::post('/addUserToTeam','ActionController@doAddUserToTeam');
+Route::post('/removeUserFromTeam','ActionController@doRemoveUserFromTeam');
+Route::post('/makeUserTeamAdmin','ActionController@doMakeUserTeamAdmin');
+Route::post('/removeUserAsTeamAdmin','ActionController@doRemoveUserAsTeamAdmin');
+
 // ajax calls
 Route::get('/getMessageStatus/{id}','ActionController@doUpdateMessageStatus');
 Route::post('/updateCard','ActionController@doUpdateCard');
@@ -74,3 +81,5 @@ Route::get('/getReplyRate/{email_id}','ActionController@doReturnReplyRate');
 // webhooks
 Route::post('/payment/paid','APIController@doInvoicePaid'); // successful invoice payment
 Route::post('/payment/failed','APIController@doInvoiceFailed'); // payment declined for invoice
+
+//API

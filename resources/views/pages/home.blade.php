@@ -112,8 +112,4 @@
 
 	@endif
 
-	<br>
-	<br>
-	<hr>
-
 @endsection

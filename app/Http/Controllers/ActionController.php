@@ -385,7 +385,7 @@ class ActionController extends Controller
 
         // send them a confirmation email
         $subject = 'Mailsy team successfully created';
-        $body = 'You\'ve successfully created a team on Mailsy! You have purchased '.$request->user_count.' licenses and your team can signup to use these licenses at '.env('DOMAIN').'/team/'.$domain.'.';
+        $body = 'You\'ve successfully created a team on Mailsy! You have purchased '.$request->user_count.' licenses and your team can signup to use these licenses at '.env('DOMAIN').'/join/'.$domain.'.';
 
         Utils::sendEmail($user->email,$subject,$body);
 
@@ -832,6 +832,68 @@ class ActionController extends Controller
             // send the user to the 'use' view
             return redirect('/home');
         }
+
+    }
+
+    public function doMakeTeam()
+    {
+        $user = Auth::user();
+
+        $team = new Team;
+        $team->name = 'name';
+        $team->created_at = time();
+        $team->save();
+
+        DB::insert('insert into customer_user (customer_id, user_id) values (?, ?)', [,]);
+        DB::insert('insert into team_user (team_id, user_id) values (?, ?)', [,]);
+
+        // send the user to the 'use' view
+        return redirect('/team/');
+
+    }
+
+    public function doAddUserToTeam()
+    {
+        $user = Auth::user();
+
+        DB::insert('insert into team_user (team_id, user_id) values (?, ?)', [,]);
+
+        // send the user to the 'use' view
+        return redirect('/team/');
+
+    }
+
+    public function doRemoveUserFromTeam()
+    {
+        $user = Auth::user();
+
+        $numberOfTeams = ;
+        if($numberOfTeams < 1)
+        {
+            $user->has_teams = 0;
+            $user->save();
+        }
+
+        // send the user to the 'use' view
+        return redirect('/home');
+
+    }
+
+    public function doMakeUserTeamAdmin()
+    {
+        $user = Auth::user();
+
+        // send the user to the 'use' view
+        return redirect('/team/');
+
+    }
+
+    public function doRemoveUserAsTeamAdmin()
+    {
+        $user = Auth::user();
+
+        // send the user to the 'use' view
+        return redirect('/home');
 
     }
 

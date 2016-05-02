@@ -29,7 +29,7 @@ class PagesController extends Controller
         $user = Auth::user();
 
         //return their emails and it's metadata if not archived
-        $emails = Email::where('user_id',$user->id)->whereNull('deleted_at')->paginate(10);
+        $emails = Email::where('user_id',$user->id)->whereNull('deleted_at')->paginate(9);
 
         // if there are emails to show, update their message statuses so the reply rates are accurate
         if($emails != '[]')
@@ -265,7 +265,7 @@ class PagesController extends Controller
         $user = Auth::user();
 
         //return their emails and it's metadata if archived
-        $emails = Email::where('user_id',$user->id)->whereNotNull('deleted_at')->paginate(10);
+        $emails = Email::where('user_id',$user->id)->whereNotNull('deleted_at')->paginate(9);
 
         return view('pages.archives', ['user' => $user, 'emails' => $emails]);
     }
@@ -302,7 +302,7 @@ class PagesController extends Controller
         }
 
         //return the emails that have been marked for the hub
-        $emails = Email::where('shared',2)->paginate(10);
+        $emails = Email::where('shared',2)->paginate(9);
 
         return view('pages.publictemplates', ['user' => $user, 'emails' => $emails]);
     }
@@ -321,10 +321,10 @@ class PagesController extends Controller
         //return the emails that have been marked for the hub
         if($user->admin)
         {
-            $emails = Email::where('shared',1)->where('creator_company',$user->id)->paginate(10);
+            $emails = Email::where('shared',1)->where('creator_company',$user->id)->paginate(9);
         } else
         {
-            $emails = Email::where('shared',1)->where('creator_company',$user->belongs_to)->paginate(10);
+            $emails = Email::where('shared',1)->where('creator_company',$user->belongs_to)->paginate(9);
         }
 
         return view('pages.privatetemplates', ['user' => $user, 'emails' => $emails]);
@@ -334,6 +334,10 @@ class PagesController extends Controller
     public function showAdmin()
     {
         $user = Auth::user();
+
+        if($user->admin != "yes"){
+            return redirect('/settings');
+        }
 
         // if the user has paid for other users
         if($user->has_users)
@@ -357,6 +361,16 @@ class PagesController extends Controller
         }
         
         return view('pages.admin', ['user' => $user, 'company' => $company]);
+    }
+
+    // show an edit page for the email that has been created
+    public function showTeam($id)
+    {
+        $user = Auth::user();
+
+        //auth if in team
+        
+        return view('pages.team', ['user' => $user]);
     }
 
 }

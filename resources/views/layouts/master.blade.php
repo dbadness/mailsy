@@ -102,10 +102,22 @@
                             <a href="/privatetemplates">Private Templates</a>
                         </li>
                     @endif
-                    @if($user->paid && $user->admin == 'yes')
+                    @if($user->admin == 'yes')
                         <li>
                             <a href="/admin">Team Admin</a>
                         </li>
+                    @endif
+
+                    @if($user->has_teams == 'yes')
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Your Teams <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                @foreach($teams as $team)
+                                    <li><a href="/team/{{$team->id}}">{{$team->name}}</a>
+                                    </li>
+                                @endforeach
+                                </ul>
+                            </li>
                     @endif
 
                 </ul>

@@ -1,5 +1,9 @@
 @extends('layouts.master')
 
+@section('PageJS')
+	<script src='/js/home.js'></script>
+@endsection
+
 @section('content')
 	<br>
 	<br>
@@ -10,6 +14,7 @@
 			<tr>
 				<td><b>Template Name</b></td>
 				<td class='emailListRight'><b>Emails Sent</b></td>
+				<td class='emailListRight'><b>Percent Replied</b></td>
 			</tr>
 			@if($emails != '[]')
 				@foreach($emails as $email)
@@ -26,6 +31,8 @@
 							</span>
 						</td>
 						<td class='emailListRight'>{!! $messageCount !!}
+						</td>
+						<td class="emailListRight"><span id='replyRateForEmail{!! $email->id !!}'></span>%
 						</td>
 					</tr>
 				@endforeach

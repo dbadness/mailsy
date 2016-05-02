@@ -50,7 +50,7 @@
 					<div class="thumbnail">
 						<div class="caption">
 							<h3><i class='fa fa-users'></i> Team Signup</h3>
-							<p>If your a team leader, use this option to pick the number of users on your team and be billed in a single monthly payment to make your life easy as pie. With the Team Signup process, we'll create a simple url for you like "www.mailsy.co/team/myCompany" where your company can easily signup for the Mailsy licences that you purchased.</p>
+							<p>If your a team leader, use this option to pick the number of users on your team and be billed in a single monthly payment to make your life easy as pie. With the Team Signup process, we'll create a simple url for you like "www.mailsy.co/join/myCompany" where your company can easily signup for the Mailsy licences that you purchased.</p>
 							<br>
 							@if(!$user->admin)
 								<p><a href='/upgrade/createTeam'><button class="btn btn-success" role="button">Create a Team</button></a></p>
