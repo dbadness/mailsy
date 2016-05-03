@@ -117,7 +117,7 @@
 					{!! Form::token() !!}
 				    @foreach($members as $member)
 				    	<tr>
-				    		@if($child->id != $user->id)
+				    		@if($member->id != $user->id)
 					    		<td><p>{!! $member->email !!} <a member='{!! $member->id !!}' class='btn btn-danger pull-right'>Remove From Team</a></p></td>
 					    	@else
 					    		<td><p>{!! $member->email !!} <a member='{!! $member->id !!}' class='btn btn-danger disabled pull-right'>You're Team Admin!</a></p></td>
