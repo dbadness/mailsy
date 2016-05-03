@@ -60,7 +60,29 @@
 					You can't have a subscription quantity of zero. If you'd like to cancel your Mailsy subscription, please do so in settings.
 				</div>
 				
+			@elseif($_GET['error'] == 'UserNotInTeam')
+
+				<div class="alert alert-danger alert-dismissible" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					The user you tried to remove from a team doesn't appear to be part of that team.
+				</div>
+				
+			@elseif($_GET['error'] == 'AlreadyAdmin')
+
+				<div class="alert alert-danger alert-dismissible" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					That user is already a team leader!
+				</div>
+				
+			@elseif($_GET['error'] == 'AlreadyOnTeam')
+
+				<div class="alert alert-danger alert-dismissible" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					That user is already on another team!
+				</div>
+				
 			@endif
+
 		@endif
 	@endif
 
@@ -79,6 +101,40 @@
 
 	@endif
 
+	@if($user->status == 'paying' && $user->team_admin)
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<strong>My Team Management</strong>
+				<br>
+				<br>
+
+			</div>
+			<div class="panel-body">
+
+			@if($user->has_users)
+
+				<table style='width:100%;'>
+					{!! Form::token() !!}
+				    @foreach($children as $child)
+				    	<tr>
+				    		@if($child->id != $user->id)
+					    		<td><p>{!! $child->email !!} <a member='{!! $child->id !!}' class='btn btn-danger pull-right'>Remove From Team</a></p></td>
+					    	@else
+					    		<td><p>{!! $child->email !!} <a member='{!! $child->id !!}' class='btn btn-danger disabled pull-right'>You're Team Admin!</a></p></td>
+
+				    		@endif
+				    	</tr>
+				    @endforeach
+				</table>
+
+			@endif
+
+			</div>
+		</div>
+	@endif
+
+	@if($user->status == 'paying' && isset($user->stripe_id))
+
 	<div class="alert alert-success alert-dismissible" role="alert" id='settingsSaved'>
 		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 		Settings saved.
@@ -87,18 +143,12 @@
 	{!! Form::token() !!}
 	<div style='display:none;' id='userEmail'>{!! $user->email !!}</div>
 
-	<div class='page-header'>
-		<h1>Company Admin</h1>
-	</div>
-
-	@if($user->status == 'paying')
-
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<strong>User Management</strong>
 				<br>
 				<br>
-				@if($user->admin)
+				@if($user->admin && isset($user->stripe_id))
 			
 					<p>You have <b>{!! $company->users_left !!}</b> licenses left out of the <b>{!! $company->total_users !!}</b> in your subscription. <span class='a' id='subscriptionModalButton' data-toggle="modal" data-target="#subscriptionModal">Add/Remove Licenses</span><br><br>Remember that you can invite people to join Mailsy at <a href='/join/{!! $company->domain !!}' target='_blank'>www.mailsy.co/team/{!! $company->domain !!}</a> to use your licenses!</p>
 
@@ -127,6 +177,10 @@
 						</div>
 					</div>
 
+				@elseif($user->admin)
+
+				You are being paid for by {{$company->domain}}! They've given you admin privileges.
+
 				@else
 
 					<p>You're not paying for any other people. Want to <a href='/upgrade/createTeam'>create a team</a> to add some?</p>
@@ -142,10 +196,57 @@
 					{!! Form::token() !!}
 				    @foreach($children as $child)
 				    	<tr>
-				    		<td><p>{!! $child->email !!} <a member='{!! $child->id !!}' class='revokeAccessLink'>Downgrade to Free Account</a></p></td>
+				    		<td><p><a class="btn btn-primary" id='userModalButton' data-toggle="modal" data-target="#userModal{{$child->id}}">{!! $child->email !!}</a>
+				    		@if($user->team_admin == 1)
+					    		<a member='{!! $child->id !!}' class='revokeAccessLink'>Downgrade to Free Account</a>
+					    	@else
+					    		<a member='{!! $child->id !!}' class='btn btn-danger pull-right disabled'>You Cannot Downgrade Someone Leading a Team</a>
+				    		@endif
+				    		</p></td>
 				    	</tr>
 				    @endforeach
 				</table>
+
+				    @foreach($children as $child)
+					<!-- Make a modal for team handling -->
+					<!-- Modal -->
+					<div id="userModal{{$child->id}}" class="modal fade" role="dialog">
+						<div class="modal-dialog">
+							<!-- Modal content-->
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+									<h4 class="modal-title">{{$child->email}} User Management</h4>
+								</div>
+								<div class="modal-body">
+									@if($child->team_admin == null && $child->belongs_to_team == null)
+										<a href="/makeTeam/{{$child->id}}" class="btn btn-primary">Make New Team Lead by This User</a>
+										<br>
+										<br>
+										<h6>Teams</h6>
+										<hr>
+										@foreach($teams as $team)
+											{{$team->name}}
+											<a href="/addToTeam/{{$child->id}}/{{$team->id}}" class="btn btn-primary pull-right">Add To Team</a>
+										@endforeach
+									@elseif($child->team_admin == 1)
+										<a href="/destroyTeam/{{$child->id}}" id="destroyTeam" class="btn btn-danger">Destroy Team Led by This Person</a>
+									@else
+										<h6>Team</h6>
+										<a href="/removeFromTeam/{{$child->id}}" class="btn btn-danger">Remove From Team</a>
+									@endif
+
+								</div>
+								<br>
+								<br>
+								<div class="modal-footer">
+									<img id='subModalLoader' style='display:none;' src='/images/loader.gif'>
+									<button type="button" class="btn btn-default" data-dismiss="modal" id='closeSubModalButton'>Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				    @endforeach
 
 			@endif
 

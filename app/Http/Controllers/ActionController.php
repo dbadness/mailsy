@@ -835,65 +835,54 @@ class ActionController extends Controller
 
     }
 
-    public function doMakeTeam()
+    public function doMakeTeam($id)
     {
         $user = Auth::user();
 
-        $team = new Team;
-        $team->name = 'name';
-        $team->created_at = time();
-        $team->save();
+        $new_admin = User::whereId($id)->first();
+        $new_admin->team_admin = 1;
+        $new_admin->belongs_to_team = $id;
+        $new_admin->save();
 
-        DB::insert('insert into customer_user (customer_id, user_id) values (?, ?)', [,]);
-        DB::insert('insert into team_user (team_id, user_id) values (?, ?)', [,]);
-
-        // send the user to the 'use' view
-        return redirect('/team/');
+        return redirect('/admin');
 
     }
 
-    public function doAddUserToTeam()
+    public function doDestroyTeam($id)
     {
         $user = Auth::user();
 
-        DB::insert('insert into team_user (team_id, user_id) values (?, ?)', [,]);
+        $formerUsers = User::where('belongs_to_team', $id)->update(['belongs_to_team' => null]);
 
-        // send the user to the 'use' view
-        return redirect('/team/');
+        $notAdmin = User::whereId($id)->first();
+        $notAdmin->team_admin = null;
+        $notAdmin->belongs_to_team = null;
+        $notAdmin->save();
+
+        return redirect('/admin');
 
     }
 
-    public function doRemoveUserFromTeam()
+    public function doAddToTeam($id, $admin_id)
     {
         $user = Auth::user();
 
-        $numberOfTeams = ;
-        if($numberOfTeams < 1)
-        {
-            $user->has_teams = 0;
-            $user->save();
-        }
+        //update stuff
+        User::where('id', $id)->update(['belongs_to' => $admin_id]);
 
-        // send the user to the 'use' view
-        return redirect('/home');
+        return redirect('/admin');
 
     }
 
-    public function doMakeUserTeamAdmin()
+    public function doRemoveFromTeam($id)
     {
         $user = Auth::user();
 
-        // send the user to the 'use' view
-        return redirect('/team/');
+        $notAdmin = User::whereId($id)->first();
+        $notAdmin->belongs_to_team = null;
+        $notAdmin->save();
 
-    }
-
-    public function doRemoveUserAsTeamAdmin()
-    {
-        $user = Auth::user();
-
-        // send the user to the 'use' view
-        return redirect('/home');
+        return redirect('/admin');
 
     }
 

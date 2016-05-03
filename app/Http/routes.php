@@ -44,7 +44,7 @@ Route::get('/view/{id}','PagesController@showView');
 // Route::get('/publictemplates','PagesController@showPublicTemplates');
 // Route::get('/privatetemplates','PagesController@showPrivateTemplates');
 Route::get('/admin','PagesController@showAdmin');
-Route::get('/team/{id}','PagesController@showTeam');
+// Route::get('/team/{id}','PagesController@showTeam');
 
 // actions
 Route::post('/returnFields', 'ActionController@returnFields');
@@ -65,11 +65,10 @@ Route::get('/archive/{eid}','ActionController@doArchiveTemplate');
 Route::get('/dearchive/{eid}','ActionController@doDearchiveTemplate');
 Route::get('/hubify/{id}/{status}','ActionController@doHubifyTemplate');
 
-Route::post('/makeTeam','ActionController@doMakeTeam');
-Route::post('/addUserToTeam','ActionController@doAddUserToTeam');
-Route::post('/removeUserFromTeam','ActionController@doRemoveUserFromTeam');
-Route::post('/makeUserTeamAdmin','ActionController@doMakeUserTeamAdmin');
-Route::post('/removeUserAsTeamAdmin','ActionController@doRemoveUserAsTeamAdmin');
+Route::get('/makeTeam/{id}','ActionController@doMakeTeam');
+Route::get('/destroyTeam/{id}','ActionController@doDestroyTeam');
+Route::get('/addToTeam/{id}/{admin_id}','ActionController@doAddToTeam');
+Route::get('/removeFromTeam/{id}','ActionController@doRemoveFromTeam');
 
 // ajax calls
 Route::get('/getMessageStatus/{id}','ActionController@doUpdateMessageStatus');

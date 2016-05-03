@@ -10,7 +10,6 @@ return array(
     'CreateCustomersTable' => $baseDir . '/database/migrations/2016_03_14_180756_create_customers_table.php',
     'CreateEmailsTable' => $baseDir . '/database/migrations/2015_11_18_231440_create_emails_table.php',
     'CreateMessagesTable' => $baseDir . '/database/migrations/2015_11_18_231451_create_messages_table.php',
-    'CreateTeamsTable' => $baseDir . '/database/migrations/2016_04_29_180218_create_teams_table.php',
     'CreateUsersTable' => $baseDir . '/database/migrations/2014_10_12_000000_create_users_table.php',
     'DatabaseSeeder' => $baseDir . '/database/seeds/DatabaseSeeder.php',
     'File_Iterator' => $vendorDir . '/phpunit/php-file-iterator/src/Iterator.php',
@@ -4083,5 +4082,5 @@ return array(
     'TestCase' => $baseDir . '/tests/TestCase.php',
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/src/Template.php',
     'UpdateUsersForLastLogin' => $baseDir . '/database/migrations/2016_04_21_022532_update_users_for_last_login.php',
-    'UpdateUsersForTeams' => $baseDir . '/database/migrations/2016_04_30_062737_update_users_for_teams.php',
+    'UpdateUsersForTeams' => $baseDir . '/database/migrations/2016_05_02_194755_update_users_for_teams.php',
 );

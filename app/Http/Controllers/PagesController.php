@@ -344,10 +344,15 @@ class PagesController extends Controller
         {
             // get the users that this user has paid for
             $children = User::where('belongs_to',$user->id)->whereNull('deleted_at')->get();
+
+            //get the admins
+            $teams = User::where('belongs_to',$user->id)->whereNull('deleted_at')->whereNotNull('team_admin')->get();
         }
         else
         {
             $children = null;
+
+            $teams = null;
         }
 
         // return the company info
@@ -359,18 +364,8 @@ class PagesController extends Controller
 
             $company->email = $company->admin->email;
         }
-        
-        return view('pages.admin', ['user' => $user, 'company' => $company]);
-    }
 
-    // show an edit page for the email that has been created
-    public function showTeam($id)
-    {
-        $user = Auth::user();
-
-        //auth if in team
-        
-        return view('pages.team', ['user' => $user]);
+        return view('pages.admin', ['user' => $user, 'company' => $company, 'children' => $children, 'teams' => $teams]);
     }
 
 }

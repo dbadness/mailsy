@@ -132,5 +132,13 @@ return array(
 			'title' => 'last_login',
 			'type' => 'text',
 		),
+		'team_admin' => array(
+			'title' => 'team_admin',
+			'type' => 'number',
+		),
+		'belongs_to_team' => array(
+			'title' => 'belongs_to_team',
+			'type' => 'number',
+		),
 	),
 );
