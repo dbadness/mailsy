@@ -41,10 +41,7 @@ Route::get('/join/{customer}','IndexController@showCompanyPage');
 Route::get('/archives','PagesController@showArchive');
 Route::get('/copy/{id}','PagesController@showCopy');
 Route::get('/view/{id}','PagesController@showView');
-// Route::get('/publictemplates','PagesController@showPublicTemplates');
-// Route::get('/privatetemplates','PagesController@showPrivateTemplates');
 Route::get('/admin','PagesController@showAdmin');
-// Route::get('/team/{id}','PagesController@showTeam');
 
 // testing
 Route::get('/smtp-tester','IndexController@showSmtpTester');
