@@ -46,6 +46,10 @@ Route::get('/view/{id}','PagesController@showView');
 Route::get('/admin','PagesController@showAdmin');
 // Route::get('/team/{id}','PagesController@showTeam');
 
+// testing
+Route::get('/smtp-tester','IndexController@showSmtpTester');
+Route::post('/smtp-tester','IndexController@doSmtpTester');
+
 // actions
 Route::post('/returnFields', 'ActionController@returnFields');
 Route::post('/createTemplate', 'ActionController@createTemplate');
