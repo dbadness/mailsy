@@ -339,22 +339,6 @@ class PagesController extends Controller
             return redirect('/settings');
         }
 
-        // if the user has paid for other users
-        if($user->has_users)
-        {
-            // get the users that this user has paid for
-            $children = User::where('belongs_to',$user->id)->whereNull('deleted_at')->get();
-
-            //get the admins
-            $teams = User::where('belongs_to',$user->id)->whereNull('deleted_at')->whereNotNull('team_admin')->get();
-        }
-        else
-        {
-            $children = null;
-
-            $teams = null;
-        }
-
         // return the company info
         $company = User::domainCheck($user->email);
 
@@ -365,7 +349,11 @@ class PagesController extends Controller
             $company->email = $company->admin->email;
         }
 
-        return view('pages.admin', ['user' => $user, 'company' => $company, 'children' => $children, 'teams' => $teams]);
+        $children = User::where('belongs_to',$company->owner_id)->whereNull('deleted_at')->get();
+        $teams = User::where('belongs_to',$company->owner_id)->whereNull('deleted_at')->whereNotNull('team_admin')->get();
+        $members = User::where('belongs_to_team', $user->id)->get();
+
+        return view('pages.admin', ['user' => $user, 'company' => $company, 'children' => $children, 'teams' => $teams, 'members' => $members]);
     }
 
 }

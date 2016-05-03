@@ -590,6 +590,7 @@ class ActionController extends Controller
         $child = User::find($request->child_id);
         $child->paid = null;
         $child->belongs_to = null;
+        $child->belongs_to_team = null;
         $child->save();
 
         // send the child an email letting them know that they've been revoked
@@ -868,7 +869,7 @@ class ActionController extends Controller
         $user = Auth::user();
 
         //update stuff
-        User::where('id', $id)->update(['belongs_to' => $admin_id]);
+        User::where('id', $id)->update(['belongs_to_team' => $admin_id]);
 
         return redirect('/admin');
 
@@ -878,9 +879,9 @@ class ActionController extends Controller
     {
         $user = Auth::user();
 
-        $notAdmin = User::whereId($id)->first();
-        $notAdmin->belongs_to_team = null;
-        $notAdmin->save();
+        $notMember = User::whereId($id)->first();
+        $notMember->belongs_to_team = null;
+        $notMember->save();
 
         return redirect('/admin');
 
