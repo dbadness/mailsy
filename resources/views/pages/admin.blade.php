@@ -197,9 +197,9 @@
 				    @foreach($children as $child)
 				    	<tr>
 				    		<td><p><a class="btn btn-primary" id='userModalButton' data-toggle="modal" data-target="#userModal{{$child->id}}">{!! $child->email !!}</a>
-				    		@if($user->team_admin == 0)
+				    		@if($user->team_admin != null)
 					    		<a member='{!! $child->id !!}' class='revokeAccessLink'>Downgrade to Free Account</a>
-					    	@else
+					    	@elseif($user->team_admin == 1)
 					    		<a member='{!! $child->id !!}' class='btn btn-danger pull-right disabled'>You Cannot Downgrade Someone Leading a Team</a>
 				    		@endif
 				    		</p></td>
