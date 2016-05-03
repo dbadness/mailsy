@@ -28,6 +28,13 @@
 					You've successfully updated your number of paid Mailsy licenses!
 				</div>
 
+			@elseif($_GET['message'] == 'downgradeSuccess')
+
+				<div class="alert alert-success alert-dismissible" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					You've successfully downgraded an account to a free account and one license has been added back to your subscription for future use.
+				</div>
+
 			@endif
 		@endif
 
@@ -177,7 +184,7 @@
 						</div>
 					</div>
 
-				@elseif($user->admin)
+				@elseif($user->belongs_to)
 
 				You are being paid for by {{$company->domain}}! They've given you admin privileges.
 

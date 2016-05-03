@@ -99,7 +99,7 @@ $(document).ready(function()
 			},
 			success: function()
 			{
-				window.location = '/settings?message=downgradeSuccess';
+				window.location = '/admin?message=downgradeSuccess';
 			}
 		});
 
