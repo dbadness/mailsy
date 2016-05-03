@@ -157,7 +157,7 @@
 				<br>
 				@if($user->admin && isset($user->stripe_id))
 			
-					<p>You have <b>{!! $company->users_left !!}</b> licenses left out of the <b>{!! $company->total_users !!}</b> in your subscription. <span class='a' id='subscriptionModalButton' data-toggle="modal" data-target="#subscriptionModal">Add/Remove Licenses</span><br><br>Remember that you can invite people to join Mailsy at <a href='/join/{!! $company->domain !!}' target='_blank'>www.mailsy.co/team/{!! $company->domain !!}</a> to use your licenses!</p>
+					<p>You have <b>{!! $company->users_left !!}</b> licenses left out of the <b>{!! $company->total_users !!}</b> in your subscription. <span class='a' id='subscriptionModalButton' data-toggle="modal" data-target="#subscriptionModal">Add/Remove Licenses</span><br><br>Remember that you can invite people to join Mailsy at <a href='/join/{!! $company->domain !!}' target='_blank'>www.mailsy.co/join/{!! $company->domain !!}</a> to use your licenses!</p>
 
 					<!-- Make a modal for subscription handling -->
 					<!-- Modal -->
