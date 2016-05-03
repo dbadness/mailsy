@@ -125,11 +125,38 @@
 				    @foreach($members as $member)
 				    	<tr>
 				    		@if($member->id != $user->id)
-					    		<td><p>{!! $member->email !!} <a member='{!! $member->id !!}'  href="/removeFromTeam/{{$member->id}}" class='btn btn-danger pull-right'>Remove From Team</a></p></td>
+					    		<td><p><a class="btn btn-primary" id='userModalButton' data-toggle="modal" data-target="#userModal{{$member->id}}">{!! $member->email !!}</a> <a member='{!! $member->id !!}'  href="/removeFromTeam/{{$member->id}}" class='btn btn-danger pull-right'>Remove From Team</a></p></td>
 					    	@else
-					    		<td><p>{!! $member->email !!} <a member='{!! $member->id !!}' class='btn btn-danger disabled pull-right'>You're Team Admin!</a></p></td>
+					    		<td><p><a class="btn btn-primary" id='userModalButton' data-toggle="modal" data-target="#userModal{{$member->id}}">{!! $member->email !!}</a> <a member='{!! $member->id !!}' class='btn btn-danger disabled pull-right'>You're Team Admin!</a></p></td>
 
 				    		@endif
+				    	</tr>
+				    @endforeach
+				</table>
+
+			@endif
+
+			</div>
+		</div>
+	@endif
+
+	@if($user->status == 'paying' && $user->admin)
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<strong>Manage Your Teams</strong>
+				<br>
+				<br>
+
+			</div>
+			<div class="panel-body">
+
+			@if($user->has_users)
+
+				<table style='width:100%;'>
+					{!! Form::token() !!}
+				    @foreach($members as $member)
+				    	<tr>
+					    	<td><p><a class="btn btn-primary" id='userModalButton' data-toggle="modal" data-target="#userModal{{$member->id}}">{!! $member->email !!}'s Team</a></p></td>
 				    	</tr>
 				    @endforeach
 				</table>
