@@ -118,7 +118,7 @@
 				    @foreach($members as $member)
 				    	<tr>
 				    		@if($member->id != $user->id)
-					    		<td><p>{!! $member->email !!} <a member='{!! $member->id !!}'  href="/removeFromTeam/{{$child->id}}" class='btn btn-danger pull-right'>Remove From Team</a></p></td>
+					    		<td><p>{!! $member->email !!} <a member='{!! $member->id !!}'  href="/removeFromTeam/{{$member->id}}" class='btn btn-danger pull-right'>Remove From Team</a></p></td>
 					    	@else
 					    		<td><p>{!! $member->email !!} <a member='{!! $member->id !!}' class='btn btn-danger disabled pull-right'>You're Team Admin!</a></p></td>
 
@@ -234,6 +234,11 @@
 									@else
 										@foreach($teams as $team)
 											{{$team->name}}
+											@if($team->id == $child->belongs_to_team)
+												<a href="/removeFromTeam/{{$child->id}}" class="btn btn-danger pull-right">Remove From Team</a>
+											@else
+												<a href="/addToTeam/{{$child->id}}/{{$team->id}}" class="btn btn-primary pull-right">Add To Team</a>
+											@endif
 										@endforeach
 									@endif
 
