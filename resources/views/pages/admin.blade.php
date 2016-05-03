@@ -234,11 +234,6 @@
 									@else
 										@foreach($teams as $team)
 											{{$team->name}}
-											@if($team->id == $child->belongs_to_team)
-												<a href="/removeFromTeam/{{$child->id}}" class="btn btn-danger">Remove From Team</a>
-											@else
-												<a href="/addToTeam/{{$child->id}}/{{$team->id}}" class="btn btn-primary pull-right">Add To Team</a>
-											@endif
 										@endforeach
 									@endif
 
