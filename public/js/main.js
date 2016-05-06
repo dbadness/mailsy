@@ -6,14 +6,34 @@ $(document).ready(function(){
 	*
 	*/
 
-	$('#sendTestEmailButton').click(function()
-	{
+	// validate the form
+	$('#testSmtpSettingsButton').click(function()
+	{	
+		var valid = false;
 		// set the variables
 		var server = $('input[name=smtp_server]').val();
 		var uname = $('input[name=smtp_uname]').val();
-		var port = $('input[name=smtp_port]').val();
-		var protocol = $('input[name=smtp_protocol]').val();
+		var port = $('#smtpPortSelect').val();
+		var protocol = $('#smtpProtocolSelect').val();
+
+		if((server != '') && (uname != '') && (port != '') && (protocol != ''))
+		{
+			$('#smtpTesterModal').modal('show');
+		}
+		else
+		{
+			$('#testError').html('Please make sure you have filled in all of the information for the email settings.');
+		}
+	});
+
+	$('#sendTestEmailButton').click(function()
+	{
+		var server = $('input[name=smtp_server]').val();
+		var uname = $('input[name=smtp_uname]').val();
+		var port = $('#smtpPortSelect').val();
+		var protocol = $('#smtpProtocolSelect').val();
 		var password = $('input[name=smtp_password]').val();
+		var token = $('input[name=_token]').val();
 
 		// send the ajax call
 		$.ajax({
@@ -24,7 +44,8 @@ $(document).ready(function(){
 				'smtp_uname': uname,
 				'smtp_port': port,
 				'smtp_protocol': protocol,
-				'smtp_password': password
+				'smtp_password': password,
+				'_token': token
 			},
 			beforeSend: function()
 			{
@@ -37,7 +58,21 @@ $(document).ready(function(){
 			success: function(response)
 			{
 				$('#smtpTestLoader').hide();
-				$('#smtpFeedback').html(response);
+
+				if(response == 'success')
+				{
+					// close the modal and show the save settings button
+					$('#smtpTesterModal').modal('hide');
+					$('#testError').html('');
+					$('#saveSmtpSettingsButton').show(); // show the save button
+					$('#testSmtpSettingsButton').hide(); // hide the test button
+					$('#testSuccess').html('Everything looks good! You can now save your settings for future use.');
+				}
+				else // if there were errors, show them and put them in a template so the user can send them to the IT dept
+				{
+					$('#testErrorDetailsWrapper').show();
+					$('#testErrorDetails').html(response);
+				}
 			}
 		});
 	});

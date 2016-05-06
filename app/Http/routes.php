@@ -53,6 +53,7 @@ Route::get('/smtp-tester','IndexController@showSmtpTester');
 
 // actions
 Route::post('/smtp-tester','ActionController@doSmtpTester');
+Route::post('/smtp-save', 'ActionController@doSmtpSave');
 Route::post('/returnFields', 'ActionController@returnFields');
 Route::post('/createTemplate', 'ActionController@createTemplate');
 Route::post('/makePreviews', 'ActionController@makePreviews');

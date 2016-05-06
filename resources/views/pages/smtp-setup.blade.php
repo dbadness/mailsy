@@ -20,7 +20,7 @@
 	<!-- Offer the SMTP form (with helpful email to the IT department -->
 	<h3>Your Email Settings</h3>
 	<p class='lead'>We'll need to save your company's email settings to your profile so we can make it easy for you to send out hundreds of emails quickly and easily from your email address. The follow information is needed to do this so, if you need help from you IT department, feel free to use the email template we've created for you below or email <a href='mailto:support@mailsy.co'>Mailsy Support</a> and we'd be happy to help.</p>
-	{!! Form::open(array('url' => '/smtp-tester')) !!}
+	{!! Form::open(array('url' => '/smtp-save')) !!}
 		{!! Form::token() !!}
 		<div class="input-group">
 		  <span class="input-group-addon" id="basic-addon1">SMTP Email Server Address</span>
@@ -34,7 +34,7 @@
 		<br>
 		<div class="input-group">
 		  <label for='smtp_port'>SMTP Port:</label>
-		  <select name='smtp_port' id='smtpSelect'>
+		  <select name='smtp_port' id='smtpPortSelect'>
 		  	<option>465</option>
 		  	<option>587</option>
 		  	<option>25</option>
@@ -43,21 +43,27 @@
 		<br>
 		<div class="input-group">
 		  <label for='smtp_protocol'>SMTP Protocol:</label>
-		  <select name='smtp_protocol' id='smtpSelect'>
-		  	<option>TLS</option>
-		  	<option>SSL</option>
-		  	<option>Unencrypted</option>
+		  <select name='smtp_protocol' id='smtpProtocolSelect'>
+		  	<option value='tls'>TLS</option>
+		  	<option value='ssl'>SSL</option>
+		  	<option value='none'>Unencrypted</option>
 		  </select>
 		</div>
 		<br>
 		<!-- Save to the DB if the test email is succesful -->
-		<button id='saveSmtpSettingsButton' class='btn btn-primary' role='button'>Save Email Settings</button>
+		<button id='saveSmtpSettingsButton' class='btn btn-primary' role='button' style='display:none;'>Save Email Settings</button>
 
 	{!! Form::close() !!}
 	<!-- Send to tutorial upon completion -->
 
 	<!-- Send a test email before saving to the DB -->
-	<button id='testSmtpSettingsButton' class='btn btn-primary' role='button' data-toggle="modal" data-target="#smtpTesterModal">Send Test Email Yourself</button>
+	<button id='testSmtpSettingsButton' class='btn btn-primary' role='button'>Send Test Email Yourself</button>
+	<span id='testError' style='color:red;'></span>
+	<span id='testSuccess' style='color:green;'></span>
+	<div id='testErrorDetailsWrapper' style='display:none;'>
+		<p class='lead'>It looks like some of the settings aren't correct. Here are the errors from the email server. <a href="mailto:?subject=Mailsy Error&body=I'm trying to set up a service that works with my company email and I don't have the settings right. Here are the errors I'm getting...">(Use this template to send an email to your IT dept to ask for help)</a>
+		<div id='testErrorDetails'></div>
+	</div>
 
 	<!-- Tester modal -->
 	<!-- Modal -->

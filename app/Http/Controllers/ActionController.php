@@ -21,33 +21,60 @@ class ActionController extends Controller
     public function doSmtpTester(Request $request)
     {
         // Create the Transport
-        $transport = \Swift_SmtpTransport::newInstance($request->smtp_server, 587, 'tls')
-          ->setUsername($request->username)
-          ->setPassword($request->password)
-          ;
+        $transport = \Swift_SmtpTransport::newInstance($request->smtp_server, $request->smtp_port, $request->smtp_protocol)
+          ->setUsername($request->smtp_uname)
+          ->setPassword($request->smtp_password)
+          ; 
 
         // Create the Mailer using your created Transport
         $mailer = \Swift_Mailer::newInstance($transport);
 
+        // set teh logger for SMTP debugging
+        // To use the ArrayLogger
+        $logger = new \Swift_Plugins_Loggers_ArrayLogger();
+        $mailer->registerPlugin(new \Swift_Plugins_LoggerPlugin($logger));
+
         $mail = new \Swift_Message;
 
         // Create a message
-        $mail->setFrom(array($request->username));
-        $mail->setTo([$request->recipient]);
-        $mail->setBody($request->body, 'text/html');
-        $mail->setSubject($request->subject);
+        $subject = 'Test email from Mailsy.';
+
+        $body = 'Hi there,<br><br>Looks like everything is set up and working correctly! You can now save your email settings on Mailsy and start sending out emails en masse!<br><br>- The Mailsy Team';
+
+        // get the email of the user
+        $user = Auth::user();
+
+        $mail->setFrom(array($user->email));
+        $mail->setTo([$user->email => $user->name]);
+        $mail->setBody($body, 'text/html');
+        $mail->setSubject($subject);
 
         // Send the message
         $result = $mailer->send($mail);
 
         if($result)
         {
-            return redirect('/smtp-tester?message=success');
+            return 'success';
         }
-        else
+        else // if there were errors, dump the logger
         {
-            return redirect('/smtp-tester?message=error');
+            return json_encode($logger);
         }
+    }
+
+    // if the test email is successful, save the smtp settings for the user
+    public function doSmtpSave(Request $request)
+    {
+        $user = Auth::user();
+
+        $user->smtp_server = $request->smtp_server;
+        $user->smtp_uname = $request->smtp_uname;
+        $user->smtp_port = $request->smtp_port;
+        $user->smtp_protocol = $request->smtp_protocol;
+
+        $user->save();
+
+        return redirect('/tutorial/step1');
     }
 
     // return the fields to the new email view from the ajax call with template
