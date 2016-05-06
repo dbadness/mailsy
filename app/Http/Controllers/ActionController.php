@@ -20,46 +20,40 @@ class ActionController extends Controller
     // send a test email when the user sets up their smtp settings
     public function doSmtpTester(Request $request)
     {
+
         // Create the Transport
-        $transport = \Swift_SmtpTransport::newInstance($request->smtp_server, $request->smtp_port, $request->smtp_protocol)
-          ->setUsername($request->smtp_uname)
-          ->setPassword($request->smtp_password)
-          ; 
-
-        // Create the Mailer using your created Transport
-        $mailer = \Swift_Mailer::newInstance($transport);
-
-        // set teh logger for SMTP debugging
-        // To use the ArrayLogger
-        $logger = new \Swift_Plugins_Loggers_ArrayLogger();
-        $mailer->registerPlugin(new \Swift_Plugins_LoggerPlugin($logger));
-
-        $mail = new \Swift_Message;
-
-        // Create a message
-        $subject = 'Test email from Mailsy.';
-
-        $body = 'Hi there,<br><br>Looks like everything is set up and working correctly! You can now save your email settings on Mailsy and start sending out emails en masse!<br><br>- The Mailsy Team';
-
-        // get the email of the user
-        $user = Auth::user();
-
-        $mail->setFrom(array($user->email));
-        $mail->setTo([$user->email => $user->name]);
-        $mail->setBody($body, 'text/html');
-        $mail->setSubject($subject);
-
-        // Send the message
-        $result = $mailer->send($mail);
-
-        if($result)
+        try
         {
-            return 'success';
+            $transport = \Swift_SmtpTransport::newInstance($request->smtp_server, $request->smtp_port, $request->smtp_protocol)->setUsername($request->smtp_uname)->setPassword($request->smtp_password);
+
+            $mailer = \Swift_Mailer::newInstance($transport);
+
+            $mail = new \Swift_Message;
+
+            // Create a message
+            $subject = 'Test email from Mailsy.';
+
+            $body = 'Hi there,<br><br>Looks like everything is set up and working correctly! You can now <a href="'.env('DOMAIN').'/smtp-setup">save your email settings on Mailsy</a> and start sending out emails en masse!<br><br>- The Mailsy Team';
+
+            // get the email of the user
+            $user = Auth::user();
+
+            $mail->setFrom(array($user->email));
+            $mail->setTo([$user->email => $user->name]);
+            $mail->setBody($body, 'text/html');
+            $mail->setSubject($subject);
+
+            $result = $mailer->send($mail);
         }
-        else // if there were errors, dump the logger
+        catch(\Swift_TransportException $e)
         {
-            return json_encode($logger);
+            return $e->getMessage();
+            die;
         }
+
+        // if we made it this far, return success
+        return 'success';
+
     }
 
     // if the test email is successful, save the smtp settings for the user

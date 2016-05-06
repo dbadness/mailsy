@@ -70,6 +70,7 @@ $(document).ready(function(){
 				}
 				else // if there were errors, show them and put them in a template so the user can send them to the IT dept
 				{
+					$('#smtpTesterModal').modal('hide');
 					$('#testErrorDetailsWrapper').show();
 					$('#testErrorDetails').html(response);
 				}
