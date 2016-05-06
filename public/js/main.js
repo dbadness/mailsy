@@ -6,6 +6,15 @@ $(document).ready(function(){
 	*
 	*/
 
+	// set up an email template for the user
+	var itTemplate = "mailto:?cc=support@mailsy.co&subject=Email Settings&";
+	itTemplate += "body=Hello,%0A%0AI'm trying to set up an internet service called Mailsy (www.mailsy.co) that works with my company email and I need some settings information about our company email. ";
+	itTemplate += "The service needs to use our outgoing SMTP email server to send emails on my behalf - don't worry, it can never read, delete, or manipulate any company email.%0A%0A";
+	itTemplate += "Here are the settings I'd need to get this thing up and running:%0A%0A";
+	itTemplate += "SMTP Server Address (ie. smtp.example.com) %0ASMTP Username (ie. flastname) %0ASMTP Port (ie. 587) %0ASMTP Protocol (ie. TLS) %0A%0AThe site never saves my email password so I can take care of that. I've also copied their support email so, if you have any questions for them, they said they'd be happy to help.%0A%0AThanks!%0A";
+
+	$('#itTemplateStatic').attr('href',itTemplate);
+
 	// validate the form
 	$('#testSmtpSettingsButton').click(function()
 	{	
@@ -79,11 +88,11 @@ $(document).ready(function(){
 
 					// populate the IT team template for the user
 					var templateBody = "mailto:?cc=support@mailsy.co&subject=Email Settings Errors&";
-					templateBody += "body=Hello,%0A%0AI'm trying to set up an internet service called Mailsy (www.mailsy.co) that works with my company email and I don't have the settings right it seems.";
+					templateBody += "body=Hello,%0A%0AI'm trying to set up an internet service called Mailsy (www.mailsy.co) that works with my company email and I don't have the settings right it seems. ";
 					templateBody += "The service needs to use our outgoing SMTP email server to send emails on my behalf - don't worry, it can never read, delete, or manipulate any company email.%0A%0A";
 					templateBody += "Here are the settings I've entered and the errors that I'm getting:%0A%0A";
 					templateBody += " SMTP Server Address: "+server+"%0A SMTP Username: "+uname+"%0A SMTP Port: "+port+"%0A SMTP Protocol: "+protocol;
-					templateBody += "%0A Error: "+response+"%0A%0AI've copied their support email so, if you have any questions for them, they said they'd be happy to help.%0A%0ABest,%0A"+userName;
+					templateBody += "%0A Error: "+response+"%0A%0AThe site never saves my email password so I can take care of that. I've copied their support email so, if you have any questions for them, they said they'd be happy to help.%0A%0ABest,%0A"+userName;
 
 					$('#itTeamTemplateDynamic').attr('href',templateBody);
 				}

@@ -19,7 +19,8 @@
 
 	<!-- Offer the SMTP form (with helpful email to the IT department -->
 	<h3>Your Email Settings</h3>
-	<p class='lead'>We'll need to save your company's email settings to your profile so we can make it easy for you to send out hundreds of emails quickly and easily from your email address. The follow information is needed to do this so, if you need help from you IT department, feel free to use the email template we've created for you below or email <a href='mailto:support@mailsy.co'>Mailsy Support</a> and we'd be happy to help.</p>
+
+	<p class='lead'>We'll need to save your company's email settings to your profile so we can make it easy for you to send out hundreds of emails quickly and easily from your email address. The follow information is needed to do this so, if you need help from you IT department, feel free to use <a id='itTemplateStatic'>this email template</a> or email <a href='mailto:support@mailsy.co'>Mailsy Support</a> and we'd be happy to help.</p>
 	{!! Form::open(array('url' => '/smtp-save')) !!}
 		{!! Form::token() !!}
 		<input type='hidden' value='{!! $user->name !!}' name='user_name'>
