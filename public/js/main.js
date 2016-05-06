@@ -2,6 +2,49 @@ $(document).ready(function(){
 
 	/**
 	*
+	* SMTP setup and testing page
+	*
+	*/
+
+	$('#sendTestEmailButton').click(function()
+	{
+		// set the variables
+		var server = $('input[name=smtp_server]').val();
+		var uname = $('input[name=smtp_uname]').val();
+		var port = $('input[name=smtp_port]').val();
+		var protocol = $('input[name=smtp_protocol]').val();
+		var password = $('input[name=smtp_password]').val();
+
+		// send the ajax call
+		$.ajax({
+			url: '/smtp-tester',
+			type: 'post',
+			data: {
+				'smtp_server': server,
+				'smtp_uname': uname,
+				'smtp_port': port,
+				'smtp_protocol': protocol,
+				'smtp_password': password
+			},
+			beforeSend: function()
+			{
+				$('#smtpTestLoader').show();
+			},
+			error: function()
+			{
+				alert('Something went wrong... please email support@mailsy.co and we\'ll help you out.');
+			},
+			success: function(response)
+			{
+				$('#smtpTestLoader').hide();
+				$('#smtpFeedback').html(response);
+			}
+		});
+	});
+
+
+	/**
+	*
 	* Create/edit/use email pages
 	*
 	*/

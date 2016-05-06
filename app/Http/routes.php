@@ -50,9 +50,9 @@ Route::get('/templatehub','PagesController@showTemplateHub');
 
 // testing
 Route::get('/smtp-tester','IndexController@showSmtpTester');
-Route::post('/smtp-tester','IndexController@doSmtpTester');
 
 // actions
+Route::post('/smtp-tester','ActionController@doSmtpTester');
 Route::post('/returnFields', 'ActionController@returnFields');
 Route::post('/createTemplate', 'ActionController@createTemplate');
 Route::post('/makePreviews', 'ActionController@makePreviews');

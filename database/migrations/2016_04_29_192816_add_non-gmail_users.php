@@ -19,6 +19,7 @@ class AddNonGmailUsers extends Migration
             $table->string('smtp_port')->nullable();
             $table->string('smtp_protocol')->nullable();
             $table->text('gmail_token')->nullable()->change();
+            $table->integer('gmail_user')->nullable();
         });
     }
 
@@ -30,7 +31,7 @@ class AddNonGmailUsers extends Migration
     public function down()
     {
         Schema::table('users', function ($table) {
-            $table->dropColumn(['password', 'smtp_server', 'smtp_uname', 'smtp_port', 'smtp_protocol']);
+            $table->dropColumn(['password', 'smtp_server', 'smtp_uname', 'smtp_port', 'smtp_protocol', 'gmail_user']);
         });
     }
 }

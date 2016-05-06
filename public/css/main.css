@@ -215,6 +215,19 @@ hr {
   margin:0 0 20px 0;
 }
 
+/* -------- SMTP setup page CSS ----------- */
+
+#mailsyFlowDiagram
+{
+  width:87%;
+  margin:-50px auto 0 auto;
+}
+
+#smtpSelect
+{
+  margin:0 0 0 10px;
+}
+
 /* ----------- Email View CSS ------------ */
 
 #messages

@@ -16,6 +16,40 @@ use Response;
 
 class ActionController extends Controller
 {
+
+    // send a test email when the user sets up their smtp settings
+    public function doSmtpTester(Request $request)
+    {
+        // Create the Transport
+        $transport = \Swift_SmtpTransport::newInstance($request->smtp_server, 587, 'tls')
+          ->setUsername($request->username)
+          ->setPassword($request->password)
+          ;
+
+        // Create the Mailer using your created Transport
+        $mailer = \Swift_Mailer::newInstance($transport);
+
+        $mail = new \Swift_Message;
+
+        // Create a message
+        $mail->setFrom(array($request->username));
+        $mail->setTo([$request->recipient]);
+        $mail->setBody($request->body, 'text/html');
+        $mail->setSubject($request->subject);
+
+        // Send the message
+        $result = $mailer->send($mail);
+
+        if($result)
+        {
+            return redirect('/smtp-tester?message=success');
+        }
+        else
+        {
+            return redirect('/smtp-tester?message=error');
+        }
+    }
+
     // return the fields to the new email view from the ajax call with template
     public function returnFields(Request $request)
     {
