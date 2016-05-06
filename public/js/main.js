@@ -30,6 +30,7 @@ $(document).ready(function(){
 	{
 		var server = $('input[name=smtp_server]').val();
 		var uname = $('input[name=smtp_uname]').val();
+		var userName = $('input[name=user_name]').val();
 		var port = $('#smtpPortSelect').val();
 		var protocol = $('#smtpProtocolSelect').val();
 		var password = $('input[name=smtp_password]').val();
@@ -63,6 +64,7 @@ $(document).ready(function(){
 				{
 					// close the modal and show the save settings button
 					$('#smtpTesterModal').modal('hide');
+					$('#testErrorDetailsWrapper').hide();
 					$('#testError').html('');
 					$('#saveSmtpSettingsButton').show(); // show the save button
 					$('#testSmtpSettingsButton').hide(); // hide the test button
@@ -73,6 +75,16 @@ $(document).ready(function(){
 					$('#smtpTesterModal').modal('hide');
 					$('#testErrorDetailsWrapper').show();
 					$('#testErrorDetails').html(response);
+
+					// populate the IT team template for the user
+					var templateBody = "mailto:?cc=support@mailsy.co&subject=Email Settings Errors&";
+					templateBody += "body=Hello,%0A%0AI'm trying to set up an internet service called Mailsy (www.mailsy.co) that works with my company email and I don't have the settings right it seems.";
+					templateBody += "The service needs to use our outgoing SMTP email server to send emails on my behalf - don't worry, it can never read, delete, or manipulate any company email.%0A%0A";
+					templateBody += "Here are the settings I've entered and the errors that I'm getting:%0A%0A";
+					templateBody += " SMTP Server Address: "+server+"%0A SMTP Username: "+uname+"%0A SMTP Port: "+port+"%0A SMTP Protocol: "+protocol;
+					templateBody += "%0A Error: "+response+"%0A%0AI've copied their support email so, if you have any questions for them, they said they'd be happy to help.%0A%0ABest,%0A"+userName;
+
+					$('#itTeamTemplateDynamic').attr('href',templateBody);
 				}
 			}
 		});

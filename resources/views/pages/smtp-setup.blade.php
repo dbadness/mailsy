@@ -22,21 +22,30 @@
 	<p class='lead'>We'll need to save your company's email settings to your profile so we can make it easy for you to send out hundreds of emails quickly and easily from your email address. The follow information is needed to do this so, if you need help from you IT department, feel free to use the email template we've created for you below or email <a href='mailto:support@mailsy.co'>Mailsy Support</a> and we'd be happy to help.</p>
 	{!! Form::open(array('url' => '/smtp-save')) !!}
 		{!! Form::token() !!}
+		<input type='hidden' value='{!! $user->name !!}' name='user_name'>
 		<div class="input-group">
 		  <span class="input-group-addon" id="basic-addon1">SMTP Email Server Address</span>
-		  <input type="text" name='smtp_server' class="form-control" placeholder="smtp.company.com" aria-describedby="basic-addon1">
+		  @if(isset($_GET['server']))
+		  	<input type="text" name='smtp_server' value="{!! $_GET['server'] !!}" class="form-control" placeholder="smtp.company.com" aria-describedby="basic-addon1">
+		  @else
+		  	<input type="text" name='smtp_server' class="form-control" placeholder="smtp.company.com" aria-describedby="basic-addon1">
+		  @endif
 		</div>
 		<br>
 		<div class="input-group">
 		  <span class="input-group-addon" id="basic-addon1">Email Username</span>
-		  <input type="text" name='smtp_uname' class="form-control" placeholder="you@company.com" aria-describedby="basic-addon1">
+		  @if(isset($_GET['uname']))
+		  	<input type="text" name='smtp_uname' value="{!! $_GET['uname'] !!}" class="form-control" placeholder="you@company.com" aria-describedby="basic-addon1">
+		  @else
+		  	<input type="text" name='smtp_uname' class="form-control" placeholder="you@company.com" aria-describedby="basic-addon1">
+		  @endif
 		</div>
 		<br>
 		<div class="input-group">
 		  <label for='smtp_port'>SMTP Port:</label>
 		  <select name='smtp_port' id='smtpPortSelect'>
-		  	<option>465</option>
 		  	<option>587</option>
+		  	<option>465</option>
 		  	<option>25</option>
 		  </select>
 		</div>
@@ -61,7 +70,7 @@
 	<span id='testError' style='color:red;'></span>
 	<span id='testSuccess' style='color:green;'></span>
 	<div id='testErrorDetailsWrapper' style='display:none;'>
-		<p class='lead'>It looks like some of the settings aren't correct. Here are the errors from the email server. <a href="mailto:?subject=Mailsy Error&body=I'm trying to set up a service that works with my company email and I don't have the settings right. Here are the errors I'm getting...">(Use this template to send an email to your IT dept to ask for help)</a>
+		<p class='lead'>It looks like some of the settings aren't correct. Here are the errors from the email server. <a id='itTeamTemplateDynamic'>(Use this template to send an email to your IT dept to ask for help)</a>
 		<div id='testErrorDetails'></div>
 	</div>
 
