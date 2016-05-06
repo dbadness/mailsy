@@ -68,10 +68,14 @@
 	<!-- Send a test email before saving to the DB -->
 	<button id='testSmtpSettingsButton' class='btn btn-primary' role='button'>Send Test Email Yourself</button>
 	<span id='testError' style='color:red;'></span>
-	<span id='testSuccess' style='color:green;'></span>
-	<div id='testErrorDetailsWrapper' style='display:none;'>
-		<p class='lead'>It looks like some of the settings aren't correct. Here are the errors from the email server. <a id='itTeamTemplateDynamic'>(Use this template to send an email to your IT dept to ask for help)</a>
-		<div id='testErrorDetails'></div>
+	<div class='alert alert-success' id='testSuccess' style='display:none;'>
+		Everything looks good! You can now save your settings for future use and check out our brief tutorial.
+	</div>
+
+	<div id='testErrorDetailsWrapper' class='alert alert-danger' style='display:none;'>
+		<p>It looks like some of the settings aren't correct. Here are the errors from the email server. If you'd like, you can use <a class='alert-link' id='itTeamTemplateDynamic'>this template</a> to send an email to your IT department to ask for help. Our support team is copied on the email as well!</p>
+		<br>
+		Error: <span id='testErrorDetails'></span>
 	</div>
 
 	<!-- Tester modal -->

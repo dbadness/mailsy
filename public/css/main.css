@@ -223,9 +223,24 @@ hr {
   margin:-50px auto 0 auto;
 }
 
-#smtpSelect
+#smtpPortSelect
 {
   margin:0 0 0 10px;
+}
+
+#smtpProtocolSelect
+{
+  margin:0 0 0 10px;
+}
+
+#testErrorDetailsWrapper
+{
+  margin:20px 0 0 0;
+}
+
+#testSuccess
+{
+  margin:20px 0 0 0;
 }
 
 /* ----------- Email View CSS ------------ */

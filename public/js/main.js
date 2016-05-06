@@ -68,10 +68,11 @@ $(document).ready(function(){
 					$('#testError').html('');
 					$('#saveSmtpSettingsButton').show(); // show the save button
 					$('#testSmtpSettingsButton').hide(); // hide the test button
-					$('#testSuccess').html('Everything looks good! You can now save your settings for future use.');
+					$('#testSuccess').show();
 				}
 				else // if there were errors, show them and put them in a template so the user can send them to the IT dept
 				{
+					$('#testSuccess').hide();
 					$('#smtpTesterModal').modal('hide');
 					$('#testErrorDetailsWrapper').show();
 					$('#testErrorDetails').html(response);
