@@ -221,6 +221,11 @@ class IndexController extends Controller
         if($user)
         {
             Auth::loginUsingId($user['id']);
+            // save their 'last_login' value
+            $user->last_login = time();
+            $user->save();
+
+            // send them to their dashboard
             return redirect('/home');
         }
         else

@@ -62,6 +62,15 @@ class User extends Model implements AuthenticatableContract,
         $user->password = $password;
         $user->name = $name;
         $user->gmail_token = $googleToken;
+        // set a flag on their user type
+        if($googleToken)
+        {
+            $user->gmail_user = 1;
+        }
+        else
+        {
+            $user->gmail_user = 0;
+        }
         $user->created_at = time();
         $user->track_email = 'yes';
         $user->timezone = 'America/New_York';

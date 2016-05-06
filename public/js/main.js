@@ -11,7 +11,8 @@ $(document).ready(function(){
 	itTemplate += "body=Hello,%0A%0AI'm trying to set up an internet service called Mailsy (www.mailsy.co) that works with my company email and I need some settings information about our company email. ";
 	itTemplate += "The service needs to use our outgoing SMTP email server to send emails on my behalf - don't worry, it can never read, delete, or manipulate any company email.%0A%0A";
 	itTemplate += "Here are the settings I'd need to get this thing up and running:%0A%0A";
-	itTemplate += "SMTP Server Address (ie. smtp.example.com) %0ASMTP Username (ie. flastname) %0ASMTP Port (ie. 587) %0ASMTP Protocol (ie. TLS) %0A%0AThe site never saves my email password so I can take care of that. I've also copied their support email so, if you have any questions for them, they said they'd be happy to help.%0A%0AThanks!%0A";
+	itTemplate += "SMTP Server Address (ie. smtp.example.com) %0ASMTP Username (ie. flastname) %0ASMTP Port (ie. 587) %0ASMTP Protocol (ie. TLS)"
+	itTemplate += "%0A%0AThe site never saves my email password so I can take care of that. I've also copied their support email so, if you have any questions for them, they said they'd be happy to help.%0A%0AThanks!%0A";
 
 	$('#itTemplateStatic').attr('href',itTemplate);
 
