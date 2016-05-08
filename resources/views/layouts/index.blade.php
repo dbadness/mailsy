@@ -90,7 +90,10 @@
                         <a href="/faq">FAQ</a>
                     </li>
                     <li>
-                        <a href="/auth">Sign Up / Log In</a>
+                        <a href="/signup">Sign Up</a>
+                    </li>
+                    <li>
+                        <a href="/login">Log In</a>
                     </li>
                 </ul>
             </div>

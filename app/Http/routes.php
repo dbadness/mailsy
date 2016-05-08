@@ -13,10 +13,14 @@
 
 Route::get('/', 'IndexController@showIndex');
 Route::get('/faq', 'IndexController@showFaq');
+Route::get('/signup','IndexController@showSignup');
+Route::post('/signup','IndexController@doSignup');
+Route::get('/login','IndexController@showLogin');
+Route::post('/login','IndexController@doLogin');
 
 // auth stuff
-Route::get('/auth/{license?}', 'IndexController@doAuth');
-Route::get('/gmail/{license?}', 'IndexController@doAddUser');
+Route::get('/auth/{signup?}/{license?}', 'IndexController@doAuth'); // signup and license are boolean values, 0 and 1
+Route::get('/gmail/{license?}', 'IndexController@doAddGmailUser');
 Route::get('/logout', function(){
 	Auth::logout();
 	return redirect('/');
@@ -25,6 +29,7 @@ Route::get('/logout', function(){
 // pages
 Route::get('/home', 'PagesController@showHome');
 Route::get('/track/{e_user_id}/{e_message_id}', 'ActionController@doTrack'); // processes a read receipt when a recipient opens an email
+Route::get('/smtp-setup','PagesController@showSmtpSetup');
 Route::get('/tutorial/step1', 'PagesController@showTutorial1');
 Route::get('/tutorial/step2', 'PagesController@showTutorial2');
 Route::get('/tutorial/step3', 'PagesController@showTutorial3');
@@ -45,9 +50,10 @@ Route::get('/admin','PagesController@showAdmin');
 
 // testing
 Route::get('/smtp-tester','IndexController@showSmtpTester');
-Route::post('/smtp-tester','IndexController@doSmtpTester');
 
 // actions
+Route::post('/smtp-tester','ActionController@doSmtpTester');
+Route::post('/smtp-save', 'ActionController@doSmtpSave');
 Route::post('/returnFields', 'ActionController@returnFields');
 Route::post('/createTemplate', 'ActionController@createTemplate');
 Route::post('/makePreviews', 'ActionController@makePreviews');

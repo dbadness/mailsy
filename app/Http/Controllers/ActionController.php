@@ -16,6 +16,61 @@ use Response;
 
 class ActionController extends Controller
 {
+
+    // send a test email when the user sets up their smtp settings
+    public function doSmtpTester(Request $request)
+    {
+
+        // Create the Transport
+        try
+        {
+            $transport = \Swift_SmtpTransport::newInstance($request->smtp_server, $request->smtp_port, $request->smtp_protocol)->setUsername($request->smtp_uname)->setPassword($request->smtp_password);
+
+            $mailer = \Swift_Mailer::newInstance($transport);
+
+            $mail = new \Swift_Message;
+
+            // Create a message
+            $subject = 'Test email from Mailsy.';
+
+            $body = 'Hi there,<br><br>Looks like everything is set up and working correctly! You can now <a href="'.env('DOMAIN').'/smtp-setup">save your email settings on Mailsy</a> and start sending out emails en masse!<br><br>- The Mailsy Team';
+
+            // get the email of the user
+            $user = Auth::user();
+
+            $mail->setFrom(array($user->email));
+            $mail->setTo([$user->email => $user->name]);
+            $mail->setBody($body, 'text/html');
+            $mail->setSubject($subject);
+
+            $result = $mailer->send($mail);
+        }
+        catch(\Swift_TransportException $e)
+        {
+            return $e->getMessage();
+            die;
+        }
+
+        // if we made it this far, return success
+        return 'success';
+
+    }
+
+    // if the test email is successful, save the smtp settings for the user
+    public function doSmtpSave(Request $request)
+    {
+        $user = Auth::user();
+
+        $user->smtp_server = $request->smtp_server;
+        $user->smtp_uname = $request->smtp_uname;
+        $user->smtp_port = $request->smtp_port;
+        $user->smtp_protocol = $request->smtp_protocol;
+
+        $user->save();
+
+        return redirect('/tutorial/step1');
+    }
+
     // return the fields to the new email view from the ajax call with template
     public function returnFields(Request $request)
     {
@@ -203,18 +258,14 @@ class ActionController extends Controller
         $email = Email::find($email_id);
         $email->temp_recipients_list = null;
         $email->save();
-        // get up a gmail client connection
-        $client = User::googleClient();
-        // get the gmail service
-        $gmail = new \Google_Service_Gmail($client);
-
-
         // send out the email
 
         // if they're not a paid user, make sure they don't send more than 10 emails per day
         $emailsLeft = User::howManyEmailsLeft();
         if($emailsLeft > 0)
         {
+
+            // set the message up
             $message = Message::find($message_id);
             // prepend the read receipt callback webhook to the message
 
@@ -231,16 +282,43 @@ class ActionController extends Controller
                 // if they selected the 'send to salesforce' button for the email...
                 $mail->addBCC($user->sf_address);
             }
-            $data = base64_encode($mail->toString());
-            $data = str_replace(array('+','/','='),array('-','_',''),$data); // url safe
-            $m = new \Google_Service_Gmail_Message();
-            $m->setRaw($data);
-            $gmailMessage = $gmail->users_messages->send('me', $m);
-            // insert the returned google message id into the DB and mark it as sent
-            $message->google_message_id = $gmailMessage->id;
+
+            // send out the message based on their email setup
+            if($user->gmail_user = 1)
+            {
+                // get up a gmail client connection
+                $client = User::googleClient();
+
+                // get the gmail service
+                $gmail = new \Google_Service_Gmail($client);
+
+                // make the message RFC compliant
+                $data = base64_encode($mail->toString());
+                $data = str_replace(array('+','/','='),array('-','_',''),$data); // url safe
+                $m = new \Google_Service_Gmail_Message();
+                $m->setRaw($data);
+                $gmailMessage = $gmail->users_messages->send('me', $m);
+                // insert the returned google message id into the DB and mark it as sent
+                $message->google_message_id = $gmailMessage->id;
+            }
+            else // if they're using their own companies SMTP server...
+            {
+                // build the transport mechanism
+                $transport = \Swift_SmtpTransport::newInstance($request->smtp_server, $request->smtp_port, $request->smtp_protocol)
+                ->setUsername($request->smtp_uname)
+                ->setPassword($request->smtp_password);
+
+                $mailer = \Swift_Mailer::newInstance($transport);
+            
+                // send the email from the messages above
+                $result = $mailer->send($mail);
+            }
+
+            // save the message info now that the emails have been sent
             $message->status = 'sent';
             $message->sent_at = time();
             $message->save();
+
         }
         else
         {

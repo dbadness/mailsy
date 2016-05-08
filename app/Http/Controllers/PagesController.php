@@ -54,6 +54,16 @@ class PagesController extends Controller
         return view('pages.home', ['user' => $user, 'emails' => $emails, 'archived' => $archived]);
     }
 
+    // if this is a new non-google user, send them to the smtp set up page
+    public function showSmtpSetup()
+    {
+        // auth the user
+        $user = Auth::user();
+
+        return view('pages.smtp-setup',['user' => $user]);
+
+    }
+
     // for the first time user, show them a tutorial page
     public function showTutorial1()
     {
