@@ -111,12 +111,12 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="intro-message">
-                        <h1>Grow your sales funnel with better conversations from the start.</h1>
-                        <h3>Send and track many emails at once with Mailsy.</h3>
+                        <h1>Send hundreds of personalized emails and get engaged responses.</h1>
+                        <h3>Send and track many emails at once with Mailsy - from any email address.</h3>
                         <hr class="intro-divider">
                         <ul class="list-inline intro-social-buttons">
                             <li>
-                                <a href="/auth" class="btn btn-info btn-lg"></i>&nbsp&nbsp&nbsp&nbsp<span class="network-name">Signup for Free Using Google</span></a>
+                                <a href="/signup" class="btn btn-info btn-lg"><span class="network-name">Signup for Free</span></a>
                             </li>
                         </ul>
                     </div>
@@ -139,9 +139,9 @@
                 <div class="col-lg-5 col-sm-6">
                     <hr class="section-heading-spacer">
                     <div class="clearfix"></div>
-                    <h2 class="section-heading">Better prospecting emails means more sales.</h2>
+                    <h2 class="section-heading">A better mass emailing system means more engaging conversations for you.</h2>
                     <p class="lead">
-                        Mailsy allows you to send hundreds of prospecting emails directly from your email account in seconds. Recipients are far more likely to reply to a personalized email that came from you - not some thoughtless email marketing service.
+                        Mailsy allows you to send hundreds of personalized emails directly from your email account in seconds. Recipients are far more likely to reply to a personalized email that came from you - not some thoughtless email marketing service.
                     </p>
                 </div>
                 <div class="col-lg-5 col-lg-offset-2 col-sm-6">
@@ -172,7 +172,7 @@
                             <br>
                             <li>Send your emails</li>
                             <br>
-                            <li>Close the deals</li>
+                            <li>Engage your audience</li>
                         </ol>
                     </h2>
                 </div>
@@ -272,7 +272,18 @@
                                 <h3>$0</h3>                            
                             </td>
                             <td> 
-                                <h3>$10</h3>
+                                <h3>$20</h3>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Track Reply Rates when Using Google Account</strong>
+                            </td>
+                            <td>
+                                <h3><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></h3>
+                            </td>
+                            <td>
+                                <h3><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></h3>
                             </td>
                         </tr>
                         <tr>
@@ -327,12 +338,12 @@
                                 <h3>10</h3>
                             </td>
                             <td>
-                                <h3>2000</h3>(Google limit)
+                                <h3>Unlimited*</h3>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <strong>Create Teams<br>(Simple Billing)</strong>
+                                <strong>Create and Manage Teams</strong>
                             </td>
                             <td>
                                 <h3></h3>
@@ -345,21 +356,24 @@
                             <td>
                             </td>
                             <td>
-                                <a href='/auth'><button class='btn btn-primary' role='button'>Sign Up for Free</button></a>
+                                <a href='/signup'><button class='btn btn-primary' role='button'>Sign Up for Free</button></a>
                             </td>
                             <td>
                             </td>
                         </tr>
                     </table>
+                    <br>
+                    <br>
+                    <p style='color:lightgray;'>* If you signup with Google, we put a cap of 1,000 emails per day since Google has a email outbound limit on your account and we don't want to lock you out of Gmail!</p>
                 </div>
                 <div class="col-lg-5 col-sm-pull-6  col-sm-6">
                     <hr class="section-heading-spacer">
                     <div class="clearfix"></div>
                     <h2 class="section-heading">Free to use with no trial periods.</h2>
                     <p class="lead">
-                        You can use your Google credentials to sign up for Mailsy and send 10 emails per day with a free account. There are no trial periods so you can use a free account as long as you'd like.
+                        You can use your Google or company email credentials to sign up for Mailsy and send 10 emails per day with a free account. There are no trial periods so you can use a free account as long as you'd like.
                         <br><br>
-                        If you want to send up to 2000 emails per day (the daily limit allowed by Google), you can upgrade to a paid account for only $10 per month. If you're a team leader, you can set up a team on Mailsy which makes user signup, administration, and billing incredibly simple. 
+                        If you want to send  unlimited emails per day (or 1,000 per day if you signup with Google), you can upgrade to a paid account for only $20 per month. If you're a team leader, you can set up a team on Mailsy which makes user signup, administration, and billing incredibly simple. 
                         <br><br>
                         As always, you can cancel or go back down to a free account whenever you'd like - there are no yearly contracts or anything like that.
                     </p>
@@ -423,7 +437,11 @@
                         </li>
                         <li class="footer-menu-divider">&sdot;</li>
                         <li>
-                            <a href="/auth">Sign Up / Log In</a>
+                            <a href="/signup">Sign Up</a>
+                        </li>
+                        <li class="footer-menu-divider">&sdot;</li>
+                        <li>
+                            <a href="/login">Log In</a>
                         </li>
                     </ul>
                     <p class="copyright text-muted small">Copyright &copy;<?php echo date('Y');?> Mailsy by Lucolo, Inc. All Rights Reserved</p>

@@ -53,10 +53,14 @@
 							<h3>{!! $email->name !!}</h3>
 
 							<div class='messageInfoWrapper'>
-								<div class='messageInfo'>
-									Reply Rate: <span id='replyRateForEmail{!! $email->id !!}'></span>%
+								<div class='messageInfo' style='border-left:solid 1px gray;'>
+									@if($user->google_user)
+										Reply Rate: <span id='replyRateForEmail{!! $email->id !!}'></span>%
+									@else
+										Reply rates coming soon!
+									@endif
 								</div>
-								<div class='messageInfo' style='border-right:solid 1px gray;'>
+								<div class='messageInfo'>
 									{!! $messageCount !!} Messages
 								</div>
 								<div class='clear'></div>

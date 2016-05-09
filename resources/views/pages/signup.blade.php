@@ -10,7 +10,7 @@
 		<h1>Welcome to Mailsy! <small>(You're about to become an email magician.)</h1>
 	</div>
 	<p class='lead'>
-		Mailsy enables you to engage with prospective and existing customers more effectively. You can sign up for Mailsy one of two ways: either with your Google account if you use Google Apps for Work or with an email and password if you don't. Don't worry, if you don't use Google Apps for Work we'll walk you through what you'll need to set Mailsy up for sending emails.
+		Mailsy enables you to engage with prospective and existing customers more effectively. You can sign up for Mailsy one of two ways: either with your Google account if you use Google Apps for Work or with an email and password if you don't. Don't worry, if you use a company we'll walk you through what you'll need to get Mailsy up and running.
 	</p>
 
 	<div class='signupOptions'>
