@@ -90,7 +90,7 @@ class IndexController extends Controller
         {
             $client->setRedirectURI(env('GOOGLE_URI_REDIRECT'));
         }      
-        $client->setScopes(['https://www.googleapis.com/auth/gmail.readonly', 'profile', 'email']);
+        $client->setScopes(['https://mail.google.com', 'profile', 'email']);
         $client->setAccessType('offline');
 
         // if they're signing up for the first time, force the prompt so we can get a refresh token
@@ -159,6 +159,7 @@ class IndexController extends Controller
 
             $existingUser->name = $name;
             $existingUser->last_login = time();
+            $existingUser->gmail_user = 1;
             $existingUser->save();
 
             // send them to the dashboard
@@ -182,6 +183,8 @@ class IndexController extends Controller
 
             // now log the user in
             $user = Auth::loginUsingId($user->id);
+            $user->gmail_user = 1;
+            $user->save();
 
             // send them to their dashboard
             return redirect('/tutorial/step1');

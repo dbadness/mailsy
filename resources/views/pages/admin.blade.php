@@ -19,9 +19,8 @@
 
 	@if($_GET)
 		@if(isset($_GET['message']))
-			@if($_GET['message'] == 'upgradeSuccess')
 
-			@elseif($_GET['message'] == 'subscriptionSuccessfullyUpdated')
+			@if($_GET['message'] == 'subscriptionSuccessfullyUpdated')
 
 				<div class="alert alert-success alert-dismissible" role="alert">
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
