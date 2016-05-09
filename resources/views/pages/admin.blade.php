@@ -251,10 +251,55 @@
 								</div>
 								<div class="modal-body">
 									@if($child->team_admin == null && $child->belongs_to_team == null)
-										<a href="/makeTeam/{{$child->id}}" class="btn btn-primary">Make New Team Lead by This User</a>
+
+									<table class="table">
+										<tr>
+											<td>Email:</td>
+											<td>{{$child->email}}</td>
+										</tr>
+										<tr>
+											@if($child->paid == 'yes')
+												<td>Using License:</td>
+												<td>yes</td>
+											@else
+												<td>Using License:</td>
+												<td>no</td>
+											@endif
+										</tr>
+										<tr>
+											@if($child->salesforce)
+												<td>Using Salesforce:</td>
+												<td>yes</td>
+											@else
+												<td>Using Salesforce:</td>
+												<td>no</td>
+											@endif
+										</tr>
+										<tr>
+											@if($child->admin == 'yes')
+												<td>Company Admin:</td>
+												<td>yes</td>
+											@else
+												<td>Company Admin:</td>
+												<td>no</td>
+											@endif
+										</tr>
+										<tr>
+											@if($child->team_admin)
+												<td>Team Admin:</td>
+												<td>yes</td>
+											@else
+												<td>Team Admin:</td>
+												<td>no</td>
+											@endif
+										</tr>
+									</table>
+
+									<h4>Actions</h4>
+									<hr>
+										<a href="/makeTeam/{{$child->id}}" class="btn btn-primary pull-right">Make New Team Lead by This User</a>
 										<br>
-										<br>
-										<h6>Teams</h6>
+										<h6>Add to Team</h6>
 										<hr>
 										@if(count($teams) == 0)
 											Your company has no teams!
