@@ -140,10 +140,19 @@
                                         @if(!$user->paid)
                                             <?php 
                                                 // make sure the company has a license to give
-                                                $company = App\User::domainCheck($user->email); 
+                                                $company = App\User::domainCheck($user->email);
+
+                                                if(isset($company->users_left)){
+                                                    $teamCheck = true;
+                                                } else
+                                                {
+                                                    $teamCheck = false;
+                                                }
                                             ?>
-                                            @if($company->users_left > 0)
-                                                <a href='/settings'>Join Your Team</a>
+                                            @if($teamCheck)
+                                                @if($company->users_left > 0)
+                                                    <a href='/settings'>Join Your Team</a>
+                                                @endif
                                             @else
                                                 <a href='/upgrade'>Upgrade</a>
                                             @endif

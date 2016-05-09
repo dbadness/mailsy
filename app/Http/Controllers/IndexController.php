@@ -36,6 +36,9 @@ class IndexController extends Controller
         if($companyDomain)
         {
             $company = Customer::where('domain',$companyDomain)->whereNull('deleted_at')->first();
+        } else
+        {
+            $company = null;
         }
 
         return view('pages.signup',['user' => $user, 'company' => $company]);

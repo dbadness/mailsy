@@ -146,17 +146,17 @@
 				<strong>Manage Your Teams</strong>
 			</div>
 			<div class="panel-body">
-				@if($user->has_users)
+				@if(count($teams) > 0)
 					<table style='width:100%;'>
 						{!! Form::token() !!}
-					    @foreach($members as $member)
+					    @foreach($teams as $team)
 					    	<tr>
 						    	<td><p><a class="btn btn-primary" id='userModalButton' data-toggle="modal" data-target="#userModal{{$member->id}}">{!! $member->email !!}'s Team</a></p></td>
 					    	</tr>
 					    @endforeach
 					</table>
 				@else
-					Invite your teams by sending them an email with this special signup link: {!! env('DOMAIN') !!}/join/{!! $company->domain !!}.
+					You have no teams! Make one by clicking on a user's name below and making them a team leader!
 				@endif
 			</div>
 		</div>			
@@ -177,6 +177,8 @@
 				<strong>User Management</strong>
 				<br>
 				<br>
+
+				<p><strong>Click on user's name to access their control panels!</strong></p>
 				@if($user->admin && isset($user->stripe_id))
 			
 					<p>You have <b>{!! $company->users_left !!}</b> licenses left out of the <b>{!! $company->total_users !!}</b> in your subscription. <span class='a' id='subscriptionModalButton' data-toggle="modal" data-target="#subscriptionModal">Add/Remove Licenses</span><br><br>Remember that you can invite people to join Mailsy at <a href='/join/{!! $company->domain !!}' target='_blank'>{!! env('DOMAIN') !!}/join/{!! $company->domain !!}</a> to use your licenses!</p>
@@ -254,6 +256,9 @@
 										<br>
 										<h6>Teams</h6>
 										<hr>
+										@if(count($teams) == 0)
+											Your company has no teams!
+										@endif
 										@foreach($teams as $team)
 											{{$team->name}}
 											<a href="/addToTeam/{{$child->id}}/{{$team->id}}" class="btn btn-primary pull-right">Add To Team</a>
@@ -283,6 +288,8 @@
 					</div>
 				    @endforeach
 
+			@else
+				You have no users! Either join your company or send people to <a href='/join/{!! $company->domain !!}'>{!! env('DOMAIN') !!}/join/{!! $company->domain !!}</a> to have them join up! Once they've joined you'll see them here.
 			@endif
 
 			</div>
