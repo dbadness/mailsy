@@ -953,7 +953,7 @@ class ActionController extends Controller
         $new_admin->belongs_to_team = $id;
         $new_admin->save();
 
-        return redirect('/admin');
+        return redirect('/admin?message=newTeamCreated');
 
     }
 
@@ -968,7 +968,7 @@ class ActionController extends Controller
         $notAdmin->belongs_to_team = null;
         $notAdmin->save();
 
-        return redirect('/admin');
+        return redirect('/admin?message=teamDestroyed');
 
     }
 
@@ -979,7 +979,7 @@ class ActionController extends Controller
         //update stuff
         User::where('id', $id)->update(['belongs_to_team' => $admin_id]);
 
-        return redirect('/admin');
+        return redirect('/admin?message=userAdded');
 
     }
 
@@ -991,7 +991,7 @@ class ActionController extends Controller
         $notMember->belongs_to_team = null;
         $notMember->save();
 
-        return redirect('/admin');
+        return redirect('/admin?message=userRemoved');
 
     }
 

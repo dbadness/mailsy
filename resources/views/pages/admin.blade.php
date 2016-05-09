@@ -35,6 +35,34 @@
 					You've successfully downgraded an account to a free account and one license has been added back to your subscription for future use.
 				</div>
 
+			@elseif($_GET['message'] == 'newTeamCreated')
+
+				<div class="alert alert-success alert-dismissible" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					New team successfully created! Now the team owner can see the Team Admin panel perform administrator actions!
+				</div>
+
+			@elseif($_GET['message'] == 'teamDestroyed')
+
+				<div class="alert alert-success alert-dismissible" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					The team was succesfully destroyed. All its members and its admin are now not in any team.
+				</div>
+
+			@elseif($_GET['message'] == 'userAdded')
+
+				<div class="alert alert-success alert-dismissible" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					You've succesfully added a user to a team!
+				</div>
+
+			@elseif($_GET['message'] == 'userRemoved')
+
+				<div class="alert alert-success alert-dismissible" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					You've succesfully removed a user from a team!
+				</div>
+
 			@endif
 		@endif
 
@@ -111,9 +139,11 @@
 	@if($user->status == 'paying' && $user->team_admin)
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<strong>My Team Management</strong>
+				<strong>Manage My Team</strong>
 				<br>
 				<br>
+
+				Add people to your team by clicking on their names under Manage My Users and clicking the add to team button.
 
 			</div>
 			<div class="panel-body">
@@ -143,7 +173,7 @@
 	@if($user->status == 'paying' && $user->admin)
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<strong>Manage Your Teams</strong>
+				<strong>Manage My Teams</strong>
 			</div>
 			<div class="panel-body">
 				@if(count($teams) > 0)
@@ -174,7 +204,7 @@
 
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<strong>User Management</strong>
+				<strong>Manage My Users</strong>
 				<br>
 				<br>
 
@@ -250,8 +280,6 @@
 									<h4 class="modal-title">{{$child->email}} User Management</h4>
 								</div>
 								<div class="modal-body">
-									@if($child->team_admin == null && $child->belongs_to_team == null)
-
 									<table class="table">
 										<tr>
 											<td>Email:</td>
@@ -297,7 +325,9 @@
 
 									<h4>Actions</h4>
 									<hr>
-										<a href="/makeTeam/{{$child->id}}" class="btn btn-primary pull-right">Make New Team Lead by This User</a>
+									@if($child->team_admin == null && $child->belongs_to_team == null)
+										<a href="/makeTeam/{{$child->id}}" class="btn btn-primary">Make New Team Lead by This User</a>
+										<br>
 										<br>
 										<h6>Add to Team</h6>
 										<hr>
@@ -334,7 +364,7 @@
 				    @endforeach
 
 			@else
-				You have no users! Either join your company or send people to <a href='/join/{!! $company->domain !!}'>{!! env('DOMAIN') !!}/join/{!! $company->domain !!}</a> to have them join up! Once they've joined you'll see them here.
+				You have no users! Join your company by clicking Join the Team or send people to <a href='/join/{!! $company->domain !!}'>{!! env('DOMAIN') !!}/join/{!! $company->domain !!}</a> to have them join up! Once they've joined you'll see them here.
 			@endif
 
 			</div>
