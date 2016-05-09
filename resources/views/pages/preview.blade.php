@@ -61,7 +61,45 @@
 		</div>
 	</a>
 
-	<!-- Modal -->
+	@if(!$user->gmail_user)
+
+		<!-- Flag for the email sending logic -->
+		<input type='hidden' name='gmail_user' value='0'>
+
+		<!-- Enter Password Modal -->
+		<div class="modal fade" id="passwordModal" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Enter your email password</h4>
+					</div>
+					<div class="modal-body">
+						<p>Since we don't save your email password, please enter it here so we can send your emails along.</p>
+						<div class="input-group">
+						  	<span class="input-group-addon" id="basic-addon1">Email Password</span>
+						  	<input type="text" class="form-control" name='penguin' aria-describedby="basic-addon1">
+						</div>
+					</div>
+					<div class="modal-footer">
+						<span id='checkingAuth' style='display:none;'><img src='/images/loader.gif'></span>
+						<span id='noPenguin' style='color:red;display:none;'>Please enter a password</span>
+						<span id='noAuth' style='color:red;display:none;'>Incorrect password</span>
+						<button type="button" class="btn btn-primary" id='submitPasswordButton'>Send Emails</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	@else
+
+		<!-- Flag for the email sending logic -->
+		<input type='hidden' name='gmail_user' value='1'>
+
+	@endif
+
+	<!-- Sending Emails Modal -->
 	<div class="modal fade" id="emailModal" role="dialog">
 		<div class="modal-dialog">
 			<!-- Modal content-->

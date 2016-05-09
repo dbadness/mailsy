@@ -20,6 +20,8 @@ class ActionController extends Controller
     // send a test email when the user sets up their smtp settings
     public function doSmtpTester(Request $request)
     {
+        // get the email of the user
+        $user = Auth::user();
 
         // Create the Transport
         try
@@ -34,9 +36,6 @@ class ActionController extends Controller
             $subject = 'Test email from Mailsy.';
 
             $body = 'Hi there,<br><br>Looks like everything is set up and working correctly! You can now <a href="'.env('DOMAIN').'/smtp-setup">save your email settings on Mailsy</a> and start sending out emails en masse!<br><br>- The Mailsy Team';
-
-            // get the email of the user
-            $user = Auth::user();
 
             $mail->setFrom(array($user->email));
             $mail->setTo([$user->email => $user->name]);
@@ -248,9 +247,32 @@ class ActionController extends Controller
             return Email::processManualData($request, $email, $user);
         }
     }
+
+    // check if the smtp connection auths
+    public function doSmtpAuthCheck($ePassword)
+    {
+        // auth the user
+        $user = Auth::user();
+
+        // Create the Transport
+        try
+        {
+            $password = base64_decode($ePassword);
+
+            $mailer = Utils::buildSmtpMailer($user,$password);
+
+        }
+        catch(\Swift_TransportException $e)
+        {
+            return 'not_authed';
+            die;
+        }
+
+        return 'authed';
+    }
     
     // send the emails
-    public function sendEmail($email_id, $message_id)
+    public function sendEmail($email_id, $message_id, $password = null)
     {
         // get the user info
         $user = Auth::user();
@@ -284,7 +306,7 @@ class ActionController extends Controller
             }
 
             // send out the message based on their email setup
-            if($user->gmail_user = 1)
+            if($user->gmail_user == 1)
             {
                 // get up a gmail client connection
                 $client = User::googleClient();
@@ -303,12 +325,11 @@ class ActionController extends Controller
             }
             else // if they're using their own companies SMTP server...
             {
-                // build the transport mechanism
-                $transport = \Swift_SmtpTransport::newInstance($request->smtp_server, $request->smtp_port, $request->smtp_protocol)
-                ->setUsername($request->smtp_uname)
-                ->setPassword($request->smtp_password);
+                // decrypt and assign the password
+                $user->password = base64_decode($password);
 
-                $mailer = \Swift_Mailer::newInstance($transport);
+                // build the mailer
+                $mailer = Utils::buildSmtpMailer($user);
             
                 // send the email from the messages above
                 $result = $mailer->send($mail);

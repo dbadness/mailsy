@@ -58,8 +58,6 @@ Route::post('/returnFields', 'ActionController@returnFields');
 Route::post('/createTemplate', 'ActionController@createTemplate');
 Route::post('/makePreviews', 'ActionController@makePreviews');
 Route::post('/updatePreviews', 'ActionController@updatePreviews');
-Route::get('/sendEmail/{email_id}/{message_id}', 'ActionController@sendEmail');
-Route::post('/saveSettings', 'ActionController@saveSettings');
 Route::post('/upgrade', 'ActionController@doUpgrade');
 Route::post('/createTeam', 'ActionController@doTeamUpgrade');
 Route::post('/useLicense','ActionController@doRedeemLicense');
@@ -83,6 +81,9 @@ Route::post('/updateCard','ActionController@doUpdateCard');
 Route::post('/membership/cancel','ActionController@doCancelMembership');
 Route::get('/sendFirstEmail','ActionController@doSendFirstEmail');
 Route::get('/getReplyRate/{email_id}','ActionController@doReturnReplyRate');
+Route::get('/smtp-auth-check/{e_password}','ActionController@doSmtpAuthCheck');
+Route::get('/sendEmail/{email_id}/{message_id}/{password?}', 'ActionController@sendEmail');
+Route::post('/saveSettings', 'ActionController@saveSettings');
 
 // webhooks
 Route::post('/payment/paid','APIController@doInvoicePaid'); // successful invoice payment

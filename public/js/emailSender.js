@@ -11,38 +11,104 @@ $(document).ready(function()
 	var minutes = Math.floor(( ( length * .5 ) / 60 ));
 	var seconds = Math.ceil( ( length * .5 ) % 60 );
 
+	// the sending function
+	function sendEmails(messageId,penguin = null)
+	{
+		setTimeout(function(){
+			$.ajax({
+				url: '/sendEmail/'+emailId+'/'+id.value+'/'+password,
+				success: function(response){
+
+					// increment the progress bar
+					total += increment;
+					$('.progress-bar').css('width',total.toFixed(0)+'%');
+					$('#progressText').html(total.toFixed(0)+'% Complete');
+
+					// show the close button
+					$('#closeEmailModal').show();
+				},
+				error: function(){
+					alert('Something went wrong. Please log out of Mailsy, log back in, and try again. If something\'s really broken, email us a support@mailsy.co and we\'d be happy to help.');
+				}
+			});
+		}, (i*500))
+	}
+
 	$('#sendButton').click(function()
 	{
-
-		// open the modal
-		$('.timerMinu').text(String(minutes));
-		$('.timerSecu').text(String(seconds));
-		$('#emailModal').modal('show');
-
-		// go through each mesage and send that email
-		$.each(messages, function(i,id)
+		// if they need to enter a password, let them
+		if($('input[name=gmail_user]').val() != 1)
 		{
-			setTimeout(function(){
-				$.ajax({
-					url: '/sendEmail/'+emailId+'/'+id.value,
-					success: function(response){
-						// increment the progress bar
-						total += increment;
-						$('.progress-bar').css('width',total.toFixed(0)+'%');
-						$('#progressText').html(total.toFixed(0)+'% Complete');
-						// update the view with the status
-						$('#status'+id.value).html(response);
+			$('#passwordModal').modal('show');
 
-						// show the close button
-						$('#closeEmailModal').show();
-					},
-					error: function(response){
-						alert('Something went wrong. Please log out of Mailsy, log back in, and try again.');
-					}
-				});
-			}, (i*500))
+			// handle the password submission and encryption
+			$('#submitPasswordButton').click(function()
+			{
+				var penguin = $('input[name=penguin]').val();
 
-		});
+				// validate the password field
+				if(penguin ==  '')
+				{
+					$('#noPenguin').show();
+				}
+				else
+				{
+					$('#noPenguin').hide();
+					penguin = window.btoa(penguin);
+
+					// check to see if the password is correct
+					$.ajax({
+						url: '/smtp-auth-check/'+penguin,
+						type: 'get',
+						beforeSend: function()
+						{
+							$('#checkingAuth').show();
+						},
+						success: function(response)
+						{
+							if(response == 'not_authed')
+							{
+								$('#checkingAuth').hide();
+								$('#noAuth').show();
+							}
+							else if(response == 'authed')
+							{
+								// with everything good to go, send the emails
+								$('#passwordModal').modal('hide');
+
+								// open the sending modal
+								$('.timerMinu').text(String(minutes));
+								$('.timerSecu').text(String(seconds));
+								$('#emailModal').modal('show');
+
+								// go through each mesage and send that email
+								$.each(messages, function(i,id)
+								{
+									sendEmails(id.value);
+								});
+							}
+						},
+						error: function()
+						{
+
+						}
+					});
+				}
+			});
+		}
+		else // if this is a gmail user, just send the emails
+		{
+			// open the sending modal
+			$('.timerMinu').text(String(minutes));
+			$('.timerSecu').text(String(seconds));
+			$('#emailModal').modal('show');
+
+			// go through each mesage and send that email
+			$.each(messages, function(i,id)
+			{
+				sendEmails(id.value);
+			});
+		}	
 	});
 
 	// send the user to the email page when they close the emailSender Modal
