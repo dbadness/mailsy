@@ -138,7 +138,11 @@
                                     <li role="separator" class="divider"></li>
                                     <li>
                                         @if(!$user->paid)
-                                            @if(App\User::domainCheck($user->email))
+                                            <?php 
+                                                // make sure the company has a license to give
+                                                $company = App\User::domainCheck($user->email); 
+                                            ?>
+                                            @if($company->users_left > 0)
                                                 <a href='/settings'>Join Your Team</a>
                                             @else
                                                 <a href='/upgrade'>Upgrade</a>

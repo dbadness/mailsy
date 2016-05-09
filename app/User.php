@@ -77,11 +77,43 @@ class User extends Model implements AuthenticatableContract,
         $user->referer = $referer;
 
         // check if they're using up a license for this signup
-        $domainDetails = User::domainCheck($email);
-        if($domainDetails && $license)
+        $company = User::domainCheck($email);
+        if($company && $license)
         {
-            $user->paid = 'yes';
-            $user->belongs_to = $domainDetails->owner_id;
+            // make sure there's a company license to use...
+            if($company->users_left > 0)
+            {
+                // update the user to paid and save the new decremented user count
+                $user->paid = 'yes';
+                $user->belongs_to = $company->owner_id;
+                $company->users_left--;
+                $company->save();
+            }
+            else
+            {
+                // sign them up as a free user and let them and the admin know that they need more licenses to sign folks up
+                // find the company admin
+                $admin = User::find($company->owner_id);
+
+                // send the user an email
+                $subject = 'There are no more licenses for '.$company->company_name;
+                $body = 'You just tried to signup for a paid Mailsy account through the '.$company->company_name.' team. Unfortunately there ';
+                $body .= 'are no more available licenses on that account. Please email the administrator ('.$admin->email.') and let them know ';
+                $body .= 'that you need a license. Until then, you have access to Mailsy on a free account.';
+
+                // send the email
+                Utils::sendEmail($user->email,$subject,$body);
+
+                // send the admin an email
+                $subject = 'There are no more licenses for '.$company->company_name;
+                $body = 'Someone ('.$user->email.') just tried to signup for a paid Mailsy account through your '.$company->company_name.' team. Unfortunately there ';
+                $body .= 'are no more available licenses on that account. Please log into Mailsy, add more licenses, and let that user ';
+                $body .= 'know that they can try again to use a license. They\'ve been signed up as a free user so ';
+                $body .= 'they can just \'join your team\' when you\'re ready.';
+
+                // send the email
+                Utils::sendEmail($admin->email,$subject,$body);
+            }
         }
 
         // add them to the marketing database

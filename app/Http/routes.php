@@ -13,8 +13,8 @@
 
 Route::get('/', 'IndexController@showIndex');
 Route::get('/faq', 'IndexController@showFaq');
-Route::get('/signup','IndexController@showSignup');
-Route::post('/signup','IndexController@doSignup');
+Route::get('/signup/{license?}/{domain?}','IndexController@showSignup');
+Route::post('/signup/{license?}','IndexController@doSignup');
 Route::get('/login','IndexController@showLogin');
 Route::post('/login','IndexController@doLogin');
 

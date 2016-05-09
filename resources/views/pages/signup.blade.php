@@ -34,7 +34,11 @@
 						<h3>Use Mailsy with Company Email</h3>
 						<p>Select this option if you use a company email system. We'll help you set everything up in the next step.</p>
 						<div id='signupWrapper'>
-							{!! Form::open(array('url' => '/signup', 'id' => 'authForm'))!!}
+							@if($company)
+								{!! Form::open(array('url' => '/signup/license', 'id' => 'authForm'))!!}
+							@else
+								{!! Form::open(array('url' => '/signup', 'id' => 'authForm'))!!}
+							@endif
 								{!! Form::token() !!}
 								<div class="input-group">
 									<span>Full Name:</span>

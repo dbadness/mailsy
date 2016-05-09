@@ -29,11 +29,16 @@ class IndexController extends Controller
     }
 
     // show the signup page
-    public function showSignup()
+    public function showSignup($license = null, $companyDomain = null)
     {
         $user = Auth::user();
 
-        return view('pages.signup',['user' => $user]);
+        if($companyDomain)
+        {
+            $company = Customer::where('domain',$companyDomain)->whereNull('deleted_at')->first();
+        }
+
+        return view('pages.signup',['user' => $user, 'company' => $company]);
     }
 
     // show the signup page
