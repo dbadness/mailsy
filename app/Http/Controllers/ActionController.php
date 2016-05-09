@@ -694,6 +694,11 @@ class ActionController extends Controller
         $child->paid = null;
         $child->belongs_to = null;
         $child->belongs_to_team = null;
+        // if the user is the child, and they're only managing themself, erase that relationship
+        if($child->id == $user->belongs_to)
+        {
+            $child->has_users = null;
+        }
         $child->save();
 
         // send the child an email letting them know that they've been revoked

@@ -20,7 +20,7 @@ $(document).ready(function(){
 		else
 		{
 			$('#badInfo').hide();
-			$('#signupForm').submit();
+			$('#authForm').submit();
 		}
 	});
 

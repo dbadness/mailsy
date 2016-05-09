@@ -11,7 +11,6 @@
 		<div class="row">
 			<div class="col-sm-4 col-md-6">
 				<div class="thumbnail">
-					<img src="..." alt="...">
 					<div class="caption">
 						<h3>Log In with Google</h3>
 						<p>
@@ -23,10 +22,9 @@
 
 			<div class="col-sm-6 col-md-6">
 				<div class="thumbnail">
-					<img src="..." alt="...">
 					<div class="caption">
 						<h3>Login with Email/Password:</h3>
-						{!! Form::open(array('url' => '/login'))!!}
+						{!! Form::open(array('url' => '/login','id' => 'authForm'))!!}
 							{!! Form::token() !!}
 							<div class="input-group">
 								<span>Email:</span>

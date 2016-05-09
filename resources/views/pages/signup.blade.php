@@ -18,7 +18,6 @@
 		<div class="row">
 			<div class="col-sm-4 col-md-6">
 				<div class="thumbnail">
-					<img src="..." alt="...">
 					<div class="caption">
 						<h3>Use Mailsy with Google Account</h3>
 						<p>Select this option if you use Google Apps for Work in your company.</p>
@@ -31,12 +30,11 @@
 
 			<div class="col-sm-6 col-md-6">
 				<div class="thumbnail">
-					<img src="..." alt="...">
 					<div class="caption">
 						<h3>Use Mailsy with Company Email</h3>
 						<p>Select this option if you use a company email system. We'll help you set everything up in the next step.</p>
 						<div id='signupWrapper'>
-							{!! Form::open(array('url' => '/signup', 'id' => 'signupForm'))!!}
+							{!! Form::open(array('url' => '/signup', 'id' => 'authForm'))!!}
 								{!! Form::token() !!}
 								<div class="input-group">
 									<span>Full Name:</span>

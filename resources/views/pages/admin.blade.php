@@ -144,27 +144,22 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<strong>Manage Your Teams</strong>
-				<br>
-				<br>
-
 			</div>
 			<div class="panel-body">
-
-			@if($user->has_users)
-
-				<table style='width:100%;'>
-					{!! Form::token() !!}
-				    @foreach($members as $member)
-				    	<tr>
-					    	<td><p><a class="btn btn-primary" id='userModalButton' data-toggle="modal" data-target="#userModal{{$member->id}}">{!! $member->email !!}'s Team</a></p></td>
-				    	</tr>
-				    @endforeach
-				</table>
-
-			@endif
-
+				@if($user->has_users)
+					<table style='width:100%;'>
+						{!! Form::token() !!}
+					    @foreach($members as $member)
+					    	<tr>
+						    	<td><p><a class="btn btn-primary" id='userModalButton' data-toggle="modal" data-target="#userModal{{$member->id}}">{!! $member->email !!}'s Team</a></p></td>
+					    	</tr>
+					    @endforeach
+					</table>
+				@else
+					Invite your teams by sending them an email with this special signup link: {!! env('DOMAIN') !!}/join/{!! $company->domain !!}.
+				@endif
 			</div>
-		</div>
+		</div>			
 	@endif
 
 	@if($user->status == 'paying' && isset($user->stripe_id))
@@ -184,7 +179,7 @@
 				<br>
 				@if($user->admin && isset($user->stripe_id))
 			
-					<p>You have <b>{!! $company->users_left !!}</b> licenses left out of the <b>{!! $company->total_users !!}</b> in your subscription. <span class='a' id='subscriptionModalButton' data-toggle="modal" data-target="#subscriptionModal">Add/Remove Licenses</span><br><br>Remember that you can invite people to join Mailsy at <a href='/join/{!! $company->domain !!}' target='_blank'>www.mailsy.co/join/{!! $company->domain !!}</a> to use your licenses!</p>
+					<p>You have <b>{!! $company->users_left !!}</b> licenses left out of the <b>{!! $company->total_users !!}</b> in your subscription. <span class='a' id='subscriptionModalButton' data-toggle="modal" data-target="#subscriptionModal">Add/Remove Licenses</span><br><br>Remember that you can invite people to join Mailsy at <a href='/join/{!! $company->domain !!}' target='_blank'>{!! env('DOMAIN') !!}/join/{!! $company->domain !!}</a> to use your licenses!</p>
 
 					<!-- Make a modal for subscription handling -->
 					<!-- Modal -->
