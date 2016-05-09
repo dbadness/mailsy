@@ -180,21 +180,67 @@ hr {
 
 /* ----------- Home Page CSS ------------- */
 
-.email
+.messageInfoWrapper
 {
-	padding:10px;
-	border-bottom:solid 1px black;
+  width:100%;
+  border:solid 1px gray;
+  border-radius:3px;
 }
 
-.emailListRight
+.messageInfo
 {
-	text-align:right;
+  width:50%;
+  padding:5px;
+  float:right;
+  text-align:center;
 }
 
-.subheader
+.templateWrapper
 {
-	font-size:120%;
-	color:gray;
+  height:250px;
+  padding:10px;
+  overflow:hidden;
+}
+
+/* ----------- Signup and Login Page CSS ----- */
+
+.signupOptions
+{
+  width:75%;
+  margin:0 auto;
+}
+
+#signupWrapper
+{
+  margin:0 0 20px 0;
+}
+
+/* -------- SMTP setup page CSS ----------- */
+
+#mailsyFlowDiagram
+{
+  width:87%;
+  margin:-50px auto 0 auto;
+}
+
+#smtpPortSelect
+{
+  margin:0 0 0 10px;
+}
+
+#smtpProtocolSelect
+{
+  margin:0 0 0 10px;
+}
+
+#testErrorDetailsWrapper
+{
+  margin:20px 0 0 0;
+}
+
+#testSuccess
+{
+  margin:20px 0 0 0;
 }
 
 /* ----------- Email View CSS ------------ */

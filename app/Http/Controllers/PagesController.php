@@ -29,9 +29,39 @@ class PagesController extends Controller
         $user = Auth::user();
 
         //return their emails and it's metadata if not archived
-        $emails = Email::where('user_id',$user->id)->whereNull('deleted_at')->get();
+        $emails = Email::where('user_id',$user->id)->whereNull('deleted_at')->paginate(9);
 
-        return view('pages.home', ['user' => $user, 'emails' => $emails]);
+        // if there are emails to show, update their message statuses so the reply rates are accurate
+        if($emails != '[]')
+        {
+            foreach($emails as $email)
+            {
+                $messages = Message::where('email_id',$email->id)->whereNull('deleted_at')->get();
+
+                if($messages != '[]')
+                {
+                    foreach($messages as $message)
+                    {
+                        Message::updateMessageStatus($message->id);
+                    }
+                }
+            }
+        }
+
+        //return their emails and it's metadata if not archived
+        $archived = Email::where('user_id',$user->id)->whereNotNull('deleted_at')->count();
+
+        return view('pages.home', ['user' => $user, 'emails' => $emails, 'archived' => $archived]);
+    }
+
+    // if this is a new non-google user, send them to the smtp set up page
+    public function showSmtpSetup()
+    {
+        // auth the user
+        $user = Auth::user();
+
+        return view('pages.smtp-setup',['user' => $user]);
+
     }
 
     // for the first time user, show them a tutorial page
@@ -245,7 +275,7 @@ class PagesController extends Controller
         $user = Auth::user();
 
         //return their emails and it's metadata if archived
-        $emails = Email::where('user_id',$user->id)->whereNotNull('deleted_at')->get();
+        $emails = Email::where('user_id',$user->id)->whereNotNull('deleted_at')->paginate(9);
 
         return view('pages.archives', ['user' => $user, 'emails' => $emails]);
     }
@@ -271,7 +301,24 @@ class PagesController extends Controller
     }
 
     // show the template hub
-    public function showTemplateHub()
+    public function showPublicTemplates()
+    {
+        // auth the user
+        $user = Auth::user();
+
+        if(!$user->paid)
+        {
+            return redirect('/home');
+        }
+
+        //return the emails that have been marked for the hub
+        $emails = Email::where('shared',2)->paginate(9);
+
+        return view('pages.publictemplates', ['user' => $user, 'emails' => $emails]);
+    }
+
+    // show the template hub
+    public function showPrivateTemplates()
     {
         // auth the user
         $user = Auth::user();
@@ -284,14 +331,39 @@ class PagesController extends Controller
         //return the emails that have been marked for the hub
         if($user->admin)
         {
-            $compEmails = Email::where('shared',1)->where('creator_company',$user->id)->get();
+            $emails = Email::where('shared',1)->where('creator_company',$user->id)->paginate(9);
         } else
         {
-            $compEmails = Email::where('shared',1)->where('creator_company',$user->belongs_to)->get();
+            $emails = Email::where('shared',1)->where('creator_company',$user->belongs_to)->paginate(9);
         }
-        $pubEmails = Email::where('shared',2)->get();
 
-        return view('pages.templatehub', ['user' => $user, 'compEmails' => $compEmails, 'pubEmails' => $pubEmails]);
+        return view('pages.privatetemplates', ['user' => $user, 'emails' => $emails]);
+    }
+
+    // show an edit page for the email that has been created
+    public function showAdmin()
+    {
+        $user = Auth::user();
+
+        if($user->admin != "yes"){
+            return redirect('/settings');
+        }
+
+        // return the company info
+        $company = User::domainCheck($user->email);
+
+        if($company)
+        {
+            $company->admin = User::where('id',$company->owner_id)->first();
+
+            $company->email = $company->admin->email;
+        }
+
+        $children = User::where('belongs_to',$company->owner_id)->whereNull('deleted_at')->get();
+        $teams = User::where('belongs_to',$company->owner_id)->whereNull('deleted_at')->whereNotNull('team_admin')->get();
+        $members = User::where('belongs_to_team', $user->id)->get();
+
+        return view('pages.admin', ['user' => $user, 'company' => $company, 'children' => $children, 'teams' => $teams, 'members' => $members]);
     }
 
 }

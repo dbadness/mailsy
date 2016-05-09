@@ -4,6 +4,7 @@
 	<div class="page-header">
 		<h1>{!! $email->name !!}</h1>
 		<a href='/copy/{!! base64_encode($email->id) !!}'>Copy Template</a>
+		<a href='/archives' class="pull-right">Back to Archives</a>
 	</div>
 	<br>
 	<div class="input-group">

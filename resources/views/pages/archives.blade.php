@@ -1,5 +1,9 @@
 @extends('layouts.master')
 
+@section('PageJS')
+	<script src='/js/home.js'></script>
+@endsection
+
 @section('content')
 	<br>
 	<br>
@@ -10,6 +14,7 @@
 			<tr>
 				<td><b>Template Name</b></td>
 				<td class='emailListRight'><b>Emails Sent</b></td>
+				<td class='emailListRight'><b>Percent Replied</b></td>
 			</tr>
 			@if($emails != '[]')
 				@foreach($emails as $email)
@@ -18,18 +23,16 @@
 					?>
 					<tr>
 						<td>
-							<form method='get' action='/dearchive/{!! $email->id !!}' enctype="multipart/form-data">
-								<span><strong>{!! $email->name !!}</strong></span>
-								<span class="pull-right">
-									<a class="btn btn-info" href='/email/{!! base64_encode($email->id) !!}'>info</a>
-									<a class="btn btn-info" href='/copy/{!! base64_encode($email->id) !!}'>copy</a>
-									<input type="hidden" name="_token" value="{{ csrf_token() }}">
-									<button class="btn btn-danger" id='dearchiveEmail'>dearchive</button>
-								</span>
-							</form>
-
+							<span><strong>{!! $email->name !!}</strong></span>
+							<span class="pull-right">
+								<a class="btn btn-info" href='/email/{!! base64_encode($email->id) !!}'>messages</a>
+								<a class="btn btn-info" href='/copy/{!! base64_encode($email->id) !!}'>copy</a>
+								<a class='btn btn-success' href='/dearchive/{!! base64_encode($email->id) !!}'>restore</a>
+							</span>
 						</td>
 						<td class='emailListRight'>{!! $messageCount !!}
+						</td>
+						<td class="emailListRight"><span id='replyRateForEmail{!! $email->id !!}'></span>%
 						</td>
 					</tr>
 				@endforeach
@@ -37,6 +40,7 @@
 		</table>
 	</div>
 
-	<a href="/home">Dashboard</a>
-
+	<span class="pull-right">{!! $emails->render() !!}</span>
+	<br>
+	<a href="/home" class="btn btn-primary">Dashboard</a>
 @endsection

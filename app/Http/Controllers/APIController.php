@@ -27,6 +27,12 @@ class APIController extends Controller
         // find the user in the DB and update their subscription id
         $user = User::where('stripe_id',$transaction['customer'])->first();
 
+        if(!isset($user)){
+            return response()->json([
+                'msg' => 'invoice_payment_failed'
+            ], 200);
+        }
+
         // make the amount a string with the appropriate decimals
         $amount = '$'.($transaction['amount_due'] / 100);
 
@@ -39,7 +45,10 @@ class APIController extends Controller
 
         Utils::sendEmail($user->email,$subject,$body);
 
-        return 'invoice_successfully_paid';
+        return Response::json([
+            'msg' => 'invoice_successfully_paid'
+        ], 200);
+
     }
 
     // handle a successful payment (the first time)
@@ -57,6 +66,12 @@ class APIController extends Controller
         // Do something with $event_json
         $user = User::where('stripe_id',$transaction['customer'])->first();
 
+        if(!isset($user)){
+            return response()->json([
+                'msg' => 'invoice_payment_failed'
+            ], 200);
+        }
+
         // make the amount a string with the appropriate decimals
         $amount = '$'.($transaction['amount_due'] / 100);
 
@@ -69,6 +84,9 @@ class APIController extends Controller
 
         Utils::sendEmail($user->email,$subject,$body);
 
-        return 'invoice_payment_failed';
+        return Response::json([
+            'msg' => 'invoice_payment_failed'
+        ], 200);
+
     }
 }

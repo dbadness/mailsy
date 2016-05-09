@@ -16,6 +16,60 @@ use Response;
 
 class ActionController extends Controller
 {
+
+    // send a test email when the user sets up their smtp settings
+    public function doSmtpTester(Request $request)
+    {
+        // get the email of the user
+        $user = Auth::user();
+
+        // Create the Transport
+        try
+        {
+            $transport = \Swift_SmtpTransport::newInstance($request->smtp_server, $request->smtp_port, $request->smtp_protocol)->setUsername($request->smtp_uname)->setPassword($request->smtp_password);
+
+            $mailer = \Swift_Mailer::newInstance($transport);
+
+            $mail = new \Swift_Message;
+
+            // Create a message
+            $subject = 'Test email from Mailsy.';
+
+            $body = 'Hi there,<br><br>Looks like everything is set up and working correctly! You can now <a href="'.env('DOMAIN').'/smtp-setup">save your email settings on Mailsy</a> and start sending out emails en masse!<br><br>- The Mailsy Team';
+
+            $mail->setFrom(array($user->email));
+            $mail->setTo([$user->email => $user->name]);
+            $mail->setBody($body, 'text/html');
+            $mail->setSubject($subject);
+
+            $result = $mailer->send($mail);
+        }
+        catch(\Swift_TransportException $e)
+        {
+            return $e->getMessage();
+            die;
+        }
+
+        // if we made it this far, return success
+        return 'success';
+
+    }
+
+    // if the test email is successful, save the smtp settings for the user
+    public function doSmtpSave(Request $request)
+    {
+        $user = Auth::user();
+
+        $user->smtp_server = $request->smtp_server;
+        $user->smtp_uname = $request->smtp_uname;
+        $user->smtp_port = $request->smtp_port;
+        $user->smtp_protocol = $request->smtp_protocol;
+
+        $user->save();
+
+        return redirect('/tutorial/step1');
+    }
+
     // return the fields to the new email view from the ajax call with template
     public function returnFields(Request $request)
     {
@@ -157,7 +211,7 @@ class ActionController extends Controller
                 {
                     // shave the delimiters
                     $field = trim($match,'@@');
-                    $fields[] = strtolower($field);
+                    $fields[] = $field;
                 }
                 $fields = array_unique($fields, SORT_REGULAR);
             }
@@ -193,9 +247,36 @@ class ActionController extends Controller
             return Email::processManualData($request, $email, $user);
         }
     }
+
+    // check if the smtp connection auths
+    public function doSmtpAuthCheck($ePassword)
+    {
+        // auth the user
+        $user = Auth::user();
+
+        // Create the Transport
+        try
+        {
+            $password = base64_decode($ePassword);
+
+            $mailer = Utils::buildSmtpMailer($user,$password);
+
+            // try to auth the SMTP server
+            $mailer->getTransport()->start();
+
+        }
+        catch(\Swift_TransportException $e)
+        {
+            return 'not_authed';
+        }
+
+        return 'authed';
+
+        
+    }
     
     // send the emails
-    public function sendEmail($email_id, $message_id)
+    public function sendEmail($email_id, $message_id, $password = null)
     {
         // get the user info
         $user = Auth::user();
@@ -203,18 +284,14 @@ class ActionController extends Controller
         $email = Email::find($email_id);
         $email->temp_recipients_list = null;
         $email->save();
-        // get up a gmail client connection
-        $client = User::googleClient();
-        // get the gmail service
-        $gmail = new \Google_Service_Gmail($client);
-
-
         // send out the email
 
         // if they're not a paid user, make sure they don't send more than 10 emails per day
         $emailsLeft = User::howManyEmailsLeft();
         if($emailsLeft > 0)
         {
+
+            // set the message up
             $message = Message::find($message_id);
             // prepend the read receipt callback webhook to the message
 
@@ -231,16 +308,42 @@ class ActionController extends Controller
                 // if they selected the 'send to salesforce' button for the email...
                 $mail->addBCC($user->sf_address);
             }
-            $data = base64_encode($mail->toString());
-            $data = str_replace(array('+','/','='),array('-','_',''),$data); // url safe
-            $m = new \Google_Service_Gmail_Message();
-            $m->setRaw($data);
-            $gmailMessage = $gmail->users_messages->send('me', $m);
-            // insert the returned google message id into the DB and mark it as sent
-            $message->google_message_id = $gmailMessage->id;
+
+            // send out the message based on their email setup
+            if($user->gmail_user == 1)
+            {
+                // get up a gmail client connection
+                $client = User::googleClient();
+
+                // get the gmail service
+                $gmail = new \Google_Service_Gmail($client);
+
+                // make the message RFC compliant
+                $data = base64_encode($mail->toString());
+                $data = str_replace(array('+','/','='),array('-','_',''),$data); // url safe
+                $m = new \Google_Service_Gmail_Message();
+                $m->setRaw($data);
+                $gmailMessage = $gmail->users_messages->send('me', $m);
+                // insert the returned google message id into the DB and mark it as sent
+                $message->google_message_id = $gmailMessage->id;
+            }
+            else // if they're using their own companies SMTP server...
+            {
+                // decrypt and assign the password
+                $password = base64_decode($password);
+
+                // build the mailer
+                $mailer = Utils::buildSmtpMailer($user,$password);
+            
+                // send the email from the messages above
+                $result = $mailer->send($mail);
+            }
+
+            // save the message info now that the emails have been sent
             $message->status = 'sent';
             $message->sent_at = time();
             $message->save();
+
         }
         else
         {
@@ -385,7 +488,7 @@ class ActionController extends Controller
 
         // send them a confirmation email
         $subject = 'Mailsy team successfully created';
-        $body = 'You\'ve successfully created a team on Mailsy! You have purchased '.$request->user_count.' licenses and your team can signup to use these licenses at '.env('DOMAIN').'/team/'.$domain.'.';
+        $body = 'You\'ve successfully created a team on Mailsy! You have purchased '.$request->user_count.' licenses and your team can signup to use these licenses at '.env('DOMAIN').'/join/'.$domain.'.';
 
         Utils::sendEmail($user->email,$subject,$body);
 
@@ -396,9 +499,32 @@ class ActionController extends Controller
     // requests, updates, and return the message status
     public function doUpdateMessageStatus($id)
     {
-        // get the message object
-        $message = Message::find($id);
-        return ucfirst($message->status);
+        // auth the user
+        $user = Auth::user();
+
+        $status = Message::updateMessageStatus($id);
+
+        return ucfirst($status);
+    }
+
+    // ajax route to return reply rate on home page (so the page doesn't take forever to load since this has to make a call to google for each message)
+    public function doReturnReplyRate($email_id)
+    {
+        // find the messages for this email
+        $messageCount = Message::where('email_id',$email_id)->whereNull('deleted_at')->count();
+
+        if($messageCount < 1)
+        {
+            $messageCount = 1;
+        }
+
+        // return the reply count
+        $replyCount = Message::where('email_id',$email_id)->where('status','replied')->whereNull('deleted_at')->count();
+
+        // find the reply percentage
+        $replyRate = round(($replyCount / $messageCount) * 100);
+
+        return $replyRate;
     }
 
     // update a customer card
@@ -430,7 +556,7 @@ class ActionController extends Controller
         // auth the user
         $user = Auth::user();
 
-        // since their an admin cancel their's and everyone they're paying f
+        // since their an admin cancel their's and everyone they're paying for
         // retrieve the subscription info
         // set the stripe token
         \Stripe\Stripe::setApiKey(env('STRIPE_TOKEN'));
@@ -448,6 +574,15 @@ class ActionController extends Controller
                 $success = User::where('id',$child->id)->update(['expires' => $subscription->current_period_end, 'belongs_to' => NULL]);
                 // send the child an email letting them know that their admin cancelled their subscription
             } 
+        }
+
+        // if the user has a company team, delete it
+        $company = Customer::where('owner_id',$user->id)->whereNull('deleted_at')->first();
+
+        if($company)
+        {
+            $company->deleted_at = time();
+            $company->save();
         }
 
         // cancel the subscription
@@ -558,6 +693,12 @@ class ActionController extends Controller
         $child = User::find($request->child_id);
         $child->paid = null;
         $child->belongs_to = null;
+        $child->belongs_to_team = null;
+        // if the user is the child, and they're only managing themself, erase that relationship
+        if($child->id == $user->belongs_to)
+        {
+            $child->has_users = null;
+        }
         $child->save();
 
         // send the child an email letting them know that they've been revoked
@@ -569,7 +710,7 @@ class ActionController extends Controller
         Utils::sendEmail($child->email,$subject,$body);
 
         // return the company information
-        $customer = Customer::where('owner_id',$user->id)->first();
+        $customer = Customer::where('owner_id',$user->id)->whereNull('deleted_at')->first();
 
         // if the admin has licenses to get back....
         if($customer->total_users > $customer->users_left)
@@ -706,9 +847,12 @@ class ActionController extends Controller
         return $response;
     }
 
-    public function doArchiveTemplate($id)
+    public function doArchiveTemplate($eid)
     {
         $user = Auth::user();
+
+        // decrypt the id
+        $id = base64_decode($eid);
 
         $email = Email::find($id);
         $email->deleted_at = time();
@@ -717,9 +861,12 @@ class ActionController extends Controller
         return redirect('/home');
     }
 
-    public function doDearchiveTemplate($id)
+    public function doDearchiveTemplate($eid)
     {
         $user = Auth::user();
+
+        // decrypt the id
+        $id = base64_decode($eid);
 
         $email = Email::find($id);
         $email->deleted_at = null;
@@ -745,7 +892,7 @@ class ActionController extends Controller
                 {
                     // shave the delimiters
                     $field = trim($match,'@@');
-                    $fields[] = strtolower($field);
+                    $fields[] = $field;
                 }
                 $fields = array_unique($fields, SORT_REGULAR);
             }
@@ -794,6 +941,57 @@ class ActionController extends Controller
             // send the user to the 'use' view
             return redirect('/home');
         }
+
+    }
+
+    public function doMakeTeam($id)
+    {
+        $user = Auth::user();
+
+        $new_admin = User::whereId($id)->first();
+        $new_admin->team_admin = 1;
+        $new_admin->belongs_to_team = $id;
+        $new_admin->save();
+
+        return redirect('/admin?message=newTeamCreated');
+
+    }
+
+    public function doDestroyTeam($id)
+    {
+        $user = Auth::user();
+
+        $formerUsers = User::where('belongs_to_team', $id)->update(['belongs_to_team' => null]);
+
+        $notAdmin = User::whereId($id)->first();
+        $notAdmin->team_admin = null;
+        $notAdmin->belongs_to_team = null;
+        $notAdmin->save();
+
+        return redirect('/admin?message=teamDestroyed');
+
+    }
+
+    public function doAddToTeam($id, $admin_id)
+    {
+        $user = Auth::user();
+
+        //update stuff
+        User::where('id', $id)->update(['belongs_to_team' => $admin_id]);
+
+        return redirect('/admin?message=userAdded');
+
+    }
+
+    public function doRemoveFromTeam($id)
+    {
+        $user = Auth::user();
+
+        $notMember = User::whereId($id)->first();
+        $notMember->belongs_to_team = null;
+        $notMember->save();
+
+        return redirect('/admin?message=userRemoved');
 
     }
 

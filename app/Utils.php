@@ -28,4 +28,18 @@ class Utils extends Model
 
     	$mailin->send_transactional_template($data);
     }
+
+    // build the SMTP transport and mailer for Swift Mailer
+    public static function buildSmtpMailer($user,$password)
+    {
+
+        // build the transport mechanism
+        $transport = \Swift_SmtpTransport::newInstance($user->smtp_server, $user->smtp_port, $user->smtp_protocol)
+        ->setUsername($user->smtp_uname)
+        ->setPassword($password);
+
+        $mailer = \Swift_Mailer::newInstance($transport);
+
+        return $mailer;
+    }
 }

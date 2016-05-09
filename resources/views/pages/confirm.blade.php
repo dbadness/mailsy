@@ -19,6 +19,7 @@
 		@endif
 		<p>
 			{!! Form::token() !!}
+			<span id="cancelationLoader" style='display:none;'><img src='/images/loader.gif'></span>
 			<button class="btn btn-danger" id='masterCancelButton' style='float:right;' role="button">Cancel Membership</button>
 			<button class="btn btn-primary" style='float:right;margin:0 20px 0 0;' href='/settings' role="button">Back to Settings</button>
 		</p>
@@ -36,6 +37,9 @@
 				},
 				success : function(){
 					window.location = '/settings?message=subscriptionCancelled';
+				},
+				beforeSend: function() {
+					$('#cancelationLoader').show();
 				},
 				error : function(){
 					alert('Something went wrong... please email hello@mailsy.co for help');

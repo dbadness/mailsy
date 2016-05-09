@@ -32,7 +32,7 @@ $(document).ready(function()
 		handler.open({
 			name: 'Mailsy Subscription',
 			description: customerInfo,
-			amount: 1000,
+			amount: 2000,
 			email: customerEmail,
 			allowRememberMe: false,
 			token: function(token)
@@ -72,7 +72,7 @@ $(document).ready(function()
 			handler.open({
 				name: 'Mailsy Subscription',
 				description: 'for '+company,
-				amount: 1000*users,
+				amount: 2000*users,
 				email: customerEmail,
 				allowRememberMe: false,
 				token: function(token)
