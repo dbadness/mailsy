@@ -36,7 +36,7 @@
 						<h3>Use Mailsy with Company Email</h3>
 						<p>Select this option if you use a company email system. We'll help you set everything up in the next step.</p>
 						<div id='signupWrapper'>
-							{!! Form::open(array('url' => '/signup'))!!}
+							{!! Form::open(array('url' => '/signup', 'id' => 'signupForm'))!!}
 								{!! Form::token() !!}
 								<div class="input-group">
 									<span>Full Name:</span>
@@ -48,6 +48,7 @@
 								  	<span>A Password for Mailsy:</span>
 								  	<input type="password" name='password' class="form-control">
 								</div>
+								<span id='badInfo' style='color:red;display:none;'>Please enter your name, email, and a password.</span>
 						</div>
 						<p>
 							<button id='signupButton' class="btn btn-primary" role="button">Sign Up</button>

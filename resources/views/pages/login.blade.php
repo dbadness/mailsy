@@ -39,8 +39,9 @@
 							  	<span>Password:</span>
 							  	<input type="password" name='password' class="form-control">
 							</div>
+							<span id='badInfo' style='color:red;display:none;'>Please enter your email and password.</span>
 							<br>
-							<button id='signupButton' class="btn btn-primary" role="button">Sign Up</button>
+							<button id='signupButton' class="btn btn-primary" role="button">Log In</button>
 						{!! Form::close() !!}
 					</div>
 				</div>

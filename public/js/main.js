@@ -2,6 +2,30 @@ $(document).ready(function(){
 
 	/**
 	*
+	* Signup and login pages
+	* 
+	*/
+	// validate the signup and login forms
+	$('#signupButton').click(function(e)
+	{
+		e.preventDefault();
+
+		var email = $('input[name=email]').val();
+		var password = $('input[name=password]').val();
+
+		if((email == '') || (password == ''))
+		{
+			$('#badInfo').show();
+		}
+		else
+		{
+			$('#badInfo').hide();
+			$('#signupForm').submit();
+		}
+	});
+
+	/**
+	*
 	* SMTP setup and testing page
 	*
 	*/
