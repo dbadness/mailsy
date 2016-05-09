@@ -261,14 +261,18 @@ class ActionController extends Controller
 
             $mailer = Utils::buildSmtpMailer($user,$password);
 
+            // try to auth the SMTP server
+            $mailer->getTransport()->start();
+
         }
         catch(\Swift_TransportException $e)
         {
             return 'not_authed';
-            die;
         }
 
         return 'authed';
+
+        
     }
     
     // send the emails
@@ -326,10 +330,10 @@ class ActionController extends Controller
             else // if they're using their own companies SMTP server...
             {
                 // decrypt and assign the password
-                $user->password = base64_decode($password);
+                $password = base64_decode($password);
 
                 // build the mailer
-                $mailer = Utils::buildSmtpMailer($user);
+                $mailer = Utils::buildSmtpMailer($user,$password);
             
                 // send the email from the messages above
                 $result = $mailer->send($mail);

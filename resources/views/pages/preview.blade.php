@@ -79,7 +79,7 @@
 						<p>Since we don't save your email password, please enter it here so we can send your emails along.</p>
 						<div class="input-group">
 						  	<span class="input-group-addon" id="basic-addon1">Email Password</span>
-						  	<input type="text" class="form-control" name='penguin' aria-describedby="basic-addon1">
+						  	<input type="password" class="form-control" name='penguin' aria-describedby="basic-addon1">
 						</div>
 					</div>
 					<div class="modal-footer">

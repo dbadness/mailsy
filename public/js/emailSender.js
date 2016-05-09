@@ -14,24 +14,22 @@ $(document).ready(function()
 	// the sending function
 	function sendEmails(messageId,penguin = null)
 	{
-		setTimeout(function(){
-			$.ajax({
-				url: '/sendEmail/'+emailId+'/'+id.value+'/'+password,
-				success: function(response){
+		$.ajax({
+			url: '/sendEmail/'+emailId+'/'+messageId+'/'+penguin,
+			success: function(response){
 
-					// increment the progress bar
-					total += increment;
-					$('.progress-bar').css('width',total.toFixed(0)+'%');
-					$('#progressText').html(total.toFixed(0)+'% Complete');
+				// increment the progress bar
+				total += increment;
+				$('.progress-bar').css('width',total.toFixed(0)+'%');
+				$('#progressText').html(total.toFixed(0)+'% Complete');
 
-					// show the close button
-					$('#closeEmailModal').show();
-				},
-				error: function(){
-					alert('Something went wrong. Please log out of Mailsy, log back in, and try again. If something\'s really broken, email us a support@mailsy.co and we\'d be happy to help.');
-				}
-			});
-		}, (i*500))
+				// show the close button
+				$('#closeEmailModal').show();
+			},
+			error: function(){
+				alert('Something went wrong. Please log out of Mailsy, log back in, and try again. If something\'s really broken, email us a support@mailsy.co and we\'d be happy to help.');
+			}
+		});
 	}
 
 	$('#sendButton').click(function()
@@ -84,13 +82,13 @@ $(document).ready(function()
 								// go through each mesage and send that email
 								$.each(messages, function(i,id)
 								{
-									sendEmails(id.value);
+									sendEmails(id.value,penguin);
 								});
 							}
 						},
 						error: function()
 						{
-
+							alert('Something went wrong! Please let us know by emailing support@mailsy.co.');
 						}
 					});
 				}
