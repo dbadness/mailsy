@@ -35,7 +35,7 @@ $(document).ready(function()
 	$('#sendButton').click(function()
 	{
 		// if they need to enter a password, let them
-		if($('input[name=gmail_user]').val() != 1)
+		if($('input[name=gmail_user]').val() == '0')
 		{
 			$('#passwordModal').modal('show');
 
