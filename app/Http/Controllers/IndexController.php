@@ -93,8 +93,8 @@ class IndexController extends Controller
         $client->setScopes(['https://mail.google.com', 'profile', 'email']);
         $client->setAccessType('offline');
 
-        // if they're signing up for the first time, force the prompt so we can get a refresh token
-        if($signup == 1)
+        // if they're signing up for the first time or haven't logged in since v1 release, force the prompt so we can get a refresh token
+        // if($signup == 1)
         {
             $client->setApprovalPrompt('force'); // so we're sure to show the screen to the user (and get a refresh token)
         }
