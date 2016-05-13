@@ -7,7 +7,7 @@
 	<div class='jumbotron' style='height:500px;float:right;width:500px;'>
 		<h3>Uh oh, we're on a road to nowhere.</h3>
 		<p>Even the best in the world lose their way sometimes. No worries, let's get back on track.</p>
-		<a href='/home'><div class='btn btn-primary' role='button'>Go Home</div></a>
+		<a href="{{ route('home') }}"><div class='btn btn-primary' role='button'>Go Home</div></a>
 	</div>
 	<div class='clear'></div>
 

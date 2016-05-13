@@ -87,13 +87,13 @@
                         <a href="#pricing">Pricing</a>
                     </li>
                     <li>
-                        <a href="/faq">FAQ</a>
+                        <a href="{{ route('faq') }}">FAQ</a>
                     </li>
                     <li>
-                        <a href="/signup">Sign Up</a>
+                        <a href="{{ route('signup') }}">Sign Up</a>
                     </li>
                     <li>
-                        <a href="/login">Log In</a>
+                        <a href="{{ route('login') }}">Log In</a>
                     </li>
                 </ul>
             </div>
@@ -116,7 +116,7 @@
                         <hr class="intro-divider">
                         <ul class="list-inline intro-social-buttons">
                             <li>
-                                <a href="/signup" class="btn btn-info btn-lg"><span class="network-name">Signup for Free</span></a>
+                                <a href="{{ route('signup') }}" class="btn btn-info btn-lg"><span class="network-name">Signup for Free</span></a>
                             </li>
                         </ul>
                     </div>
@@ -356,7 +356,7 @@
                             <td>
                             </td>
                             <td>
-                                <a href='/signup'><button class='btn btn-primary' role='button'>Sign Up for Free</button></a>
+                                <a href="{{ route('signup') }}"><button class='btn btn-primary' role='button'>Sign Up for Free</button></a>
                             </td>
                             <td>
                             </td>

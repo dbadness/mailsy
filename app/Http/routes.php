@@ -11,14 +11,8 @@
 |
 */
 
-// Route::group(['middleware' => 'notAuth'], function(){
-	Route::get('/', ['as' => 'index', 'uses' => 'IndexController@showIndex']);
-	Route::get('/faq', ['as' => 'faq', 'uses' => 'IndexController@showFaq']);
-	Route::get('/signup/{license?}/{domain?}', ['as' => 'signup', 'uses' => 'IndexController@showSignup']);
-	Route::post('/signup/{license?}', ['as' => 'signupPost', 'uses' => 'IndexController@doSignup']);
-	Route::get('/login', ['as' => 'login', 'uses' => 'IndexController@showLogin']);
-	Route::post('/login', ['as' => 'loginPost', 'uses' => 'IndexController@doLogin']);
-// });
+Route::get('/', ['as' => 'index', 'uses' => 'IndexController@showIndex']);
+Route::get('/faq', ['as' => 'faq', 'uses' => 'IndexController@showFaq']);
 
 // auth stuff
 Route::get('/auth/{signup?}/{license?}', ['as' => 'Auth', 'uses' => 'IndexController@doAuth']); // signup and license are boolean values, 0 and 1
@@ -28,6 +22,20 @@ Route::get('/logout', function(){
 	return redirect('/');
 });
 
+//Has special access restrictions in Administrator.php
+Route::get('/admin', ['as' => 'admin', 'uses' => 'PagesController@showAdmin']);
+
+Route::get('/join/{customer}', ['as' => 'join', 'uses' =>'IndexController@showCompanyPage']);
+Route::get('/track/{e_user_id}/{e_message_id}', ['as' => 'track', 'uses' => 'ActionController@doTrack']); // processes a read receipt when a recipient opens an email
+
+// Route::group(['middleware' => 'notAuth'], function(){
+	Route::get('/signup/{license?}/{domain?}', ['as' => 'signup', 'uses' => 'IndexController@showSignup']);
+	Route::post('/signup/{license?}', ['as' => 'signupPost', 'uses' => 'IndexController@doSignup']);
+	Route::get('/login', ['as' => 'login', 'uses' => 'IndexController@showLogin']);
+	Route::post('/login', ['as' => 'loginPost', 'uses' => 'IndexController@doLogin']);
+// });
+
+//This is currently being done at the controller level in the __construct call.
 // Route::group(['middleware' => 'auth'], function(){
 	// pages
 	Route::get('/home', ['as' => 'home', 'uses' => 'PagesController@showHome']);
@@ -48,12 +56,6 @@ Route::get('/logout', function(){
 	Route::get('/copy/{id}', ['as' => 'copy', 'uses' => 'PagesController@showCopy']);
 	Route::get('/view/{id}', ['as' => 'view', 'uses' => 'PagesController@showView']);
 // });
-
-//Has special access restrictions in Administrator.php
-Route::get('/admin', ['as' => 'admin', 'uses' => 'PagesController@showAdmin']);
-
-Route::get('/join/{customer}', ['as' => 'join', 'uses' =>'IndexController@showCompanyPage']);
-Route::get('/track/{e_user_id}/{e_message_id}', ['as' => 'track', 'uses' => 'ActionController@doTrack']); // processes a read receipt when a recipient opens an email
 
 // testing
 Route::get('/smtp-tester', ['as' => 'smtpTesterGet', 'uses' => 'IndexController@showSmtpTester']);
@@ -76,7 +78,6 @@ Route::post('/updateSubscription/{direction}', ['as' => 'updateSubscription', 'u
 Route::get('/archive/{eid}', ['as' => 'archive', 'uses' => 'ActionController@doArchiveTemplate']);
 Route::get('/dearchive/{eid}', ['as' => 'dearchive', 'uses' => 'ActionController@doDearchiveTemplate']);
 Route::get('/hubify/{id}/{status}', ['as' => 'hubify', 'uses' => 'ActionController@doHubifyTemplate']);
-
 Route::get('/makeTeam/{id}','ActionController@doMakeTeam');
 Route::get('/destroyTeam/{id}','ActionController@doDestroyTeam');
 Route::get('/addToTeam/{id}/{admin_id}','ActionController@doAddToTeam');

@@ -70,14 +70,14 @@
         <nav class="navbar navbar-default">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <a class="navbar-brand topnav" href="/"><img src='/images/logo.png' alt='Mailsy' width='80px'></a>
+                    <a class="navbar-brand topnav" href="{{ route('index') }}"><img src='/images/logo.png' alt='Mailsy' width='80px'></a>
                 </div>
                 <!-- Collect the nav links, forms, and other content for toggling -->
                     @if(isset($user))
                         <ul class="nav navbar-nav navbar-right">
                             <ul class="nav navbar-nav">
                                 <li>
-                                    <a href='/home'>Go to Your Dashboard</a>
+                                    <a href="{{ route('home') }}">Go to Your Dashboard</a>
                                 </li>
                             </ul>
                         </ul>
@@ -85,10 +85,10 @@
                         <ul class="nav navbar-nav navbar-right">
                             <ul class="nav navbar-nav">
                                 <li>
-                                    <a href='/signup'>Sign Up</a>
+                                    <a href="{{ route('signup') }}">Sign Up</a>
                                 </li>
                                 <li>
-                                    <a href='/login'>Log In</a>
+                                    <a href="{{ route('login') }}">Log In</a>
                                 </li>
                             </ul>
                         </ul>
