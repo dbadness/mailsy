@@ -13,6 +13,7 @@ use App\Email;
 use App\Message;
 use App\Customer;
 use Log;
+use View;
 
 class PagesController extends Controller
 {
@@ -20,14 +21,15 @@ class PagesController extends Controller
     {
         // everything in this controller is for authed users only
         $this->middleware('auth');
+
+        $user = Auth::user();
+
+        view()->share('user', $user);
     }
 
     // show the home page once the user is authed
     public function showHome()
     {
-        // auth the user
-        $user = Auth::user();
-
         //return their emails and it's metadata if not archived
         $emails = Email::where('user_id',$user->id)->whereNull('deleted_at')->paginate(9);
 
@@ -51,7 +53,7 @@ class PagesController extends Controller
         //return their emails and it's metadata if not archived
         $archived = Email::where('user_id',$user->id)->whereNotNull('deleted_at')->count();
 
-        return view('pages.home', ['user' => $user, 'emails' => $emails, 'archived' => $archived]);
+        return view('pages.home', ['emails' => $emails, 'archived' => $archived]);
     }
 
     // if this is a new non-google user, send them to the smtp set up page

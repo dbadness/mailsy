@@ -16,7 +16,8 @@
         <link rel="stylesheet" href="{!! asset('/css/main.css') !!}">
         <script src="{!! asset('/js/main.js') !!}"></script>
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
-        <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"> @yield('PageJS')
+        <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        @yield('PageJS')
 
         <link href="/css/summernote.css" rel="stylesheet">
         <script src="/js/summernote.js"></script>
@@ -77,7 +78,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand topnav" href="/home"><img src='/images/logo.png' alt='Mailsy' width='80px'>
+                <a class="navbar-brand topnav" href="{{ route('home') }}"><img src='/images/logo.png' alt='Mailsy' width='80px'>
                 </a>
             </div>
 
@@ -85,10 +86,10 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li>
-                        <a href="/home">Dashboard <span class="sr-only">(current)</span></a>
+                        <a href="{{ route('home') }}">Dashboard <span class="sr-only">(current)</span></a>
                     </li>
                     <li>
-                        <a href="/create">New Template</a>
+                        <a href="{{ route('create') }}">New Template</a>
                     </li>
 <!--
                     @if($user->paid)
@@ -105,7 +106,7 @@
                     @endif
                     @if($user->admin == 'yes')
                         <li>
-                            <a href="/admin">Team Admin</a>
+                            <a href="{{ route('admin') }}">Team Admin</a>
                         </li>
 
                     @endif
@@ -115,12 +116,12 @@
 
                     <ul class="nav navbar-nav navbar-right">
                         <ul class="nav navbar-nav">
-                            <li><a href='/settings'>{!! $user->email !!}</a></li>
+                            <li><a href="{{ route('settings') }}">{!! $user->email !!}</a></li>
                             <li>
                                 @if(!$user->paid)
-                                    <a href='/upgrade'>({!! App\User::howManyEmailsLeft() !!} emails left today)</a>
+                                    <a href="{{ route('upgrade') }}">({!! App\User::howManyEmailsLeft() !!} emails left today)</a>
                                 @else
-                                    <a href='/settings'>
+                                    <a href="{{ route('settings') }}">
                                         Upgraded Account!
                                         @if($user->expires)
                                             (until {!! date('m-d-Y',$user->expires) !!})
@@ -131,9 +132,9 @@
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">More <span class="caret"></span></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="/settings">Settings</a>
+                                    <li><a href="{{ route('settings') }}">Settings</a>
                                     </li>
-                                    <li><a href="/tutorial/step1">Tutorial</a>
+                                    <li><a href="{{ route('tutorial1') }}">Tutorial</a>
                                     </li>
                                     <li role="separator" class="divider"></li>
                                     <li>
@@ -151,13 +152,13 @@
                                             ?>
                                             @if($teamCheck)
                                                 @if($company->users_left > 0)
-                                                    <a href='/settings'>Join Your Team</a>
+                                                    <a href="{{ route('settings') }}">Join Your Team</a>
                                                 @endif
                                             @else
-                                                <a href='/upgrade'>Upgrade</a>
+                                                <a href="{{ route('upgrade') }}">Upgrade</a>
                                             @endif
                                         @else
-                                            <a href='/settings'>Upgraded Account!</a>
+                                            <a href="{{ route('settings') }}">Upgraded Account!</a>
                                         @endif
                                     </li>
                                     <li role="separator" class="divider"></li>
@@ -176,7 +177,7 @@
                 <div class="alert alert-warning alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
                     </button>
-                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> You've reached the maximum number of emails you can send per day on a free account. If you love Mailsy, why not <a class='alert-link' href='/upgrade'>upgrade</a> so you can send unlimited emails per day?
+                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> You've reached the maximum number of emails you can send per day on a free account. If you love Mailsy, why not <a class='alert-link' href="{{ route('upgrade') }}">upgrade</a> so you can send unlimited emails per day?
                 </div>
             @endif
             @yield('content')

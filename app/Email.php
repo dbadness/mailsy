@@ -11,6 +11,68 @@ class Email extends Model
     
     // don't automitically add timestamps to new/updated records
     public $timestamps = false;
+
+    public static function makeFieldList($user, $request)
+    {
+
+        // combine the subject and template for regex matching
+        $content = $request->_subject.' '.$request->_email_template;
+
+        // find the variables in the email and return them to the view        
+        preg_match_all('/@@[a-zA-Z0-9]*/',$content,$matches);
+        if($matches)
+        {
+            foreach($matches as $k => $v)
+            {
+                $fields = [];
+                foreach($v as $match)
+                {
+                    // shave the delimiters
+                    $field = trim($match,'@@');
+                    $fields[] = $field;
+                }
+                $fields = array_unique($fields, SORT_REGULAR);
+                return $fields;
+            }
+//            return redirect('/use/'.base64_encode($email->id));
+        }
+        else
+        {
+            $fields = [];
+            return $fields;
+        }
+
+    }
+
+    public static function makeNewEmail($user, $request)
+    {
+
+        $email = new Email;
+        $email->user_id = $user->id;
+        $email->name = $request->_name;
+        $email->subject = $request->_subject;
+        $email->template = $request->_email_template;
+        $email->creator_name = $user->name;
+        $email->created_at = time();
+        $email->shared = 0;
+        $email->copies = 0;
+        if($user->admin)
+        {
+            $email->creator_company = $user->id;
+        } else
+        {
+            $email->creator_company = $user->belongs_to;
+        }
+
+        $fieldsOut = Email::makeFieldList($user, $request);
+
+        // save the fields to the DB
+        $email->fields = json_encode($fieldsOut);
+        $email->save();
+
+        return $email->id;
+
+    }
     
     public static function processCSV($request, $email, $user)
     {

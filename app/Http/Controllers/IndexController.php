@@ -10,7 +10,7 @@ use App\Http\Controllers\Controller;
 use App\User;
 use App\Customer;
 use App\Utils;
-use Auth;   
+use Auth;
 
 use \Sendinblue\Mailin as Mailin;
 

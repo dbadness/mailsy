@@ -14,16 +14,16 @@
 			<p>Mailsy allows you to send multiple, individualized emails in seconds - 
 			create a template, fill in the pieces of relevent information, 
 			and  hit send. Just once!</p>
-			<p>Dive right in and <a href='/create'><strong>create your first template!</strong></a> or check out the <a href='/faq'><strong>quickstart guide</strong></a>.</p>
+			<p>Dive right in and <a href="{{ route('create') }}"><strong>create your first template!</strong></a> or check out the <a href="{{ route('faq') }}"><strong>quickstart guide</strong></a>.</p>
 		</div>
 
 		<div class="alert alert-info" role="alert">
 			No emails to report yet...
 			
 			@if(!$user->paid)
-				<a href='/create' class='alert-link'>Create a template</a> and send up to 10 emails per today on the free account.
+				<a href="{{ route('create') }}" class='alert-link'>Create a template</a> and send up to 10 emails per today on the free account.
 			@else
-				<a href='/create' class='alert-link'>Create a template</a> and send hundreds of emails per day since you have an upgraded account!
+				<a href="{{ route('create') }}" class='alert-link'>Create a template</a> and send hundreds of emails per day since you have an upgraded account!
 			@endif
 		</div>
 		
@@ -32,7 +32,7 @@
 		<!-- show the archived emails if there are any -->
 		@if($archived > 0)
 
-			<a href='/archives'>Archived Templates</a>
+			<a href="{{ route('getArchive') }}">Archived Templates</a>
 
 		@endif
 
@@ -71,11 +71,11 @@
 							</div>
 
 							<!-- action buttons -->
-							<a class="btn btn-primary" href='/use/{!! base64_encode($email->id) !!}'>use</a>
-							<a class="btn btn-info" href='/email/{!! base64_encode($email->id) !!}'>messages</a>
-							<a class="btn btn-info" href='/edit/{!! base64_encode($email->id) !!}'>edit</a>
-							<a class="btn btn-info" href='/copy/{!! base64_encode($email->id) !!}'>copy</a>
-							<a class="btn btn-danger" href='/archive/{!! base64_encode($email->id) !!}'>archive</a>
+							<a class="btn btn-primary" href="{!! route('use', array( base64_encode($email->id) )) !!}">use</a>
+							<a class="btn btn-info" href="{!! route('email', array( base64_encode($email->id) )) !!}">messages</a>
+							<a class="btn btn-info" href="{!! route('edit', array( base64_encode($email->id) )) !!}">edit</a>
+							<a class="btn btn-info" href="{!! route('copy', array( base64_encode($email->id) )) !!}">copy</a>
+							<a class="btn btn-danger" href="{!! route('archive', array( base64_encode($email->id) )) !!}">archive</a>
 							
 							@if($user->can_see_secrets == 1)
 								<!-- actions for the hub -->
@@ -85,7 +85,7 @@
 										<span class="caret"></span></button>
 										<ul class="dropdown-menu">
 											@if($email->shared == 0)
-												<li class="active"><a href="/hubify/{!! base64_encode($email->id) !!}/0">Private</a></li>
+												<li class="active"><a href="{!! route('archive', array( base64_encode($email->id) )) !!}""/hubify/{!! base64_encode($email->id) !!}/0">Private</a></li>
 											@else
 												<li><a href="/hubify/{!! base64_encode($email->id) !!}/0">Private</a></li>
 											@endif
