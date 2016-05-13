@@ -39,7 +39,7 @@
 					<input name='message_id' value='{!! $message->id !!}' type='hidden'/>
 					<tr>
 						<td>{!! $message->recipient !!}</td>
-						<td class='emailListRight'><span class='viewMessage' messageId='{!! $message->id !!}'>View Message</span></td>
+						<td class='emailListRight'><a class="btn btn-primary" id='userModalButton' data-toggle="modal" data-target="#messageModal{{$message->id}}">View Message</a></td>
 						<td class='emailListRight'>{!! date('D, M d, Y g:ia', $message->sent_at) !!} EST</td>
 						<td class='emailListRight'><span id='status{!! $message->id !!}'></span></td>
 						<td class='emailListRight'>
@@ -57,4 +57,39 @@
 			@endif
 		</table>
 	</div>
+
+			@if($messages != '[]')
+				@foreach($messages as $message)
+					<!-- Make a modal for team handling -->
+					<!-- Modal -->
+					<div id="messageModal{{$message->id}}" class="modal fade" role="dialog">
+						<div class="modal-dialog">
+							<!-- Modal content-->
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+									<h4 class="modal-title">Message to {!! $message->recipient !!}</h4>
+								</div>
+								<div class="modal-body">
+									<h6>Subject</h6>
+									<hr>
+									{{ $message->subject }}
+									<hr>
+									<h6>Message</h6>
+									<hr>
+									{{ $message->message }}
+								</div>
+								<br>
+								<br>
+								<div class="modal-footer">
+									<img id='subModalLoader' style='display:none;' src='/images/loader.gif'>
+									<button type="button" class="btn btn-default" data-dismiss="modal" id='closeSubModalButton'>Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				@endforeach
+			@endif
+
+
 @endsection
