@@ -16,13 +16,18 @@ use Response;
 
 class ActionController extends Controller
 {
+    public function __construct()
+    {
+        // everything in this controller is for authed users only
+        $this->middleware('auth');
+
+        //Use this to set any variables that should be available to all functions in this controller.
+        $this->user = Auth::user();
+    }
 
     // send a test email when the user sets up their smtp settings
     public function doSmtpTester(Request $request)
     {
-        // get the email of the user
-        $user = Auth::user();
-
         // Create the Transport
         try
         {
@@ -37,8 +42,8 @@ class ActionController extends Controller
 
             $body = 'Hi there,<br><br>Looks like everything is set up and working correctly! You can now <a href="'.env('DOMAIN').'/smtp-setup">save your email settings on Mailsy</a> and start sending out emails en masse!<br><br>- The Mailsy Team';
 
-            $mail->setFrom(array($user->email));
-            $mail->setTo([$user->email => $user->name]);
+            $mail->setFrom(array($this->user->email));
+            $mail->setTo([$this->user->email => $this->user->name]);
             $mail->setBody($body, 'text/html');
             $mail->setSubject($subject);
 
@@ -58,14 +63,12 @@ class ActionController extends Controller
     // if the test email is successful, save the smtp settings for the user
     public function doSmtpSave(Request $request)
     {
-        $user = Auth::user();
+        $this->user->smtp_server = $request->smtp_server;
+        $this->user->smtp_uname = $request->smtp_uname;
+        $this->user->smtp_port = $request->smtp_port;
+        $this->user->smtp_protocol = $request->smtp_protocol;
 
-        $user->smtp_server = $request->smtp_server;
-        $user->smtp_uname = $request->smtp_uname;
-        $user->smtp_port = $request->smtp_port;
-        $user->smtp_protocol = $request->smtp_protocol;
-
-        $user->save();
+        $this->user->save();
 
         return redirect('/tutorial/step1');
     }
@@ -78,13 +81,13 @@ class ActionController extends Controller
         {
             return 'no main content';
         }
+
         // save the email template
-        $user = Auth::user();
         // if there's no email_id, create one. if there is, use it
         if(!$request->_email_id)
         {
             // create the email object
-            Email::makeNewEmail($user, $request);
+            Email::makeNewEmail($this->user, $request);
 
         }
         else
@@ -94,7 +97,7 @@ class ActionController extends Controller
             $email->subject = $request->_subject;
             $email->template = $request->_email_template;
 
-            $fields = Email::makeFieldList($user, $request);
+            $fields = Email::makeFieldList($this->user, $request);
             $email->fields = json_encode($fields);
             $email->save();
         }
@@ -116,11 +119,10 @@ class ActionController extends Controller
         {
             return 'no main content';
         }
-        // save the email template
-        $user = Auth::user();
 
+        // save the email template
         // create the email object
-        $passID = Email::makeNewEmail($user, $request);
+        $passID = Email::makeNewEmail($this->user, $request);
 
         return redirect('/use/'.base64_encode($passID));
     }
@@ -161,35 +163,29 @@ class ActionController extends Controller
     // take the template's contents and the recipients list and generate previews for the user
     public function makePreviews(Request $request)
     {
-        // auth the user
-        $user = Auth::user();
-
         // find the email object
         $email = Email::find($request->_email_id);
 
         // split on whether there's a CSV or not
         if($request->csvFile)
         {
-            return $response = Email::processCSV($request, $email, $user);
+            return $response = Email::processCSV($request, $email, $this->user);
         } 
         else
         {
-            return Email::processManualData($request, $email, $user);
+            return Email::processManualData($request, $email, $this->user);
         }
     }
 
     // check if the smtp connection auths
     public function doSmtpAuthCheck($ePassword)
     {
-        // auth the user
-        $user = Auth::user();
-
         // Create the Transport
         try
         {
             $password = base64_decode($ePassword);
 
-            $mailer = Utils::buildSmtpMailer($user,$password);
+            $mailer = Utils::buildSmtpMailer($this->user,$password);
 
             // try to auth the SMTP server
             $mailer->getTransport()->start();
@@ -208,8 +204,7 @@ class ActionController extends Controller
     // send the emails
     public function sendEmail($email_id, $message_id, $password = null)
     {
-        // get the user info
-        $user = Auth::user();
+
         // find the email object and delete and temp_recipients_list
         $email = Email::find($email_id);
         $email->temp_recipients_list = null;
@@ -225,22 +220,22 @@ class ActionController extends Controller
             $message = Message::find($message_id);
             // prepend the read receipt callback webhook to the message
 
-            $full_body = $message->message.'<img src="'.env('DOMAIN').'/track/'.base64_encode($user->id).'/'.base64_encode($message->id).'" alt="tracker" title="tracker" style="display:block" width="1" height="1">';
+            $full_body = $message->message.'<img src="'.env('DOMAIN').'/track/'.base64_encode($this->user->id).'/'.base64_encode($message->id).'" alt="tracker" title="tracker" style="display:block" width="1" height="1">';
 
             // use swift mailer to build the mime
             $mail = new \Swift_Message;
-            $mail->setFrom(array($user->email => $user->name));
+            $mail->setFrom(array($this->user->email => $this->user->name));
             $mail->setTo([$message->recipient]);
             $mail->setBody($full_body, 'text/html');
             $mail->setSubject($message->subject);
             if($message->send_to_salesforce)
             {
                 // if they selected the 'send to salesforce' button for the email...
-                $mail->addBCC($user->sf_address);
+                $mail->addBCC($this->user->sf_address);
             }
 
             // send out the message based on their email setup
-            if($user->gmail_user == 1)
+            if($this->user->gmail_user == 1)
             {
                 // get up a gmail client connection
                 $client = User::googleClient();
@@ -263,7 +258,7 @@ class ActionController extends Controller
                 $password = base64_decode($password);
 
                 // build the mailer
-                $mailer = Utils::buildSmtpMailer($user,$password);
+                $mailer = Utils::buildSmtpMailer($this->user,$password);
             
                 // send the email from the messages above
                 $result = $mailer->send($mail);
@@ -286,31 +281,28 @@ class ActionController extends Controller
     // save the settings page
     public function saveSettings(Request $request)
     {
-        $user = Auth::user();
         // update the values in the DB
-        $user->name = $request->name;
-        $user->sf_address = $request->sf_address;
-        $user->signature = $request->signature;
-        $user->timezone = $request->timezone;
+        $this->user->name = $request->name;
+        $this->user->sf_address = $request->sf_address;
+        $this->user->signature = $request->signature;
+        $this->user->timezone = $request->timezone;
 
         if($request->track_email == 'yes')
         {
-            $user->track_email = 'yes';
+            $this->user->track_email = 'yes';
         }
         else
         {
-            $user->track_email = NULL;
+            $this->user->track_email = NULL;
         }
         
-        $user->save();
+        $this->user->save();
 
         return 'success';
     }
     // upgrade the user to a paid account (and send out invites to users if need be)
     public function doUpgrade(Request $request)
     {
-        // auth the user
-        $user = Auth::user();
 
         // attempt to charge their card via stripe
         // See your keys here https://dashboard.stripe.com/account/apikeys
@@ -318,41 +310,41 @@ class ActionController extends Controller
 
         // if this a new subscription...
         // make a new customer if this is their first time upgrading
-        if(!$user->stripe_id)
+        if(!$this->user->stripe_id)
         {
             // Use Stripe's library to make requests...
             $customer = \Stripe\Customer::create(array(
                 'source' => $request->stripe_token,
                 'plan' => 'paid',
-                'email' => $user->email,
+                'email' => $this->user->email,
                 'quantity' => 1
             ));
 
             // set their stripe id and their payment settings
-            $user->stripe_id = $customer->id;
-            $user->status = 'paying';
-            $user->paid = 'yes';
-            $user->expires = null; // in case they reupgrade before their subscription exprires
-            $user->save();
+            $this->user->stripe_id = $customer->id;
+            $this->user->status = 'paying';
+            $this->user->paid = 'yes';
+            $this->user->expires = null; // in case they reupgrade before their subscription exprires
+            $this->user->save();
         }
         else
         {
             // return their existing stripe key and handle the 'resignup' if that's the case based on an expiration
-            $customer = \Stripe\Customer::retrieve($user->stripe_id);
+            $customer = \Stripe\Customer::retrieve($this->user->stripe_id);
             $customer->subscriptions->create(array('plan' => 'paid'));
 
             // update their info in the db
-            $user->status = 'paying';
-            $user->paid = 'yes';
-            $user->expires = null; // in case they reupgrade before their subscription exprires
-            $user->save();
+            $this->user->status = 'paying';
+            $this->user->paid = 'yes';
+            $this->user->expires = null; // in case they reupgrade before their subscription exprires
+            $this->user->save();
         }
 
         // send confirmation email
         $subject = 'You\'re cleared for takeoff...';
         $body = 'Thank you for upgrading Mailsy to a paid account! You can now send a boatload of emails from Mailsy to increase the size and quality of your prospecting pipeline. As we develop new features for Mailsy, you\'ll get access to them automatically.';
 
-        Utils::sendEmail($user->email,$subject,$body);
+        Utils::sendEmail($this->user->email,$subject,$body);
 
         // send them to the settings page so they can see that they're signup for a paid account
         return redirect('/settings?message=upgradeSuccess');
@@ -361,13 +353,11 @@ class ActionController extends Controller
     // create a team and perform the necessary stripe functions
     public function doTeamUpgrade(Request $request)
     {
-        $user = Auth::user();
-
         // return the stripe API key
         \Stripe\Stripe::setApiKey(env('STRIPE_TOKEN'));
 
         // validate the domain
-        $domain = strstr($user->email,'@');
+        $domain = strstr($this->user->email,'@');
         $tld = strrpos($domain, '.');
         // strip the tld
         $domain = substr($domain, 0, $tld);
@@ -376,7 +366,7 @@ class ActionController extends Controller
 
         // add them to the customers table
         $customer = new Customer;
-        $customer->owner_id = $user->id;
+        $customer->owner_id = $this->user->id;
         $customer->company_name = $request->company_name;
         $customer->domain = $domain;
         $customer->total_users = $request->user_count;
@@ -386,41 +376,41 @@ class ActionController extends Controller
 
         // update the information in stripe
         // make a new customer if this is their first time upgrading
-        if(!$user->stripe_id)
+        if(!$this->user->stripe_id)
         {
             // Use Stripe's library to make requests...
             $customer = \Stripe\Customer::create(array(
                 'source' => $request->stripe_token,
                 'plan' => 'paid',
-                'email' => $user->email,
+                'email' => $this->user->email,
                 'quantity' => $request->user_count
             ));
 
             // set their stripe id and their payment settings
-            $user->stripe_id = $customer->id;
-            $user->status = 'paying';
-            $user->admin = 'yes';
-            $user->expires = null; // in case they reupgrade before their subscription exprires
-            $user->save();
+            $this->user->stripe_id = $customer->id;
+            $this->user->status = 'paying';
+            $this->user->admin = 'yes';
+            $this->user->expires = null; // in case they reupgrade before their subscription exprires
+            $this->user->save();
         }
         else
         {
             // return their existing stripe key and handle the 'resignup' if that's the case based on an expiration
-            $customer = \Stripe\Customer::retrieve($user->stripe_id);
+            $customer = \Stripe\Customer::retrieve($this->user->stripe_id);
             $customer->subscriptions->create(array('plan' => 'paid','quantity' => $request->user_count));
 
             // update their info in the db
-            $user->status = 'paying';
-            $user->admin = 'yes';
-            $user->expires = null; // in case they reupgrade before their subscription exprires
-            $user->save();
+            $this->user->status = 'paying';
+            $this->user->admin = 'yes';
+            $this->user->expires = null; // in case they reupgrade before their subscription exprires
+            $this->user->save();
         }
 
         // send them a confirmation email
         $subject = 'Mailsy team successfully created';
         $body = 'You\'ve successfully created a team on Mailsy! You have purchased '.$request->user_count.' licenses and your team can signup to use these licenses at '.env('DOMAIN').'/join/'.$domain.'.';
 
-        Utils::sendEmail($user->email,$subject,$body);
+        Utils::sendEmail($this->user->email,$subject,$body);
 
         // send them back to the settings page
         return redirect('/settings?message=teamCreated');
@@ -429,9 +419,6 @@ class ActionController extends Controller
     // requests, updates, and return the message status
     public function doUpdateMessageStatus($id)
     {
-        // auth the user
-        $user = Auth::user();
-
         $status = Message::updateMessageStatus($id);
 
         return ucfirst($status);
@@ -460,11 +447,9 @@ class ActionController extends Controller
     // update a customer card
     public function doUpdateCard(Request $request)
     {
-        // auth the user
-        $user = Auth::user();
         // create a new card object
         \Stripe\Stripe::setApiKey(env('STRIPE_TOKEN'));
-        $cu = \Stripe\Customer::retrieve($user->stripe_id);
+        $cu = \Stripe\Customer::retrieve($this->user->stripe_id);
         $card = $cu->sources->create(array("source" => $request->stripe_token));
         // update the 'default_source' of the customer for future invoices
         $cu->default_source = $card->id;
@@ -475,7 +460,7 @@ class ActionController extends Controller
         // the email body
         $body = 'Your payment method (ending in '.$card->last4.') has been successully added to your account.';
 
-        Utils::sendEmail($user->email,$subject,$body);
+        Utils::sendEmail($this->user->email,$subject,$body);
 
         return json_encode($card);
     }
@@ -483,20 +468,17 @@ class ActionController extends Controller
     // update/cancel memberships
     public function doCancelMembership(Request $request)
     {
-        // auth the user
-        $user = Auth::user();
-
         // since their an admin cancel their's and everyone they're paying for
         // retrieve the subscription info
         // set the stripe token
         \Stripe\Stripe::setApiKey(env('STRIPE_TOKEN'));
-        $customer = \Stripe\Customer::retrieve($user->stripe_id);
+        $customer = \Stripe\Customer::retrieve($this->user->stripe_id);
         $subscription = $customer->subscriptions->retrieve($customer->subscriptions->data{0}->id);
 
-        if($user->has_users)
+        if($this->user->has_users)
         {
             // get the users that are associated with this admin user
-            $children = User::where('belongs_to',$user->id)->whereNull('deleted_at')->get();
+            $children = User::where('belongs_to',$this->user->id)->whereNull('deleted_at')->get();
             // make everyone a free user at the end of the subscription period
             foreach($children as $child)
             {   
@@ -507,7 +489,7 @@ class ActionController extends Controller
         }
 
         // if the user has a company team, delete it
-        $company = Customer::where('owner_id',$user->id)->whereNull('deleted_at')->first();
+        $company = Customer::where('owner_id',$this->user->id)->whereNull('deleted_at')->first();
 
         if($company)
         {
@@ -517,17 +499,17 @@ class ActionController extends Controller
 
         // cancel the subscription
         $canceledSubscription = $subscription->cancel(['at_period_end' => true]);
-        $user->expires = $subscription->current_period_end;
-        $user->has_users = null;
-        $user->admin = null; // ditch their admin status
-        $user->status = null;
-        $user->save();
+        $this->user->expires = $subscription->current_period_end;
+        $this->user->has_users = null;
+        $this->user->admin = null; // ditch their admin status
+        $this->user->status = null;
+        $this->user->save();
 
         // send a confirmation email
         $subject = 'Mailsy Subscription Successfully Canceled';
-        $body = 'Your Mailsy subscription has been successfully canceled and use of our paid features will expire on '.date('n/d/Y', $user->expires).'. If you\'d be so kind, please reply to this email and let us know why Mailsy wasn\'t a good fit for you or your team.';
+        $body = 'Your Mailsy subscription has been successfully canceled and use of our paid features will expire on '.date('n/d/Y', $this->user->expires).'. If you\'d be so kind, please reply to this email and let us know why Mailsy wasn\'t a good fit for you or your team.';
 
-        Utils::sendEmail($user->email,$subject,$body);
+        Utils::sendEmail($this->user->email,$subject,$body);
 
         // success message
         return 'true';
@@ -536,13 +518,10 @@ class ActionController extends Controller
     // update/cancel memberships
     public function doUpdateSubscription($direction, Request $request)
     {
-        // auth the user
-        $user = Auth::user();
-
         // retrieve the subscription info
         // set the stripe token
         \Stripe\Stripe::setApiKey(env('STRIPE_TOKEN'));
-        $customer = \Stripe\Customer::retrieve($user->stripe_id);
+        $customer = \Stripe\Customer::retrieve($this->user->stripe_id);
         $subscription = $customer->subscriptions->retrieve($customer->subscriptions->data{0}->id);
 
         // make sure they can't have a quantity that equals zero
@@ -552,7 +531,7 @@ class ActionController extends Controller
         }
 
         // make sure that they have licenses to deduct
-        $company = Customer::where('owner_id',$user->id)->whereNull('deleted_at')->first();
+        $company = Customer::where('owner_id',$this->user->id)->whereNull('deleted_at')->first();
 
         // for decrementing the subscription quantity...
         if($direction == 'decrease')
@@ -569,7 +548,7 @@ class ActionController extends Controller
                 {
                     // make the update on the mailsy side
                     $company->total_users = $request->new_subs;
-                    $company->users_left = $request->new_subs - User::where('belongs_to',$user->id)->whereNull('deleted_at')->count();
+                    $company->users_left = $request->new_subs - User::where('belongs_to',$this->user->id)->whereNull('deleted_at')->count();
                     $company->save();
 
                     // make the subscription update on the stripe side
@@ -590,7 +569,7 @@ class ActionController extends Controller
             {
                  // make the update on the mailsy side
                 $company->total_users = $request->new_subs;
-                $company->users_left = $request->new_subs - User::where('belongs_to',$user->id)->whereNull('deleted_at')->count();
+                $company->users_left = $request->new_subs - User::where('belongs_to',$this->user->id)->whereNull('deleted_at')->count();
                 $company->save();
 
                 // make the subscription update on the stripe side
@@ -610,7 +589,7 @@ class ActionController extends Controller
         $body = 'We\'re writing to let you know that your Mailsy subscription has been successfully updated. If you\'ve reduced your number of licenses, you\'ll get a credit on your next billing cycle for the prorated amount. If you\'ve increased the number of licenses, you\'ll be charged for the prorated amount of these new licenses as part of your next payment.';
 
         // send the confirmation email
-        Utils::sendEmail($user->email,$subject,$body);
+        Utils::sendEmail($this->user->email,$subject,$body);
     
         return 'success';
     }
@@ -618,14 +597,12 @@ class ActionController extends Controller
     // revoke a user's access but keep their subscription intact
     public function doRevokeAccess(Request $request)
     {
-        $user = Auth::user();
-
         $child = User::find($request->child_id);
         $child->paid = null;
         $child->belongs_to = null;
         $child->belongs_to_team = null;
         // if the user is the child, and they're only managing themself, erase that relationship
-        if($child->id == $user->belongs_to)
+        if($child->id == $this->user->belongs_to)
         {
             $child->has_users = null;
         }
@@ -635,12 +612,12 @@ class ActionController extends Controller
         // send an email to the admin letting them know they're unsubscribed
         $subject = 'Mailsy account downgraded';
         // the email body
-        $body = 'We\'re writing to let you know that your paid Mailsy subscription has been downgraded to a free account by '.$user->name.'. If you think this has been done in error, please email your administrator at '.$user->email.'.';
+        $body = 'We\'re writing to let you know that your paid Mailsy subscription has been downgraded to a free account by '.$this->user->name.'. If you think this has been done in error, please email your administrator at '.$this->user->email.'.';
         
         Utils::sendEmail($child->email,$subject,$body);
 
         // return the company information
-        $customer = Customer::where('owner_id',$user->id)->whereNull('deleted_at')->first();
+        $customer = Customer::where('owner_id',$this->user->id)->whereNull('deleted_at')->first();
 
         // if the admin has licenses to get back....
         if($customer->total_users > $customer->users_left)
@@ -655,9 +632,7 @@ class ActionController extends Controller
     // add a user to an existing team if there are licenses available
     public function doRedeemLicense(Request $request)
     {
-        $user = Auth::user();
-
-        if(User::domainCheck($user->email))
+        if(User::domainCheck($this->user->email))
         {
             $company = Customer::find($request->company_id);
 
@@ -666,14 +641,14 @@ class ActionController extends Controller
             {
                 // grant the access
                 $company->users_left--;
-                $user->paid = 'yes';
-                $user->belongs_to = $company->owner_id;
+                $this->user->paid = 'yes';
+                $this->user->belongs_to = $company->owner_id;
 
                 // in case it hasn't been done yet, update the admins 'has_users' status
                 User::where('id',$company->owner_id)->update(['has_users' => 'yes']);
 
                 // save everything
-                $user->save();
+                $this->user->save();
                 $company->save();
 
                 return redirect('/settings?message=licenseRedeemed');
@@ -707,7 +682,6 @@ class ActionController extends Controller
     // send the tutorial email to the user
     public function doSendFirstEmail()
     {
-        $user = Auth::user();
         $subject = 'Working with Example Co, Inc';
         $body = 'Hi Steve,<br><br>';
         $body .= 'Name is Alex and we met last night at the event and spoke briefly about getting more users to your site. ';
@@ -720,7 +694,7 @@ class ActionController extends Controller
         $gmail = new \Google_Service_Gmail($client);
         // use swift mailer to build the mime
         $mail = new \Swift_Message;
-        $mail->setTo([$user->email]);
+        $mail->setTo([$this->user->email]);
         $mail->setBody($body, 'text/html');
         $mail->setSubject($subject);
         $data = base64_encode($mail->toString());
@@ -729,15 +703,14 @@ class ActionController extends Controller
         $m->setRaw($data);
         $gmailMessage = $gmail->users_messages->send('me', $m);
         // update the DB so we can check if this feature is used
-        $user->tutorial_email = 'yes';
-        $user->save();
+        $this->user->tutorial_email = 'yes';
+        $this->user->save();
         return 'success';
     }
 
     // send the tutorial email to the user
     public function deleteMessage($id)
     {
-        $user = Auth::user();
         $task = Task::findOrFail($id);
         $task->delete();
         Session::flash('flash_message', 'Task successfully deleted!');
@@ -749,26 +722,26 @@ class ActionController extends Controller
     public function doTrack($e_user_id, $e_message_id)
     {
         // decrypt the ids
-        $user_id = base64_decode($e_user_id);
+        $this->user_id = base64_decode($e_user_id);
         $message_id = base64_decode($e_message_id);
         // get the message id and make the DB update
         $message = Message::find($message_id);
         if($message->status != 'read')
         {
-            $user = Auth::loginUsingId($user_id);
+            $user = Auth::loginUsingId($this->user_id);
             $message->status = 'read';
             $message->read_at = time();
             $message->save();
-            if($user->track_email)
+            if($this->user->track_email)
             {
                 // set the timezone
-                date_default_timezone_set($user->timezone);
+                date_default_timezone_set($this->user->timezone);
 
                 // send a notification email
                 $subject = $message->recipient.' opened your Mailsy email!';
                 $body = 'We\'re writing to let you know that '.$message->recipient.' opened your email on '.date('D, M d, Y', $message->read_at).' at '.date('g:ia',$message->read_at).' EST.';
 
-                Utils::sendEmail($user->email,$subject,$body);
+                Utils::sendEmail($this->user->email,$subject,$body);
             }
         }
 
@@ -779,8 +752,6 @@ class ActionController extends Controller
 
     public function doArchiveTemplate($eid)
     {
-        $user = Auth::user();
-
         // decrypt the id
         $id = base64_decode($eid);
 
@@ -793,8 +764,6 @@ class ActionController extends Controller
 
     public function doDearchiveTemplate($eid)
     {
-        $user = Auth::user();
-
         // decrypt the id
         $id = base64_decode($eid);
 
@@ -807,10 +776,8 @@ class ActionController extends Controller
 
     public function copyTemplate(Request $request)
     {
-        $user = Auth::user();
-        
         // save the email template
-        Email::makeNewEmail($user, $request);
+        Email::makeNewEmail($this->user, $request);
 
         Email::find($request->_email_id)->copies++;
         Email::find($request->_email_id)->save();
@@ -821,8 +788,6 @@ class ActionController extends Controller
 
     public function doHubifyTemplate($eid, $status)
     {
-        $user = Auth::user();
-
         if(intval($status) != 1 && intval($status) != 2 && intval($status) != 0)
         {
             return redirect('/home');
@@ -840,8 +805,6 @@ class ActionController extends Controller
 
     public function doMakeTeam($id)
     {
-        $user = Auth::user();
-
         $new_admin = User::whereId($id)->first();
         $new_admin->team_admin = 1;
         $new_admin->belongs_to_team = $id;
@@ -853,8 +816,6 @@ class ActionController extends Controller
 
     public function doDestroyTeam($id)
     {
-        $user = Auth::user();
-
         $formerUsers = User::where('belongs_to_team', $id)->update(['belongs_to_team' => null]);
 
         $notAdmin = User::whereId($id)->first();
@@ -868,8 +829,6 @@ class ActionController extends Controller
 
     public function doAddToTeam($id, $admin_id)
     {
-        $user = Auth::user();
-
         //update stuff
         User::where('id', $id)->update(['belongs_to_team' => $admin_id]);
 
@@ -879,8 +838,6 @@ class ActionController extends Controller
 
     public function doRemoveFromTeam($id)
     {
-        $user = Auth::user();
-
         $notMember = User::whereId($id)->first();
         $notMember->belongs_to_team = null;
         $notMember->save();
