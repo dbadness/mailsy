@@ -24,12 +24,15 @@ class PagesController extends Controller
 
         $user = Auth::user();
 
-        view()->share('user', $user);
+        View::share('user', $user);
     }
 
     // show the home page once the user is authed
     public function showHome()
     {
+        // auth the user
+        $user = Auth::user();
+
         //return their emails and it's metadata if not archived
         $emails = Email::where('user_id',$user->id)->whereNull('deleted_at')->paginate(9);
 
@@ -62,7 +65,7 @@ class PagesController extends Controller
         // auth the user
         $user = Auth::user();
 
-        return view('pages.smtp-setup',['user' => $user]);
+        return view('pages.smtp-setup');
 
     }
 
@@ -75,7 +78,7 @@ class PagesController extends Controller
         $user->saw_tutorial_one = 'yes';
         $user->save();
 
-        return view('pages.tutorial1', ['user' => $user]);
+        return view('pages.tutorial1');
     }
 
     // for the first time user, show them a tutorial page
@@ -87,7 +90,7 @@ class PagesController extends Controller
         $user->saw_tutorial_two = 'yes';
         $user->save();
 
-        return view('pages.tutorial2', ['user' => $user]);
+        return view('pages.tutorial2');
     }
 
     // for the first time user, show them a tutorial page
@@ -99,7 +102,7 @@ class PagesController extends Controller
         $user->saw_tutorial_three = 'yes';
         $user->save();
 
-        return view('pages.tutorial3', ['user' => $user]);
+        return view('pages.tutorial3');
     }
 
     // the email creation page
@@ -108,7 +111,8 @@ class PagesController extends Controller
         $user = Auth::user();
         // count the emails that this user has
         $emails = Email::where('user_id',$user->id)->whereNull('deleted_at')->count();
-        return view('pages.create', ['user' => $user, 'emails' => $emails]);
+
+        return view('pages.create', ['emails' => $emails]);
     }
 
     // show the email preview page
@@ -130,7 +134,7 @@ class PagesController extends Controller
         }
 
         // if all is good to go, return the view with the previews
-        return view('pages.preview', ['user' => $user, 'email' => $email, 'messages' => $messages]);
+        return view('pages.preview', ['messages' => $messages]);
     }
 
     // show an edit page for the email that has been created
@@ -150,7 +154,7 @@ class PagesController extends Controller
         // if you're editing a template, erase the messages that haven't been sent
         Message::where('email_id',$email->id)->whereNull('deleted_at')->whereNull('status')->update(['deleted_at' => time()]);
         
-        return view('pages.edit', ['email' => $email, 'user' => $user]);
+        return view('pages.edit', ['email' => $email]);
 
     }
 
@@ -164,7 +168,7 @@ class PagesController extends Controller
         // if there are messages that are 'in the queue', make sure they're deleted as the user is about to enter more
         Message::where('email_id',$email->id)->whereNull('deleted_at')->whereNull('status')->update(['deleted_at' => time()]);
 
-        return view('pages.use', ['user' => $user, 'email' => $email]);
+        return view('pages.use', ['email' => $email]);
     }
 
     // show the messages for an email
@@ -181,7 +185,7 @@ class PagesController extends Controller
         // go through the messages and set the statuses of the messages
         $messages = Message::where('email_id',$email->id)->whereNotNull('status')->whereNull('deleted_at')->get();
 
-        return view('pages.email', ['user' => $user, 'email' => $email, 'messages' => $messages]);
+        return view('pages.email', ['email' => $email, 'messages' => $messages]);
     }
 
     // the settings page
@@ -223,7 +227,7 @@ class PagesController extends Controller
         }
 
         // parse the view
-        return view('pages.settings', ['user' => $user, 'children' => $children, 'company' => $company]);
+        return view('pages.settings', ['children' => $children, 'company' => $company]);
     }
 
     // show the upgrade page
@@ -236,7 +240,7 @@ class PagesController extends Controller
             return redirect('/settings');
         }
 
-        return view('pages.upgrade', ['user' => $user]);
+        return view('pages.upgrade');
     }
 
     // show a confirmation page regarding user management
@@ -250,7 +254,7 @@ class PagesController extends Controller
         $customer = \Stripe\Customer::retrieve($user->stripe_id);
         $subscription = $customer->subscriptions->retrieve($customer->subscriptions->data{0}->id);
 
-        return view('pages.confirm', ['user' => $user, 'end_date' => $subscription->current_period_end]);
+        return view('pages.confirm', ['end_date' => $subscription->current_period_end]);
     }
 
     // page to add users
@@ -267,7 +271,7 @@ class PagesController extends Controller
         // strip the @ symbol
         $domain = substr($domain, 1, 50);
 
-        return view('pages.createTeam',['user' => $user, 'domain' => $domain]);
+        return view('pages.createTeam',['domain' => $domain]);
     }
 
     // show archived templates
@@ -279,7 +283,7 @@ class PagesController extends Controller
         //return their emails and it's metadata if archived
         $emails = Email::where('user_id',$user->id)->whereNotNull('deleted_at')->paginate(9);
 
-        return view('pages.archives', ['user' => $user, 'emails' => $emails]);
+        return view('pages.archives', ['emails' => $emails]);
     }
 
     // show an edit page for the email that has been created
@@ -289,7 +293,7 @@ class PagesController extends Controller
 
         $email = User::verifyUser($eid);
         
-        return view('pages.copy', ['email' => $email, 'user' => $user]);
+        return view('pages.copy', ['email' => $email]);
     }
 
     // show an edit page for the email that has been created
@@ -299,7 +303,7 @@ class PagesController extends Controller
 
         $email = User::verifyUser($eid);
         
-        return view('pages.view', ['email' => $email, 'user' => $user]);
+        return view('pages.view', ['email' => $email]);
     }
 
     // show the template hub
@@ -316,7 +320,7 @@ class PagesController extends Controller
         //return the emails that have been marked for the hub
         $emails = Email::where('shared',2)->paginate(9);
 
-        return view('pages.publictemplates', ['user' => $user, 'emails' => $emails]);
+        return view('pages.publictemplates', ['emails' => $emails]);
     }
 
     // show the template hub
@@ -339,7 +343,7 @@ class PagesController extends Controller
             $emails = Email::where('shared',1)->where('creator_company',$user->belongs_to)->paginate(9);
         }
 
-        return view('pages.privatetemplates', ['user' => $user, 'emails' => $emails]);
+        return view('pages.privatetemplates', ['emails' => $emails]);
     }
 
     // show an edit page for the email that has been created
@@ -365,7 +369,7 @@ class PagesController extends Controller
         $teams = User::where('belongs_to',$company->owner_id)->whereNull('deleted_at')->whereNotNull('team_admin')->get();
         $members = User::where('belongs_to_team', $user->id)->get();
 
-        return view('pages.admin', ['user' => $user, 'company' => $company, 'children' => $children, 'teams' => $teams, 'members' => $members]);
+        return view('pages.admin', ['company' => $company, 'children' => $children, 'teams' => $teams, 'members' => $members]);
     }
 
 }
