@@ -16,7 +16,7 @@ Route::get('/faq', ['as' => 'faq', 'uses' => 'IndexController@showFaq']);
 
 // auth stuff
 Route::get('/auth/{signup?}/{license?}', ['as' => 'Auth', 'uses' => 'IndexController@doAuth']); // signup and license are boolean values, 0 and 1
-Route::get('/gmail/{license?}', ['as' => 'index', 'uses' => 'IndexController@doAddGmailUser']);
+Route::get('/gmail/{license?}', ['as' => 'gmail', 'uses' => 'IndexController@doAddGmailUser']);
 Route::get('/logout', function(){
 	Auth::logout();
 	return redirect('/');

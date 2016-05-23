@@ -87,28 +87,25 @@ class ActionController extends Controller
         if(!$request->_email_id)
         {
             // create the email object
-            Email::makeNewEmail($this->user, $request);
+            $email = Email::makeNewEmail($this->user, $request);
 
         }
         else
         {
-            $email = Email::find($request->_email_id);
-            $email->name = $request->_name;
-            $email->subject = $request->_subject;
-            $email->template = $request->_email_template;
-
-            $fields = Email::makeFieldList($this->user, $request);
-            $email->fields = json_encode($fields);
-            $email->save();
+            $email = Email::updateEmail($this->user, $request);
         }
+
+        $fields = Email::makeFieldList($this->user, $request);
+        $content = $request->_subject.' '.$request->_email_template;
+        preg_match_all('/@@[a-zA-Z0-9]*/',$content,$matches);
 
         if($matches)
         {
-            // return json_encode(['fields' => $fields, 'email' => $email->id]);
+            return json_encode(['fields' => $fields, 'email' => $email->id]);
         }
         else
         {
-            // return json_encode(['email' => $email->id]);
+            return json_encode(['email' => $email->id]);
         }
     }
 
@@ -132,6 +129,7 @@ class ActionController extends Controller
     {
         // combine the subject and template for regex matching
         $content = $request->_subject.' '.$request->_email_template;
+
         // find the variables in the email and return them to the view        
         preg_match_all('/@@[a-zA-Z0-9]*/',$content,$matches);
         if($matches)
@@ -150,12 +148,14 @@ class ActionController extends Controller
         }
         
         // save the email template
-        $email = Email::find($request->_email_id);
-        $email->name = $request->_name;
-        $email->subject = $request->_subject;
-        $email->template = $request->_email_template;
-        $email->fields = json_encode($fields);
-        $email->save();
+        $email = Email::updateEmail($this->user, $request);
+        // $email = Email::find($request->_email_id);
+        // $email->name = $request->_name;
+        // $email->subject = $request->_subject;
+        // $email->template = $request->_email_template;
+        // $email->fields = json_encode($fields);
+        // $email->save();
+
         // send the user to the 'use' view
         return redirect('/use/'.base64_encode($email->id));
     }
@@ -169,11 +169,11 @@ class ActionController extends Controller
         // split on whether there's a CSV or not
         if($request->csvFile)
         {
-            return $response = Email::processCSV($request, $email, $this->user);
+            return $response = Utils::processCSV($request, $email, $this->user);
         } 
         else
         {
-            return Email::processManualData($request, $email, $this->user);
+            return Utils::processManualData($request, $email, $this->user);
         }
     }
 
@@ -206,9 +206,8 @@ class ActionController extends Controller
     {
 
         // find the email object and delete and temp_recipients_list
-        $email = Email::find($email_id);
-        $email->temp_recipients_list = null;
-        $email->save();
+        Email::deleteTempFieldList($email_id);
+
         // send out the email
 
         // if they're not a paid user, make sure they don't send more than 10 emails per day
@@ -692,6 +691,7 @@ class ActionController extends Controller
         $client = User::googleClient();
         // get the gmail service
         $gmail = new \Google_Service_Gmail($client);
+
         // use swift mailer to build the mime
         $mail = new \Swift_Message;
         $mail->setTo([$this->user->email]);
@@ -702,6 +702,7 @@ class ActionController extends Controller
         $m = new \Google_Service_Gmail_Message();
         $m->setRaw($data);
         $gmailMessage = $gmail->users_messages->send('me', $m);
+
         // update the DB so we can check if this feature is used
         $this->user->tutorial_email = 'yes';
         $this->user->save();

@@ -8,7 +8,15 @@
 	<br>
 	<br>
 
-	@if($emails == '[]')
+	<!-- show the archived emails if there are any -->
+	@if($archived > 0)
+
+		<a href="{{ route('getArchive') }}">Archived Templates</a>
+
+	@endif
+
+	@if(count($emails) < 1)
+		<hr>
 		<div class="jumbotron">
 			<h2>Prospecting is lightspeed with Mailsy.</h2>
 			<p>Mailsy allows you to send multiple, individualized emails in seconds - 
@@ -29,12 +37,7 @@
 		
 	@else
 
-		<!-- show the archived emails if there are any -->
-		@if($archived > 0)
-
-			<a href="{{ route('getArchive') }}">Archived Templates</a>
-
-		@endif
+	{{$emails}}
 
 		<!-- show the reponse rates for the emails -->
 

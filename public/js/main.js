@@ -24,6 +24,49 @@ $(document).ready(function(){
 		}
 	});
 
+	// refresh the fields when the user hits the button "again"
+	$('#refreshFields').click(function()
+	{
+		// take the markup from the email and put it into the hidden textarea
+		$('#emailTemplateHolder').val($('#emailTemplate').code());
+
+		$.ajax({
+			method: 'post',
+			url: '/returnFields',
+			data: 
+			{
+				'_email_template' : $('#emailTemplateHolder').val(),
+				'_name' : $('input[name=_name]').val(),
+				'_subject' : $('#subject').val(),
+				'_token' : $('input[name=_token]').val(),
+				'_email_id' : $('input[name=_email_id]').val()
+			},
+			error: function()
+			{
+				alert('Something went wrong.');
+			},
+			beforeSend: function() {
+				$('#refreshFields').html('Loading...');
+			},
+			success: function(response) {
+				var data = $.parseJSON(response);
+				var count = 0;
+				$('#saved').show();
+				$('#refreshFields').html('Save Template and Refresh Fields');
+				// refresh the fields div
+				$('#recipientList').html('<tr id=\'headers\'><td style=\'width:40px;\'></td><td class=\'field\'><b>Email</b></td></tr><tr class=\'recipient\'><td class=\'removeRow\'><div style=\'height:5px;\'></div><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td><td class=\'field\'><input type="text" name=\'_email[]\' class="form-control"></td></tr>');
+				$.each(data.fields,function(k,v)
+				{
+					$('#headers').append('<td class=\'field\'><b>'+v+'</b></td>');
+				});
+				$.each(data.fields,function(k,v)
+				{
+					$('.recipient').append('<td class=\'field\'><input type="text" name="'+v+'[]" class="form-control"></td>');
+				});
+			}
+		});
+	});
+
 	/**
 	*
 	* SMTP setup and testing page
