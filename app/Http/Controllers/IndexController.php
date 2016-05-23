@@ -122,7 +122,12 @@ class IndexController extends Controller
             $client->setRedirectURI(env('GOOGLE_URI_REDIRECT'));
         }
 
-        $accessToken = $client->authenticate($_GET['code']);
+        if(isset($_GET['code'])){
+            $accessToken = $client->authenticate($_GET['code']);
+        } else
+        {
+            return redirect('/signup');
+        }
 
         $client->setAccessToken($accessToken);
 

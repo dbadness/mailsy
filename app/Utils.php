@@ -43,9 +43,9 @@ class Utils extends Model
         return $mailer;
     }
 
-    public static function processCSV($request, $email, $user)
+    public static function approveCSV($request, $email, $user)
     {
-
+        //
         if (!ini_get("auto_detect_line_endings")) {
             ini_set("auto_detect_line_endings", '1');
         }
@@ -170,7 +170,13 @@ class Utils extends Model
             }
         }
 
-        //CSV has been approved
+        return true;
+    }
+
+    public static function processCSV($request, $email, $user)
+    {
+
+        Utils::approveCSV($request, $email, $user);
 
         //Build array of arrays named after headers and populate them
         $processedCSV = array();

@@ -28,16 +28,13 @@ Route::get('/admin', ['as' => 'admin', 'uses' => 'PagesController@showAdmin']);
 Route::get('/join/{customer}', ['as' => 'join', 'uses' =>'IndexController@showCompanyPage']);
 Route::get('/track/{e_user_id}/{e_message_id}', ['as' => 'track', 'uses' => 'ActionController@doTrack']); // processes a read receipt when a recipient opens an email
 
-// Route::group(['middleware' => 'notAuth'], function(){
-	Route::get('/signup/{license?}/{domain?}', ['as' => 'signup', 'uses' => 'IndexController@showSignup']);
-	Route::post('/signup/{license?}', ['as' => 'signupPost', 'uses' => 'IndexController@doSignup']);
-	Route::get('/login', ['as' => 'login', 'uses' => 'IndexController@showLogin']);
-	Route::post('/login', ['as' => 'loginPost', 'uses' => 'IndexController@doLogin']);
-// });
+Route::get('/signup/{license?}/{domain?}', ['as' => 'signup', 'uses' => 'IndexController@showSignup']);
+Route::post('/signup/{license?}', ['as' => 'signupPost', 'uses' => 'IndexController@doSignup']);
+Route::get('/login', ['as' => 'login', 'uses' => 'IndexController@showLogin']);
+Route::post('/login', ['as' => 'loginPost', 'uses' => 'IndexController@doLogin']);
 
-//This is currently being done at the controller level in the __construct call.
-// Route::group(['middleware' => 'auth'], function(){
-	// pages
+// pages
+Route::group(['middleware' => 'auth'], function(){
 	Route::get('/home', ['as' => 'home', 'uses' => 'PagesController@showHome']);
 	Route::get('/smtp-setup', ['as' => 'smtp-setup', 'uses' => 'PagesController@showSmtpSetup']);
 	Route::get('/tutorial/step1', ['as' => 'tutorial1', 'uses' => 'PagesController@showTutorial1']);
@@ -55,7 +52,7 @@ Route::get('/track/{e_user_id}/{e_message_id}', ['as' => 'track', 'uses' => 'Act
 	Route::get('/archives', ['as' => 'getArchive', 'uses' => 'PagesController@showArchive']);
 	Route::get('/copy/{id}', ['as' => 'copy', 'uses' => 'PagesController@showCopy']);
 	Route::get('/view/{id}', ['as' => 'view', 'uses' => 'PagesController@showView']);
-// });
+});
 
 // testing
 Route::get('/smtp-tester', ['as' => 'smtpTesterGet', 'uses' => 'IndexController@showSmtpTester']);
@@ -78,10 +75,10 @@ Route::post('/updateSubscription/{direction}', ['as' => 'updateSubscription', 'u
 Route::get('/archive/{eid}', ['as' => 'archive', 'uses' => 'ActionController@doArchiveTemplate']);
 Route::get('/dearchive/{eid}', ['as' => 'dearchive', 'uses' => 'ActionController@doDearchiveTemplate']);
 Route::get('/hubify/{id}/{status}', ['as' => 'hubify', 'uses' => 'ActionController@doHubifyTemplate']);
-Route::get('/makeTeam/{id}','ActionController@doMakeTeam');
-Route::get('/destroyTeam/{id}','ActionController@doDestroyTeam');
-Route::get('/addToTeam/{id}/{admin_id}','ActionController@doAddToTeam');
-Route::get('/removeFromTeam/{id}','ActionController@doRemoveFromTeam');
+Route::get('/makeTeam/{id}', ['as' => 'makeTeam', 'uses' => 'ActionController@doMakeTeam']);
+Route::get('/destroyTeam/{id}', ['as' => 'destroyTeam', 'uses' => 'ActionController@doDestroyTeam']);
+Route::get('/addToTeam/{id}/{admin_id}', ['as' => 'addToTeam', 'uses' => 'ActionController@doAddToTeam']);
+Route::get('/removeFromTeam/{id}', ['as' => 'removeFromTeam', 'uses' => 'ActionController@doRemoveFromTeam']);
 
 // ajax calls
 Route::get('/getMessageStatus/{id}','ActionController@doUpdateMessageStatus');
@@ -96,4 +93,3 @@ Route::post('/saveSettings', 'ActionController@saveSettings');
 // webhooks
 Route::post('/payment/paid','APIController@doInvoicePaid'); // successful invoice payment
 Route::post('/payment/failed','APIController@doInvoiceFailed'); // payment declined for invoice
-

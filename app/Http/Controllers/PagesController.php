@@ -19,9 +19,6 @@ class PagesController extends Controller
 {
     public function __construct()
     {
-        // everything in this controller is for authed users only
-        $this->middleware('auth');
-
         //Use this to set any variables that should be available to all functions in this controller.
         $this->user = Auth::user();
 
