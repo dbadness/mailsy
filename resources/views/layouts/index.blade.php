@@ -116,7 +116,9 @@
                         <hr class="intro-divider">
                         <ul class="list-inline intro-social-buttons">
                             <li>
-                                <a href="{{ route('signup') }}" class="btn btn-info btn-lg"><span class="network-name">Signup for Free</span></a>
+                                <a href="{{ route('signup', [1]) }}" class="btn btn-info btn-lg"><span class="network-name">Signup for Free</span></a>
+                                <br>
+                                <a href="{{ route('login') }}">Existing User? Login</a>
                             </li>
                         </ul>
                     </div>
