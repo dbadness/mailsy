@@ -27,7 +27,7 @@ class PagesController extends Controller
     }
 
     // show the home page once the user is authed
-    public function showHome()
+    public function showTemplates()
     {
         //return their emails and it's metadata if not archived
         $emails = Email::where('user_id',$this->user->id)->whereNull('deleted_at')->paginate(9);
@@ -52,7 +52,7 @@ class PagesController extends Controller
         //return their emails and it's metadata if not archived
         $archived = Email::where('user_id',$this->user->id)->whereNotNull('deleted_at')->count();
 
-        return view('pages.home', ['emails' => $emails, 'archived' => $archived]);
+        return view('pages.templates', ['emails' => $emails, 'archived' => $archived]);
     }
 
     // if this is a new non-google user, send them to the smtp set up page
@@ -320,5 +320,35 @@ class PagesController extends Controller
 
         return view('pages.admin', ['company' => $company, 'children' => $children, 'teams' => $teams, 'members' => $members]);
     }
+
+    // show ephemeral template page
+    public function showSend()
+    {
+
+        return view('pages.ephemeral', []);
+    }
+
+    // show ephemeral template page
+    public function showOutbox()
+    {
+
+        return view('pages.outbox', []);
+    }
+
+    // show ephemeral template page
+    public function showHome()
+    {
+
+        return view('pages.home', []);
+    }
+
+    // show ephemeral template page
+    public function showSendOne()
+    {
+
+
+        return view('pages.sendOne', []);
+    }
+
 
 }

@@ -121,7 +121,7 @@ class ActionController extends Controller
         // create the email object
         $passID = Email::makeNewEmail($this->user, $request);
 
-        return redirect('/use/'.base64_encode($passID));
+        return redirect('/use/'.base64_encode($passID->id));
     }
 
     // save the template if the user edits it
@@ -206,6 +206,7 @@ class ActionController extends Controller
     {
 
         // find the email object and delete and temp_recipients_list
+        $email = Email::find($email_id);
         Email::deleteTempFieldList($email_id);
 
         // send out the email
@@ -844,6 +845,82 @@ class ActionController extends Controller
         $notMember->save();
 
         return redirect('/admin?message=userRemoved');
+
+    }
+
+    public function doSendOneEmail(Request $request)
+    {
+
+        $to = $request->_recipient;
+        $subject = $request->_subject;
+        $body = $request->_email_template;
+
+       // if they're not a paid user, make sure they don't send more than 10 emails per day
+        $emailsLeft = User::howManyEmailsLeft();
+        if($emailsLeft > 0)
+        {
+
+            // set the message up
+            $message = $body;
+            // prepend the read receipt callback webhook to the message
+
+            $full_body = $message->message.'<img src="'.env('DOMAIN').'/track/'.base64_encode($this->user->id).'/'.base64_encode($message->id).'" alt="tracker" title="tracker" style="display:block" width="1" height="1">';
+
+            // use swift mailer to build the mime
+            $mail = new \Swift_Message;
+            $mail->setFrom(array($this->user->email => $this->user->name));
+            $mail->setTo([$message->recipient]);
+            $mail->setBody($full_body, 'text/html');
+            $mail->setSubject($message->subject);
+            if($message->send_to_salesforce)
+            {
+                // if they selected the 'send to salesforce' button for the email...
+                $mail->addBCC($this->user->sf_address);
+            }
+
+            // send out the message based on their email setup
+            if($this->user->gmail_user == 1)
+            {
+                // get up a gmail client connection
+                $client = User::googleClient();
+
+                // get the gmail service
+                $gmail = new \Google_Service_Gmail($client);
+
+                // make the message RFC compliant
+                $data = base64_encode($mail->toString());
+                $data = str_replace(array('+','/','='),array('-','_',''),$data); // url safe
+                $m = new \Google_Service_Gmail_Message();
+                $m->setRaw($data);
+                $gmailMessage = $gmail->users_messages->send('me', $m);
+                // insert the returned google message id into the DB and mark it as sent
+                $message->google_message_id = $gmailMessage->id;
+            }
+            else // if they're using their own companies SMTP server...
+            {
+                // decrypt and assign the password
+                $password = base64_decode($password);
+
+                // build the mailer
+                $mailer = Utils::buildSmtpMailer($this->user,$password);
+            
+                // send the email from the messages above
+                $result = $mailer->send($mail);
+            }
+
+            // save the message info now that the emails have been sent
+            $message->status = 'sent';
+            $message->sent_at = time();
+            $message->save();
+
+        }
+        else
+        {
+            // delete all unsent emails (the user has been warned)
+            Message::where('id',$email->id)->update(['deleted_at' => time()]);
+        }
+
+        return redirect('/sendone?message=emailSent');
 
     }
 

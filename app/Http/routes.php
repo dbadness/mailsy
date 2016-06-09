@@ -12,11 +12,10 @@
 */
 
 Route::get('/', ['as' => 'index', 'uses' => 'IndexController@showIndex']);
-Route::get('/faq', ['as' => 'faq', 'uses' => 'IndexController@showFaq']);
 
 // auth stuff
 Route::get('/auth/{signup?}/{license?}', ['as' => 'Auth', 'uses' => 'IndexController@doAuth']); // signup and license are boolean values, 0 and 1
-Route::get('/gmail/{license?}', ['as' => 'gmail', 'uses' => 'IndexController@doAddGmailUser']);
+Route::get('/gmail/{signup?}/{license?}', ['as' => 'gmail', 'uses' => 'IndexController@doAddGmailUser']);
 Route::get('/logout', function(){
 	Auth::logout();
 	return redirect('/');
@@ -36,6 +35,7 @@ Route::post('/login', ['as' => 'loginPost', 'uses' => 'IndexController@doLogin']
 // pages
 Route::group(['middleware' => 'auth'], function(){
 	Route::get('/home', ['as' => 'home', 'uses' => 'PagesController@showHome']);
+	Route::get('/templates', ['as' => 'templates', 'uses' => 'PagesController@showTemplates']);
 	Route::get('/smtp-setup', ['as' => 'smtp-setup', 'uses' => 'PagesController@showSmtpSetup']);
 	Route::get('/tutorial/step1', ['as' => 'tutorial1', 'uses' => 'PagesController@showTutorial1']);
 	Route::get('/tutorial/step2', ['as' => 'tutorial2', 'uses' => 'PagesController@showTutorial2']);
@@ -52,6 +52,9 @@ Route::group(['middleware' => 'auth'], function(){
 	Route::get('/archives', ['as' => 'getArchive', 'uses' => 'PagesController@showArchive']);
 	Route::get('/copy/{id}', ['as' => 'copy', 'uses' => 'PagesController@showCopy']);
 	Route::get('/view/{id}', ['as' => 'view', 'uses' => 'PagesController@showView']);
+	Route::get('/send', ['as' => 'send', 'uses' => 'PagesController@showSend']);
+	Route::get('/outbox', ['as' => 'outbox', 'uses' => 'PagesController@showOutbox']);
+	Route::get('/sendone', ['as' => 'sendone', 'uses' => 'PagesController@showSendOne']);
 });
 
 // testing
@@ -70,6 +73,7 @@ Route::post('/useLicense', ['as' => 'useLicense', 'uses' => 'ActionController@do
 Route::post('/saveTemplate', ['as' => 'saveTemplate', 'uses' => 'ActionController@saveTemplate']);
 Route::post('/copyTemplate', ['as' => 'copyTemplate', 'uses' => 'ActionController@copyTemplate']);
 Route::post('/sendFeedback', ['as' => 'sendFeedback', 'uses' => 'ActionController@doSendFeedback']);
+Route::post('/sendOneEmail', ['as' => 'sendOneEmail', 'uses' => 'ActionController@doSendOneEmail']);
 Route::post('/revokeAccess', ['as' => 'revokeAccess', 'uses' => 'ActionController@doRevokeAccess']);
 Route::post('/updateSubscription/{direction}', ['as' => 'updateSubscription', 'uses' => 'ActionController@doUpdateSubscription']);
 Route::get('/archive/{eid}', ['as' => 'archive', 'uses' => 'ActionController@doArchiveTemplate']);

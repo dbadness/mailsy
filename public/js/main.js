@@ -319,7 +319,12 @@ $(document).ready(function(){
 		$('csvFileUpload').val(null);
 	});
 
-	
+
+	$('#sendOneEmailBtn').click(function()
+	{
+		$('#emailTemplateHolder').val($('#emailTemplate').code());
+	})
+
 }); // end doc ready
 
 // https://github.com/summernote/summernote/issues/702

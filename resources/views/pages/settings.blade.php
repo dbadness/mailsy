@@ -116,6 +116,17 @@
 	<div class='page-header'>
 		<h1>Settings</h1>
 	</div>
+
+	<div class="panel panel-default">
+		<div class="panel-heading"><strong>Notification Settings</strong></div>
+		<div class='panel-body'>
+			I want to receive emails when...<br>
+			<input type="checkbox"> Someone opens my email<br>
+			<input type="checkbox"> My weekly summary is ready<br>
+			<input type="checkbox"> I make a payment<br>
+		</div>
+	</div>
+
 	<div class="panel panel-default">
 		<div class="panel-heading"><strong>Email Settings</strong></div>
 		<div class='panel-body'>

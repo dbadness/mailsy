@@ -11,6 +11,7 @@ use App\User;
 use App\Customer;
 use App\Utils;
 use Auth;
+use Log;
 
 use \Sendinblue\Mailin as Mailin;
 
@@ -93,7 +94,7 @@ class IndexController extends Controller
         $client->setScopes(['https://mail.google.com', 'profile', 'email']);
         $client->setAccessType('offline');
 
-        // if they're signing up for the first time or haven't logged in since v1 release, force the prompt so we can get a refresh token
+        // if they're signing up for the first time force the prompt so we can get a refresh token
         if($signup == 1)
         {
             $client->setApprovalPrompt('force'); // so we're sure to show the screen to the user (and get a refresh token)
@@ -112,6 +113,7 @@ class IndexController extends Controller
         $client->setDeveloperKey(env('GOOGLE_KEY'));
         $client->setClientID(env('GOOGLE_CLIENT_ID'));
         $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
+
         // make sure we accomodate the lincense flag if it's there
         if($license)
         {
@@ -122,12 +124,16 @@ class IndexController extends Controller
             $client->setRedirectURI(env('GOOGLE_URI_REDIRECT'));
         }
 
-        if(isset($_GET['code'])){
+        if(isset($_GET['code']))
+        {
             $accessToken = $client->authenticate($_GET['code']);
         } else
         {
             return redirect('/signup');
         }
+
+        // $processedAccessToken = json_decode($accessToken, true);
+        // $processedAcessToken["refresh_token"] = $existingUser->refresh_token;
 
         $client->setAccessToken($accessToken);
 
@@ -136,11 +142,24 @@ class IndexController extends Controller
         $userProfile = $googlePlus->people->get('me');
         $name = $userProfile->displayName;
         $email = $userProfile->emails{0}->value;
+
         // don't let them sign up twice
         $existingUser = User::where('email',$email)->first();
 
+        $refreshExists = preg_match('/refresh_token/', $accessToken);
+
+        // $existingUser->refresh_token = $processedAccessToken["refresh_token"];
+
         // if this is a duplicate, just sign them in (don't sign them up again)
-        if($existingUser)
+        if($existingUser && $refreshExists)
+        {
+            return redirect('/login?error=accountExists');
+        }
+        elseif(!$existingUser && !$refreshExists)
+        {
+            return redirect('/signup?error=accountDNE');
+        }
+        elseif($existingUser && !$refreshExists)
         {
             // log the user in and send them to the home page
             $success = Auth::loginUsingId($existingUser->id);
@@ -170,7 +189,7 @@ class IndexController extends Controller
             // send them to the dashboard
             return redirect('/home');
         }
-        else
+        elseif(!$existingUser && $refreshExists)
         {
             // make a new user and return that object
             // get the referer and throw them in the DB
