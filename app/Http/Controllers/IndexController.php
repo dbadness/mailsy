@@ -20,12 +20,12 @@ class IndexController extends Controller
     public function showIndex()
     {
         // set cookie to track signup referals
-        if(isset($_SERVER['HTTP_REFERER']))
-        {
-            setcookie('mailsy_referer', $_SERVER['HTTP_REFERER'], time() + (86400 * 30), '/'); // 86400 = 1 day
-        }
+        // if(isset($_SERVER['HTTP_REFERER']))
+        // {
+        //     setcookie('mailsy_referer', $_SERVER['HTTP_REFERER'], time() + (86400 * 30), '/'); // 86400 = 1 day
+        // }
 
-        return view('layouts.index');
+        return redirect('https://www.lucolo.com/mailsy');
     }
 
     // show the signup page

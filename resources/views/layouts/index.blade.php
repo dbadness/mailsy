@@ -87,9 +87,6 @@
                         <a href="#pricing">Pricing</a>
                     </li>
                     <li>
-                        <a href="/faq">FAQ</a>
-                    </li>
-                    <li>
                         <a href="/signup">Sign Up</a>
                     </li>
                     <li>
