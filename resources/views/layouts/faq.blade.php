@@ -22,6 +22,7 @@
     <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link href="https://bootswatch.com/readable/bootstrap.min.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -68,16 +69,16 @@
         <div class="container topnav">
 
             <div class="navbar-header">
-                <a class="navbar-brand topnav" href="/"><img src='/images/logo.png' alt='Mailsy' width='80px'></a>
+                <a class="navbar-brand topnav" href="{{ route('index') }}"><img src='/images/logo.png' alt='Mailsy' width='80px'></a>
             </div>
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a href="/signup">Sign Up</a>
+                        <a href="{{ route('signup') }}">Sign Up</a>
                     </li>
                     <li>
-                        <a href="/login">Log In</a>
+                        <a href="{{ route('login') }}">Log In</a>
                     </li>
                 </ul>
             </div>
@@ -240,15 +241,15 @@
                 <div class="col-lg-12">
                     <ul class="list-inline">
                         <li>
-                            <a href="/">Home</a>
+                            <a href="{{ route('index') }}">Home</a>
                         </li>
                         <li class="footer-menu-divider">&sdot;</li>
                         <li>
-                            <a href="/signup">Sign Up</a>
+                            <a href="{{ route('signup') }}">Sign Up</a>
                         </li>
                         <li class="footer-menu-divider">&sdot;</li>
                         <li>
-                            <a href="/login">Log In</a>
+                            <a href="{{ route('login') }}">Log In</a>
                         </li>
                     </ul>
                     <p class="copyright text-muted small">Copyright &copy;<?php echo date('Y');?> Mailsy by Lucolo, Inc. All Rights Reserved</p>

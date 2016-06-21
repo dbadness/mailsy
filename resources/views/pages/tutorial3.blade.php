@@ -32,14 +32,21 @@ Alex</textarea>
 				<td class='field'><div style='padding:6px;background:white;border-radius:3px;border:solid 1px lightgray;'>getting more users to your site</div></td>
 			</tr>
 		</table>
+		<a class="btn btn-warning" style='float:right;margin:0 0 0 20px;' href='/featuretutorial'>
+			<div>
+				Actually, I'm still a bit confused... Can I read the docs?
+			</div>
+		</a>
+
 		<a href='/create'>
 			<div class="btn btn-primary" style='float:right;margin:0 0 0 20px;' role="button">
 				I get it! Onto my own template...
 			</div>
 		</a>
-		<div class="btn btn-success" style='float:right;' id='sendFirstEmail' role="button">
+		<div class="btn btn-success pull-left" style='float:right;' id='sendFirstEmail' role="button">
 			Send Email to Myself
 		</div>
+
 		<div style='float:left;margin-left:20px;display:none;' id='firstEmailSending'>
 			<img src='/images/ring.gif' width='30px' alt='Loading'>
 		</div>

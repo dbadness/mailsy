@@ -11,294 +11,92 @@ class Email extends Model
     
     // don't automitically add timestamps to new/updated records
     public $timestamps = false;
-    
-    public static function processCSV($request, $email, $user)
+
+    public static function makeFieldList($user, $request)
     {
 
-        if (!ini_get("auto_detect_line_endings")) {
-            ini_set("auto_detect_line_endings", '1');
-        }
+        // combine the subject and template for regex matching
+        $content = $request->_subject.' '.$request->_email_template;
 
-        $errors = array(
-            "badEmails" => 'false',
-            "noHeaders" => 'false',
-            "noEmailInHeaders" => 'false',
-            "headerFieldMissing" => 'false',
-            "rowsNotExtant" => 'false',
-            "incompleteColumns" => 'false',
-            "blankData" => 'false',
-            'tooLarge' => 'false'
-            );
-
-        //Get a list of fields from request
-        $fields = array();
-        foreach($_POST as $k => $v)
+        // find the variables in the email and return them to the view        
+        preg_match_all('/@@[a-zA-Z0-9]*/',$content,$matches);
+        if($matches)
         {
-            if(($k != 'files') && (substr($k,0,1) != '_') && ($k != 'csvFile') || ($k == '_email'))
+            foreach($matches as $k => $v)
             {
-                if($k == '_email'){
-                    $fields[] = 'email';
-                } else
+                $fields = [];
+                foreach($v as $match)
                 {
-                    $fields[] = strtolower($k);
+                    // shave the delimiters
+                    $field = trim($match,'@@');
+                    $fields[] = $field;
                 }
+                $fields = array_unique($fields, SORT_REGULAR);
+                return $fields;
             }
+//            return redirect('/use/'.base64_encode($email->id));
         }
-
-        //Read in CSV
-        $fullCsv = Reader::createFromPath($request->csvFile);
-
-        //check if header row exists
-        if(count($fullCsv->fetchOne()) < 0)
+        else
         {
-            $errors['noHeaders'] = 'true';
-            return redirect('/use/'.base64_encode($email->id) . '?' . http_build_query($errors));
+            $fields = [];
+            return $fields;
         }
 
-        //Get headers
-        $headers = $fullCsv->fetchOne();
-
-        $count = 0;
-        $locater = array();
-
-        $emailExists = false;
-        foreach($headers as $i => $header){
-            //Clean up headers
-            $header = strtolower($header);
-
-            //emails are handled differently
-            if(strtolower($header) == 'emails' || strtolower($header) == 'email')
-            {
-                $headers[$i] = 'email';
-                $emailExists = true;
-            }
-
-            //Check headers against fields
-            foreach($fields as $field)
-            {
-                if($field == $header)
-                {
-                    //create a locater value to find things in headers by field name. Update counter.
-                    $locater[$header] = $i;
-                    $count++;
-                } elseif($header == 'emails' || $header == 'email')
-                {
-                    $locater['email'] = $i;
-                }
-            }
-        }
-
-        //If email doesn't exist as any of the headers, error
-        if(!$emailExists)
-        {
-            $errors["noEmailInHeaders"] = "true";
-            return redirect('/use/'.base64_encode($email->id) . '?' . http_build_query($errors));
-        }
-
-        //If the number of fields doesn't equal, error
-        if(count($fields) != $count)
-        {
-            $errors["headerFieldMissing"] = "true";
-            return redirect('/use/'.base64_encode($email->id) . '?' . http_build_query($errors));
-        }
-
-        //Set CSV object sans headers
-        $csv = $fullCsv->setOffset(1)->fetchAll();
-
-        //make sure CSV exists below headers, or else error
-        if(count($csv) < 1)
-        {
-            $errors["rowsNotExtant"] = "true";
-            return redirect('/use/'.base64_encode($email->id) . '?' . http_build_query($errors));
-
-            if(count($csv[0]) < count($headers))
-            {
-            $errors["rowsNotExtant"] = "true";
-            return redirect('/use/'.base64_encode($email->id) . '?' . http_build_query($errors));
-            }
-        }
-
-        //check to see the values all exist and there aren't too many
-        foreach($fields as $field)
-        {
-            foreach($csv as $i => $row)
-            {
-                if($i > env('MESSAGE_MAX')){
-                    $errors['tooLarge'] = "true";
-                    return redirect('/use/'.base64_encode($email->id) . '?' . http_build_query($errors));
-                }
-                if(count($row) < count($headers))
-                {
-                    $errors["incompleteColumns"] = "true";
-                }
-                if($row[$locater[$field]] == '')
-                {
-                    $errors["blankData"] = "true";
-                    return redirect('/use/'.base64_encode($email->id) . '?' . http_build_query($errors));
-                }
-            }
-        }
-
-        //CSV has been approved
-
-        //Build array of arrays named after headers and populate them
-        $processedCSV = array();
-        foreach($fields as $field)
-        {
-            $processedCSV[$field] = array();
-            foreach($csv as $row)
-            {
-                array_push($processedCSV[$field], $row[$locater[$field]]);
-            }
-        }
-
-        // build the recipient list and assign the fields to them
-        $messages = [];
-        $tempRecipientsList = [];
-        foreach($processedCSV['email'] as $key => $recipientEmail)
-        {
-
-            // for each field provided, replace the variable in the template with the correct field input
-            // use the key we returned from figuring out with recipient entry we're currently on
-            $messageText = $request->_email_template;
-            $subjectText = $request->_subject;
-            $fieldEntries = [];
-            foreach($fields as $field)
-            {
-                $subjectText = str_ireplace('@@'.$field, $processedCSV[$field][$key], $subjectText);
-                $messageText = str_ireplace('@@'.$field, $processedCSV[$field][$key], $messageText);
-                // set up an entry for the recipients list later on
-                $fieldEntries[] = [$field => $processedCSV[$field][$key]];
-            }
-
-            // trim the <p> tags off the messageText
-            $messageText = substr($messageText,0,-4);
-            $messageText = substr($messageText,3);
-
-            // make a message to throw into the DB
-            $message = new Message;
-            $message->user_id = $user->id;
-            $message->email_id = $email->id;
-            $message->recipient = $recipientEmail;
-            $message->subject = $subjectText;
-            // let the db know that the message came from a csv
-            $message->sent_with_csv = 'yes';
-
-            if($request->_signature == 'on')
-            {
-                $message->message = $messageText.'<br><br>'.$user->signature;
-            }else
-            {
-                $message->message = $messageText;
-            }
-            if($request->_send_to_salesforce == 'on')
-            {
-                $message->send_to_salesforce = 'yes';
-            }
-
-            $message->created_at = time();
-            $message->save();
-
-            // set up the data list in case the user wants to go back and make some edits
-            $tempRecipientsList[] = [
-                '_email' => $recipientEmail,
-                '_fields' => json_encode($fieldEntries)
-            ];
-        }
-
-        // save the tempRecipientsList to the email object for future use (if needed)
-        $email->temp_recipients_list = json_encode($tempRecipientsList);
-        $email->save();
-
-        foreach($processedCSV['email'] as $recipientEmail)
-        {
-            if(!filter_var($recipientEmail,FILTER_VALIDATE_EMAIL))
-            {
-                $errors['badEmails'] = "true";
-                return redirect('/use/'.base64_encode($email->id) . '?' . http_build_query($errors));
-            }
-            else
-            {
-                return redirect('/preview/'.base64_encode($email->id));
-            }
-        }
     }
 
-    public static function processManualData($request, $email, $user)
+    public static function deleteTempFieldList($email_id)
     {
-        // build the recipient list and assign the fields to them
-        $messages = [];
-        $tempRecipientsList = [];
-        foreach($_POST['_email'] as $key => $recipientEmail)
-        {
-            // return the array of the fields from the user
-            $fields = [];
-            foreach($_POST as $k => $v)
-            {
-                if(($k != 'files') && (substr($k,0,1) != '_') && ($k != 'csvFile'))
-                {
-                    $fields[] = $k;
-                }
-            }
-            // for each field provided, replace the variable in the template with the correct field input
-            // use the key we returned from figuring out with recipient entry we're currently on
-            $messageText = $request->_email_template;
-            $subjectText = $request->_subject;
-            $fieldEntries = [];
-            foreach($fields as $field)
-            {
-                $subjectText = str_replace('@@'.$field, $_POST[$field][$key], $subjectText);
-                $messageText = str_replace('@@'.$field, $_POST[$field][$key], $messageText);
-                // set up an entry for the recipients list later on
-                $fieldEntries[] = [$field => $_POST[$field][$key]];
-            }
-            // trim the <p> tags off the messageText if the used DIDN'T paste a match styles
-            // (this needs to be fixed with a new JS editor that doesn't automatically insert <p> tags)
-            if(substr($messageText,0,3) == '<p>')
-            {
-                $messageText = substr($messageText,0,-4);
-                $messageText = substr($messageText,3);
-            }
-            // make a message to throw into the DB
-            $message = new Message;
-            $message->user_id = $user->id;
-            $message->email_id = $email->id;
-            $message->recipient = $recipientEmail;
-            $message->subject = $subjectText;
-            if($request->_signature == 'on')
-            {
-                $message->message = $messageText.'<br><br>'.$user->signature;
-            }else
-            {
-                $message->message = $messageText;
-            }
-            if($request->_send_to_salesforce == 'on')
-            {
-                $message->send_to_salesforce = 'yes';
-            }
-            $message->created_at = time();
-            $message->save();
-            // set up the data list in case the user wants to go back and make some edits
-            $tempRecipientsList[] = [
-                '_email' => $recipientEmail,
-                '_fields' => json_encode($fieldEntries)
-            ];
-        }
-        // save the tempRecipientsList to the email object for future use (if needed)
-        $email->temp_recipients_list = json_encode($tempRecipientsList);
+        $email = Email::find($email_id);
+        $email->temp_recipients_list = null;
         $email->save();
-        // make sure the emails are legit
-        foreach($request->_email as $recipientEmail)
+    }
+
+    public static function makeNewEmail($user, $request, $oneOff)
+    {
+
+        $email = new Email;
+        $email->user_id = $user->id;
+        $email->name = $request->_name;
+        $email->subject = $request->_subject;
+        $email->template = $request->_email_template;
+        $email->creator_name = $user->name;
+        $email->created_at = time();
+        $email->shared = 0;
+        $email->copies = 0;
+        if($oneOff)
         {
-            if(!filter_var($recipientEmail,FILTER_VALIDATE_EMAIL))
-            {
-                return redirect('/edit/'.base64_encode($email->id).'?badEmails=true');
-            }
-            else
-            {
-                return redirect('/preview/'.base64_encode($email->id));
-            }
+            $email->one_off = 1;
         }
+        if($user->admin)
+        {
+            $email->creator_company = $user->id;
+        } else
+        {
+            $email->creator_company = $user->belongs_to;
+        }
+
+        $fieldsOut = Email::makeFieldList($user, $request);
+
+        // save the fields to the DB
+        $email->fields = json_encode($fieldsOut);
+        $email->save();
+
+        return $email;
+
+    }
+
+    public static function updateEmail($user, $request)
+    {
+        $email = Email::find($request->_email_id);
+        $email->name = $request->_name;
+        $email->subject = $request->_subject;
+        $email->template = $request->_email_template;
+
+        $fields = Email::makeFieldList($user, $request);
+        $email->fields = json_encode($fields);
+        $email->save();
+
+        return $email;
     }
     
 }

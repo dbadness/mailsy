@@ -140,5 +140,9 @@ return array(
 			'title' => 'belongs_to_team',
 			'type' => 'number',
 		),
+		'refresh_token' => array(
+			'title' => 'refresh_token',
+			'type' => 'text',
+		),
 	),
 );

@@ -14,12 +14,30 @@ $(document).ready(function()
 	// the sending function
 	function sendEmails(messageId,penguin = null)
 	{
+
+		console.log($('#fileToUpload')[0].files);
+
+   	    var data = new FormData();
+		$.each($('#fileToUpload')[0].files, function(key, file)
+		{
+	        data.append('_files[]', file);
+		});
+
 		$.ajax({
 			url: '/sendEmail/'+emailId+'/'+messageId+'/'+penguin,
+			method: 'post',
+		    contentType: false,
+		    processData: false,
+        	headers: {
+    	        'X-CSRF-TOKEN': $('input[name=_token]').val()
+	        },
+			data: data,
 			success: function(response){
 
 				// increment the progress bar
 				total += increment;
+				$('.preflight').addClass('hidden');
+				$('.estimate').removeClass('hidden');
 				$('.progress-bar').css('width',total.toFixed(0)+'%');
 				$('#progressText').html(total.toFixed(0)+'% Complete');
 

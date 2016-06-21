@@ -52,27 +52,35 @@
 			</div>
 		@endif
 	@endif
-	<div class="page-header">
-		<h1>{!! $email->name !!}</h1>
-		<a href='/edit/{!! base64_encode($email->id) !!}'>Edit Template</a>
-	</div>
 
-	<p><b>Files will be attached on the previews page</b></p>
+		<div class="page-header">
+			<h1>Send emails to list</h1>
+		
+			<p>Use a single word starting with two '@' symbols to denote a piece of information that you want to individualize the in the emails. (Yes, you can use punctuation!)</p>
+			<p>Try something like:</p>
+			<ul>
+				<li>Hello @@name!</li>
+				<li>I noticed that you purchased @@product and I was hoping...</li>
+				<li>We had a conversation about @@topic at the event last night...</li>
+			</ul>
+			<p><b>*Please Note* You can't have two different fields with the same name like "Today is @@day and tomorrow is @@day".</b></p>
+			<p>Check out the <a href='/faq'>quick start guide</a> if you'd like to see an example with templates!</p>
+			<br>
+			<p><b>Files will be attached on the previews page</b></p>
+
+		</div>
 
 	<form method='post' action='/makePreviews' id='makePreviews' enctype="multipart/form-data">
 		{!! Form::token() !!}
-		{!! Form::hidden('_email_template', $email->template) !!}
-		{!! Form::hidden('_subject', $email->subject) !!}
-		<input type='hidden' name='_email_id' value='{!! $email->id !!}'>
-		<br>
+
 		<div class="input-group">
 			<span class="input-group-addon" id="basic-addon4">Subject</span>
-			<input type="text" id='subject' class="form-control" aria-describedby="basic-addon4" disabled value="{!! $email->subject !!}">
+			<input type="text" id='subject' class="form-control" aria-describedby="basic-addon4">
 		</div>
 		<br>
-		<div class="well">
-			{!! $email->template !!}
-		</div>
+		<div id="emailTemplate"></div>
+		<textarea name='_email_template' id='emailTemplateHolder'></textarea>
+		<textarea name='_name' id='name' class="hidden">{{$user->email}}OneOff</textarea>
 
 		<div id='checkHolders'>
 			<div class='checkHolder' id='sfHolder'>
@@ -90,6 +98,13 @@
 		</div>
 		<br>
 
+		<!-- Trigger the modal with a button -->
+		<span class="btn btn-primary" role="button" id="sendListStep1">
+			Generate Fields
+		</span>
+		<br>
+		<br>
+
 		<div id="uploadData">
 			<table class="table" id="recipientList">
 				<tr id='headers'>
@@ -97,11 +112,7 @@
 					<td class='field'>
 						<b>Email</b>
 					</td>
-					@foreach(json_decode($email->fields) as $field)
-						<td class='field'>
-							<b>{!! $field !!}</b>
-						</td>
-					@endforeach
+
 				</tr>
 				<tr class='recipient'>
 					<td class='removeRow'>
@@ -111,11 +122,7 @@
 					<td class='field'>
 						<input type="text" class="form-control" name='_email[]'>
 					</td>
-					@foreach(json_decode($email->fields) as $field)
-						<td class='field'>
-							<input type="text" class="form-control" name='{!! $field !!}[]'>
-						</td>
-					@endforeach
+
 				</tr>
 			</table>
 			<div class="btn btn-info" id='addRecipient' role="button">
@@ -132,8 +139,12 @@
 			</span>
 		</div>
 
-		<div id="uploadCSV">
-			<!-- Trigger the modal with a button -->
+		<div id="uploadCSV" class="hidden">
+			<div>
+				Fields: <span id=""></span>
+			</div>
+			<br>
+
 			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Upload CSV List of Emails and Message Information</button>
 			or
 

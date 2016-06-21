@@ -15,7 +15,15 @@
 	<br>
 	<br>
 
-	<!-- Let them know how many emails they have left (and that, if they send em, they'll be deleted -->
+	<form method='post' action="{{ route('sendOneEmail') }}" id='sendOneEmail' enctype="multipart/form-data">
+		{!! Form::token() !!}
+		File Upload (These Will Be Attached to EVERY Email!)
+		<input type="file" name="_files[]" id="fileToUpload" multiple>
+	</form>
+	<br>
+	<br>
+
+	<!-- Let them know how many emails they have left (and that, if they send em, they'll be deleted) -->
 	@if(!$user->paid && (count($messages) > App\User::howManyEmailsLeft()))
 		<div class="alert alert-info" role="alert">
 			You have <strong>{!! App\User::howManyEmailsLeft() !!} emails left</strong> to send today on your free account but you're trying to send <strong>{!! count($messages) !!}</strong> - emails beyond the quota won't be sent.
@@ -29,6 +37,7 @@
 	{!! Form::hidden('email_id', $email->id) !!}
 
 	{!! Form::token() !!}
+	<input type="hidden" name="_token" value="{{ csrf_token() }}">
 
 	@foreach($messages as $message)
 
@@ -114,7 +123,8 @@
 					<div class="progress">
 						<div class="progress-bar" style="width:0%;"></div>
 					</div>
-					<strong>Estimated Time: <span class='timerMinu'></span> Minutes and <span class='timerSecu'></span> Seconds</strong>
+					<span class="preflight"><strong>Preparing to send (this can take a while, especially with lots of files!)</strong></span>
+					<span class="estimate hidden"><strong>Estimated Time: <span class='timerMinu'></span> Minutes and <span class='timerSecu'></span> Seconds</strong></span>
 				</div>
 				<div class="modal-footer" id='closeEmailModal' style='display:none;'>
 					<button type="button" class="btn btn-default" data-dismiss="modal" id='closeEmailModalButton'>Close</button>

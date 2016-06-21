@@ -43,6 +43,11 @@ class User extends Model implements AuthenticatableContract,
     // don't automatically add timestamps to new/updated records
     public $timestamps = false;
 
+    public static function makeNewUser()
+    {
+        //
+    }
+
     /** filter the page for this specific user.
      *
      * @param $email id str email of new user
@@ -73,6 +78,7 @@ class User extends Model implements AuthenticatableContract,
         }
         $user->created_at = time();
         $user->track_email = 'yes';
+        $user->track_links = 'yes';
         $user->timezone = 'America/New_York';
         $user->referer = $referer;
 

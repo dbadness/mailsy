@@ -12,23 +12,24 @@
 			{!! $errors->first() !!}
 		</div>
 	@endif
-	<div class="page-header">
-		@if($emails == 0)
-			<h1>Welcome to Mailsy! Let's get started with your first email template.</h1>
-		@else
-			<h1>Create a new email template</h1>
-		@endif
+		<div class="page-header">
+			@if($emails == 0)
+				<h1>Welcome to Mailsy! Let's get started with your first email template.</h1>
+			@else
+				<h1>Create a new email template</h1>
+			@endif
 		
-		<p>Use a single word starting with two '@' symbols to denote a piece of information that you want to individualize the in the emails. (Yes, you can use punctuation!)</p>
-		<p>Try something like:</p>
-		<ul>
-			<li>Hello @@name!</li>
-			<li>I noticed that you purchased @@product and I was hoping...</li>
-			<li>We had a conversation about @@topic at the event last night...</li>
-		</ul>
-		<p><b>*Please Note* You can't have two different fields with the same name like "Today is @@day and tomorrow is @@day".</b></p>
-		<p>Check out the <a href='/faq'>quick start guide</a> if you'd like to see an example!</p>
-	</div>
+			<p>Use a single word starting with two '@' symbols to denote a piece of information that you want to individualize the in the emails. (Yes, you can use punctuation!)</p>
+			<p>Try something like:</p>
+			<ul>
+				<li>Hello @@name!</li>
+				<li>I noticed that you purchased @@product and I was hoping...</li>
+				<li>We had a conversation about @@topic at the event last night...</li>
+			</ul>
+			<p><b>*Please Note* You can't have two different fields with the same name like "Today is @@day and tomorrow is @@day".</b></p>
+			<p>Check out the <a href='/faq'>quick start guide</a> if you'd like to see an example!</p>
+		</div>
+
 	<form method='post' action='/createTemplate' id='makePreviews'>
 		{!! Form::token() !!}
 			

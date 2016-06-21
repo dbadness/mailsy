@@ -116,6 +116,17 @@
 	<div class='page-header'>
 		<h1>Settings</h1>
 	</div>
+
+<!-- 	<div class="panel panel-default">
+		<div class="panel-heading"><strong>Notification Settings</strong></div>
+		<div class='panel-body'>
+			I want to receive emails when...<br>
+			<input type="checkbox"> Someone opens my email<br>
+			<input type="checkbox"> My weekly summary is ready<br>
+			<input type="checkbox"> I make a payment<br>
+		</div>
+	</div> -->
+
 	<div class="panel panel-default">
 		<div class="panel-heading"><strong>Email Settings</strong></div>
 		<div class='panel-body'>
@@ -132,7 +143,23 @@
 						@endif
 					</select>
 				</span>
-				<input type="text" class="form-control" value='Send me an email when someone opens my emails.' disabled>
+				<input type="text" class="form-control" value='Notify me when someone looks at one my emails.' disabled>
+			</div>
+			<br>
+			<p>Link Tracking:</p>
+			<div class="input-group">
+				<span class="input-group-addon">
+					<select id='trackLinks' name='track_links'>
+						@if($user->track_links)
+							<option value='yes' selected>Yes</option>
+							<option value='no'>No</option>
+						@else
+							<option value='yes'>Yes</option>
+							<option value='no' selected>No</option>
+						@endif
+					</select>
+				</span>
+				<input type="text" class="form-control" value='Notify me when someone clicks through a link in one my emails.' disabled>
 			</div>
 			<br>
 			<p>Name:</p>

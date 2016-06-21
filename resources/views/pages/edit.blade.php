@@ -58,6 +58,7 @@
 			<?php $recipients = json_decode($email->temp_recipients_list); ?>
 			<table class="table" id="recipientList">
 				<tr id='headers'>
+				<td></td>
 					<td class='field'>
 						<b>Email</b>
 					</td>
@@ -73,6 +74,10 @@
 				</tr>
 				@foreach($recipients as $recipient)
 					<tr class='recipient'>
+						<td class='removeRow'>
+							<div style='height:5px;'></div>
+							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						</td>
 						<td class='field'>
 							<input type="text" name='_email[]' class="form-control" value='{{ $recipient->_email }}'>
 						</td>

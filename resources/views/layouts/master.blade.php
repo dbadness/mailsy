@@ -16,10 +16,13 @@
         <link rel="stylesheet" href="{!! asset('/css/main.css') !!}">
         <script src="{!! asset('/js/main.js') !!}"></script>
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
-        <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"> @yield('PageJS')
+        <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        @yield('PageJS')
 
         <link href="/css/summernote.css" rel="stylesheet">
         <script src="/js/summernote.js"></script>
+
+        <link href="https://bootswatch.com/readable/bootstrap.min.css" rel="stylesheet">
 
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -67,7 +70,7 @@
     </head>
 
 <body>
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-default navbar-fixed-top" style="height: 50px;">
         <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
@@ -77,19 +80,34 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand topnav" href="/home"><img src='/images/logo.png' alt='Mailsy' width='80px'>
-                </a>
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a class="navbar-brand topnav" href="{{ route('home') }}"><img src='/images/logo.png' alt='Mailsy' width='80px'></a>
+                    </li>
+                </ul>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li>
-                        <a href="/home">Dashboard <span class="sr-only">(current)</span></a>
+                        <a href="{{ route('sendone') }}">Send Email</a>
                     </li>
                     <li>
-                        <a href="/create">New Template</a>
+                        <a href="{{ route('send') }}">Send Email to List</a>
                     </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Templates <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="{{ route('create') }}">New Template</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('templates') }}">Saved Templates <span class="sr-only">(current)</span></a>
+                                    </li>
+                                </ul>
+                            </li>
+
 <!--
                     @if($user->paid)
                         <li>
@@ -105,7 +123,7 @@
                     @endif
                     @if($user->admin == 'yes')
                         <li>
-                            <a href="/admin">Team Admin</a>
+                            <a href="{{ route('admin') }}">Team Admin</a>
                         </li>
 
                     @endif
@@ -115,25 +133,35 @@
 
                     <ul class="nav navbar-nav navbar-right">
                         <ul class="nav navbar-nav">
-                            <li><a href='/settings'>{!! $user->email !!}</a></li>
+                            <li><a href="{{ route('settings') }}">{!! $user->email !!}</a></li>
                             <li>
                                 @if(!$user->paid)
-                                    <a href='/upgrade'>({!! App\User::howManyEmailsLeft() !!} emails left today)</a>
+                                    <a href="{{ route('upgrade') }}">({!! App\User::howManyEmailsLeft() !!} emails left today)</a>
                                 @else
-                                    <a href='/settings'>
+<!--                                     <a href="{{ route('settings') }}">
                                         Upgraded Account!
                                         @if($user->expires)
                                             (until {!! date('m-d-Y',$user->expires) !!})
                                         @endif
                                     </a> 
-                                @endif
+ -->                                @endif
                             </li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">More <span class="caret"></span></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="/settings">Settings</a>
+                                    <li>
+                                        <a href="{{ route('home') }}">Dashboard</a>
                                     </li>
-                                    <li><a href="/tutorial/step1">Tutorial</a>
+                                    <li><a href="{{ route('outbox') }}">Outbox</a>
+                                    </li>
+                                    <li><a href="{{ route('events') }}">Events</a>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="{{ route('settings') }}">Settings</a>
+                                    </li>
+                                    <li><a href="{{ route('tutorial1') }}">Template Tutorial</a>
+                                    </li>
+                                    <li><a href="{{ route('featuretutorial') }}">Feature Tutorial</a>
                                     </li>
                                     <li role="separator" class="divider"></li>
                                     <li>
@@ -151,13 +179,13 @@
                                             ?>
                                             @if($teamCheck)
                                                 @if($company->users_left > 0)
-                                                    <a href='/settings'>Join Your Team</a>
+                                                    <a href="{{ route('settings') }}">Join Your Team</a>
                                                 @endif
                                             @else
-                                                <a href='/upgrade'>Upgrade</a>
+                                                <a href="{{ route('upgrade') }}">Upgrade</a>
                                             @endif
                                         @else
-                                            <a href='/settings'>Upgraded Account!</a>
+                                            <a href="{{ route('settings') }}">Upgraded Account!</a>
                                         @endif
                                     </li>
                                     <li role="separator" class="divider"></li>
@@ -176,18 +204,19 @@
                 <div class="alert alert-warning alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
                     </button>
-                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> You've reached the maximum number of emails you can send per day on a free account. If you love Mailsy, why not <a class='alert-link' href='/upgrade'>upgrade</a> so you can send unlimited emails per day?
+                    <br>
+                    <br>
+                    <br>
+                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> You've reached the maximum number of emails you can send per day on a free account. If you love Mailsy, why not <a class='alert-link' href="{{ route('upgrade') }}">upgrade</a> so you can send unlimited emails per day?
                 </div>
             @endif
+            <br>
+            <br>
+            <br>
             @yield('content')
         </div>
         <div style="height:100px;"></div>
-        <nav class="navbar navbar-default navbar-fixed-bottom">
-            <div class="container" style="text-align:center;">
-                <p class="navbar-text" style="float:none;">Copyright &copy;
-                    <?php echo date( 'Y');?> Mailsy by Lucolo, Inc. Questions? Feedback? Movie recommendations? Send an email to <a href="mailto:hello@mailsy.co">hello@mailsy.co</a> or reach out on <a href="https://www.twitter.com/mailsyapp" target="_blank">Twitter</a>.</p>
-            </div>
-        </nav>
+
     </body>
 
 </html>

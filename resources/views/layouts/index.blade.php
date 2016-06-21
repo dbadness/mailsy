@@ -24,6 +24,7 @@
     <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link href="https://bootswatch.com/readable/bootstrap.min.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -87,10 +88,10 @@
                         <a href="#pricing">Pricing</a>
                     </li>
                     <li>
-                        <a href="/signup">Sign Up</a>
+                        <a href="{{ route('signup') }}">Sign Up</a>
                     </li>
                     <li>
-                        <a href="/login">Log In</a>
+                        <a href="{{ route('login') }}">Log In</a>
                     </li>
                 </ul>
             </div>
@@ -98,7 +99,6 @@
         </div>
         <!-- /.container -->
     </nav>
-
 
     <!-- Header -->
     <a name=""></a>
@@ -113,7 +113,9 @@
                         <hr class="intro-divider">
                         <ul class="list-inline intro-social-buttons">
                             <li>
-                                <a href="/signup" class="btn btn-info btn-lg"><span class="network-name">Signup for Free</span></a>
+                                <a href="{{ route('signup', [1]) }}" class="btn btn-info btn-lg"><span class="network-name">Signup for Free</span></a>
+                                <br>
+                                <a href="{{ route('login') }}">Existing User? Login</a>
                             </li>
                         </ul>
                     </div>
@@ -353,7 +355,7 @@
                             <td>
                             </td>
                             <td>
-                                <a href='/signup'><button class='btn btn-primary' role='button'>Sign Up for Free</button></a>
+                                <a href="{{ route('signup') }}"><button class='btn btn-primary' role='button'>Sign Up for Free</button></a>
                             </td>
                             <td>
                             </td>
@@ -429,9 +431,6 @@
                             <a href="mailto:hello@mailsy.co">Contact</a>
                         </li>
                         <li class="footer-menu-divider">&sdot;</li>
-                        <li>
-                            <a href="/faq">FAQ</a>
-                        </li>
                         <li class="footer-menu-divider">&sdot;</li>
                         <li>
                             <a href="/signup">Sign Up</a>

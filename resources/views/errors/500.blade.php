@@ -16,7 +16,7 @@
 			<br>
 			<br>
 			<button class='btn btn-primary'>Send Feedback</button>
-			<a href='/home'><div class='btn btn-primary' role='button'>Go Home</div></a>
+			<a href="{{ route('home') }}"><div class='btn btn-primary' role='button'>Go Home</div></a>
 		</form>
 	</div>
 	<div class='clear'></div>
