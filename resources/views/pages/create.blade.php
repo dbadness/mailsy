@@ -12,7 +12,6 @@
 			{!! $errors->first() !!}
 		</div>
 	@endif
-	<span class="hidden">
 		<div class="page-header">
 			@if($emails == 0)
 				<h1>Welcome to Mailsy! Let's get started with your first email template.</h1>
@@ -30,7 +29,6 @@
 			<p><b>*Please Note* You can't have two different fields with the same name like "Today is @@day and tomorrow is @@day".</b></p>
 			<p>Check out the <a href='/faq'>quick start guide</a> if you'd like to see an example!</p>
 		</div>
-	</span>
 
 	<form method='post' action='/createTemplate' id='makePreviews'>
 		{!! Form::token() !!}

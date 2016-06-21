@@ -1,3 +1,4 @@
+
 $(document).ready(function(){
 
 	/**
@@ -319,11 +320,83 @@ $(document).ready(function(){
 		$('csvFileUpload').val(null);
 	});
 
-
 	$('#sendOneEmailBtn').click(function()
 	{
+		//Check if email complaint with RFC 2822, 3.6.2.
+		function check(email) {
+			var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    		return re.test(email);
+		}
+
+		var mail = $('#email').val();
+
+		if(check(mail))
+		{
+			$('#emailTemplateHolder').val($('#emailTemplate').code());
+			return true;
+		} else
+		{
+			$('#notAnEmail').removeClass('hidden');
+			return false;
+		}
+
+	});
+
+	$('#sendListStep1').click(function()
+	{
 		$('#emailTemplateHolder').val($('#emailTemplate').code());
-	})
+		// $('#sendListStep1').toggle();
+		// $('#uploadCSV').removeClass('hidden');
+		// $("#subject").prop('disabled', true);
+		// $("#emailTemplate").prop('disabled', true);
+
+		$.ajax({
+			method: 'post',
+			url: '/returnFieldsOneOff',
+			data: 
+			{
+				'_email_template' : $('#emailTemplateHolder').val(),
+				'_name' : $('#name').val(),
+				'_subject' : $('#subject').val(),
+				'_token' : $('input[name=_token]').val(),
+			},
+			error: function(response)
+			{
+				// alert('Something went wrong.');
+				console.log(response);
+			},
+			beforeSend: function() {
+				$('#refreshFields').html('Loading...');
+			},
+			success: function(response) {
+				window.location = response;
+			}
+		});
+
+	});
+
+	//convert those marked to convert to proper time
+	window.onload = function()
+	{
+		function timeConverter(UNIX_timestamp){
+			var a = new Date(UNIX_timestamp * 1000);
+			var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+			var year = a.getFullYear();
+			var month = months[a.getMonth()];
+			var date = a.getDate();
+			var hour = a.getHours();
+			var min = a.getMinutes();
+			var sec = a.getSeconds();
+			var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+  			return time;
+		}
+
+		$('.unixToConvert').each(function()
+		{
+			$(this).text(timeConverter($(this).code()));
+		})
+
+	};
 
 }); // end doc ready
 

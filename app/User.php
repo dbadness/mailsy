@@ -78,6 +78,7 @@ class User extends Model implements AuthenticatableContract,
         }
         $user->created_at = time();
         $user->track_email = 'yes';
+        $user->track_links = 'yes';
         $user->timezone = 'America/New_York';
         $user->referer = $referer;
 

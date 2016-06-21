@@ -51,7 +51,7 @@ class Email extends Model
         $email->save();
     }
 
-    public static function makeNewEmail($user, $request)
+    public static function makeNewEmail($user, $request, $oneOff)
     {
 
         $email = new Email;
@@ -63,6 +63,10 @@ class Email extends Model
         $email->created_at = time();
         $email->shared = 0;
         $email->copies = 0;
+        if($oneOff)
+        {
+            $email->one_off = 1;
+        }
         if($user->admin)
         {
             $email->creator_company = $user->id;

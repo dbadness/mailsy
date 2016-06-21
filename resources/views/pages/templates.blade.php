@@ -18,14 +18,11 @@
 		<hr>
 		<div class="jumbotron">
 			<h2>Prospecting is lightspeed with Mailsy.</h2>
-			<p>Mailsy allows you to send multiple, individualized emails in seconds - 
-			create a template, fill in the pieces of relevent information, 
-			and  hit send. Just once!</p>
-			<p>Dive right in and <a href="{{ route('create') }}"><strong>create your first template!</strong></a> or check out the <a href="{{ route('faq') }}"><strong>quickstart guide</strong></a>.</p>
+			<p>Dive right in and <a href="{{ route('create') }}"><strong>create your first template!</strong></a>.</p>
 		</div>
 
 		<div class="alert alert-info" role="alert">
-			No emails to report yet...
+			You have no templates yet...
 			
 			@if(!$user->paid)
 				<a href="{{ route('create') }}" class='alert-link'>Create a template</a> and send up to 10 emails per today on the free account.
@@ -54,7 +51,7 @@
 
 							<div class='messageInfoWrapper'>
 								<div class='messageInfo' style='border-left:solid 1px gray;'>
-									Last Sent Date
+									Stats Coming Soon!
 								</div>
 								<div class='messageInfo'>
 									{!! $messageCount !!} Messages

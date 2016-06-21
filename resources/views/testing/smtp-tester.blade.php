@@ -117,19 +117,15 @@
 			<div class="form-group">
 				<input name='password' placeholder="password">
 			</div>
-			<div class="form-group">
+<!-- 			<div class="form-group">
 				<input name='recipient' placeholder="recipient email">
 			</div>
-
-<!-- 				<label for='subject'>Subject:</label>
-				<input name='subject'>
-
-				<br>
-
-				<label for='body'>Body:</label>
-				<textarea name='body'></textarea>
-
-				<br> -->
+ -->			<div class="form-group">
+				<input name='_to' placeholder="email to send from">
+			</div>
+			<div class="form-group">
+				<input name='_from' placeholder="email to send to">
+			</div>
 
 			<div class="form-group">
 				<input class="btn btn-primary" type='submit' value='send'>

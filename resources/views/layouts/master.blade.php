@@ -154,10 +154,12 @@
                                     </li>
                                     <li><a href="{{ route('outbox') }}">Outbox</a>
                                     </li>
+                                    <li><a href="{{ route('events') }}">Events</a>
+                                    </li>
                                     <li role="separator" class="divider"></li>
                                     <li><a href="{{ route('settings') }}">Settings</a>
                                     </li>
-                                    <li><a href="{{ route('tutorial1') }}">Tutorial</a>
+                                    <li><a href="{{ route('tutorial1') }}">Template Tutorial</a>
                                     </li>
                                     <li role="separator" class="divider"></li>
                                     <li>
@@ -200,6 +202,9 @@
                 <div class="alert alert-warning alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
                     </button>
+                    <br>
+                    <br>
+                    <br>
                     <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> You've reached the maximum number of emails you can send per day on a free account. If you love Mailsy, why not <a class='alert-link' href="{{ route('upgrade') }}">upgrade</a> so you can send unlimited emails per day?
                 </div>
             @endif

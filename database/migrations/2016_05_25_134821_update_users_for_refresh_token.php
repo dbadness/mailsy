@@ -19,15 +19,19 @@ class UpdateUsersForRefreshToken extends Migration
             $table->string('id_token');
             $table->string('created');
             $table->string('refresh_token');
+            $table->string('track_links');
+            $table->integer('second_last_login');
         });
-        Schema::table('messages', function (Blueprint $table) {
-            $table->dropColumn([
-                'read_at'
-                ]);
+        Schema::table('emails', function ($table) {
+            $table->integer('one_off')->nullable();
+        });
+        Schema::table('messages', function ($table) {
+            $table->string('files');
         });
         Schema::create('events', function ($table) {
             $table->increments('id');
             $table->string('user_id');
+            $table->string('message_id');
             $table->string('event_type');
             $table->string('event_message');
             $table->integer('timestamp');
@@ -49,12 +53,22 @@ class UpdateUsersForRefreshToken extends Migration
                 'expires_in',
                 'id_token',
                 'created',
-                'refresh_token'
+                'refresh_token',
+                'track_links',
+                'second_last_login'
                 ]);
         });
-        Schema::table('messages', function (Blueprint $table) {
-            $table->integer('read_at')->nullable();
+        Schema::table('emails', function ($table)
+        {
+            $table->dropColumn(['one_off',
+                ]);
         });
+        Schema::table('messages', function ($table)
+        {
+            $table->dropColumn(['files',
+                ]);
+        });
+
         Schema::drop('events');
 
     }

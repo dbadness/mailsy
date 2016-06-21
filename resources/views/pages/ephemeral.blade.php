@@ -53,6 +53,20 @@
 		@endif
 	@endif
 
+		<div class="page-header">
+			<h1>Send emails to list</h1>
+		
+			<p>Use a single word starting with two '@' symbols to denote a piece of information that you want to individualize the in the emails. (Yes, you can use punctuation!)</p>
+			<p>Try something like:</p>
+			<ul>
+				<li>Hello @@name!</li>
+				<li>I noticed that you purchased @@product and I was hoping...</li>
+				<li>We had a conversation about @@topic at the event last night...</li>
+			</ul>
+			<p><b>*Please Note* You can't have two different fields with the same name like "Today is @@day and tomorrow is @@day".</b></p>
+			<p>Check out the <a href='/faq'>quick start guide</a> if you'd like to see an example with templates!</p>
+		</div>
+
 	<form method='post' action='/makePreviews' id='makePreviews' enctype="multipart/form-data">
 		{!! Form::token() !!}
 
@@ -62,6 +76,8 @@
 		</div>
 		<br>
 		<div id="emailTemplate"></div>
+		<textarea name='_email_template' id='emailTemplateHolder'></textarea>
+		<textarea name='_name' id='name' class="hidden">{{$user->email}}OneOff</textarea>
 
 		<div id='checkHolders'>
 			<div class='checkHolder' id='sfHolder'>
@@ -77,6 +93,13 @@
 			@endif
 			<div class='clear'></div>
 		</div>
+		<br>
+
+		<!-- Trigger the modal with a button -->
+		<span class="btn btn-primary" role="button" id="sendListStep1">
+			Generate Fields
+		</span>
+		<br>
 		<br>
 
 		<div id="uploadData">
@@ -111,21 +134,12 @@
 			<span class="btn btn-primary" id="showCSV" role="button">
 				Upload a CSV
 			</span>
-			or
-			<span class="btn btn-primary" id="showCSV" role="button">
-				Upload a CSV
-			</span>
 		</div>
 
-		<div id="uploadCSV">
-			<!-- Trigger the modal with a button -->
-			<span class="btn btn-primary" role="button">
-				Generate Fields and Refresh Data
-			</span>
-			<span class="pull-right">
-				Fields:
-			</span>
-			<br>
+		<div id="uploadCSV" class="hidden">
+			<div>
+				Fields: <span id=""></span>
+			</div>
 			<br>
 
 			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Upload CSV List of Emails and Message Information</button>

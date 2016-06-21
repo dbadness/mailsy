@@ -7,6 +7,7 @@ use Auth;
 use App\User;
 use App\Email;
 use App\Message;
+use App\Event;
 use App\Customer;
 use App\Utils;
 use Redirect;
@@ -23,41 +24,6 @@ class ActionController extends Controller
 
         //Use this to set any variables that should be available to all functions in this controller.
         $this->user = Auth::user();
-    }
-
-    // send a test email when the user sets up their smtp settings
-    public function doSmtpTester(Request $request)
-    {
-        // Create the Transport
-        try
-        {
-            $transport = \Swift_SmtpTransport::newInstance($request->smtp_server, $request->smtp_port, $request->smtp_protocol)->setUsername($request->smtp_uname)->setPassword($request->smtp_password);
-
-            $mailer = \Swift_Mailer::newInstance($transport);
-
-            $mail = new \Swift_Message;
-
-            // Create a message
-            $subject = 'Test email from Mailsy.';
-
-            $body = 'Hi there,<br><br>Looks like everything is set up and working correctly! You can now <a href="'.env('DOMAIN').'/smtp-setup">save your email settings on Mailsy</a> and start sending out emails en masse!<br><br>- The Mailsy Team';
-
-            $mail->setFrom(array($this->user->email));
-            $mail->setTo([$this->user->email => $this->user->name]);
-            $mail->setBody($body, 'text/html');
-            $mail->setSubject($subject);
-
-            $result = $mailer->send($mail);
-        }
-        catch(\Swift_TransportException $e)
-        {
-            return $e->getMessage();
-            die;
-        }
-
-        // if we made it this far, return success
-        return 'success';
-
     }
 
     // if the test email is successful, save the smtp settings for the user
@@ -87,7 +53,7 @@ class ActionController extends Controller
         if(!$request->_email_id)
         {
             // create the email object
-            $email = Email::makeNewEmail($this->user, $request);
+            $email = Email::makeNewEmail($this->user, $request, false);
 
         }
         else
@@ -109,6 +75,35 @@ class ActionController extends Controller
         }
     }
 
+    // return the fields to the new email view from the ajax call with template
+    public function returnFieldsOneOff(Request $request)
+    {
+        // make sure that all the fields are accounted for and are alphanumeric
+        if(!$request->_name || !$request->_subject || !$request->_email_template)
+        {
+            return 'no main content';
+        }
+
+        // save the email template
+        // if there's no email_id, create one. if there is, use it
+        if(!$request->_email_id)
+        {
+            // create the email object
+            $email = Email::makeNewEmail($this->user, $request, true);
+
+        }
+        else
+        {
+            $email = Email::updateEmail($this->user, $request);
+        }
+
+        $fields = Email::makeFieldList($this->user, $request);
+        $content = $request->_subject.' '.$request->_email_template;
+        preg_match_all('/@@[a-zA-Z0-9]*/',$content,$matches);
+
+        return '/use/'.base64_encode($email->id);
+    }
+
     public function createTemplate(Request $request)
     {
         // make sure that all the fields are accounted for and are alphanumeric
@@ -119,7 +114,7 @@ class ActionController extends Controller
 
         // save the email template
         // create the email object
-        $passID = Email::makeNewEmail($this->user, $request);
+        $passID = Email::makeNewEmail($this->user, $request, false);
 
         return redirect('/use/'.base64_encode($passID->id));
     }
@@ -149,12 +144,6 @@ class ActionController extends Controller
         
         // save the email template
         $email = Email::updateEmail($this->user, $request);
-        // $email = Email::find($request->_email_id);
-        // $email->name = $request->_name;
-        // $email->subject = $request->_subject;
-        // $email->template = $request->_email_template;
-        // $email->fields = json_encode($fields);
-        // $email->save();
 
         // send the user to the 'use' view
         return redirect('/use/'.base64_encode($email->id));
@@ -202,7 +191,7 @@ class ActionController extends Controller
     }
     
     // send the emails
-    public function sendEmail($email_id, $message_id, $password = null)
+    public function sendEmail($email_id, $message_id, $password = null, Request $request)
     {
 
         // find the email object and delete and temp_recipients_list
@@ -210,6 +199,10 @@ class ActionController extends Controller
         Email::deleteTempFieldList($email_id);
 
         // send out the email
+// Content-Disposition: form-data; name="_files[]"; filename="1.jpg"
+// Content-Type: image/jpeg
+// Content-Disposition: form-data; name="_files[]"; filename="1.jpg"
+// Content-Type: image/jpeg
 
         // if they're not a paid user, make sure they don't send more than 10 emails per day
         $emailsLeft = User::howManyEmailsLeft();
@@ -218,8 +211,36 @@ class ActionController extends Controller
 
             // set the message up
             $message = Message::find($message_id);
-            // prepend the read receipt callback webhook to the message
 
+            //Begin replacement for link tracking
+           if($this->user->track_links == 'yes')
+            {
+                $messageText = $message->message;
+
+                preg_match_all('#[-a-zA-Z0-9@:%_\+.~\#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~\#?&//=]*)?#si', $messageText, $matches);
+
+                if($matches)
+                {
+                    foreach($matches[0] as $match)
+                    {
+                        if(preg_match("/(http|https):\/\/(.*?)$/i", $match, $holder) == 0)
+                        {
+                            $redirect_match = 'http://'.$match;
+                        } else
+                        {
+                            $redirect_match = $match;                   
+                        }
+
+                        $matcher = '@'.$match.'@';
+                        $messageText = preg_replace($matcher, '<a href='.env('DOMAIN').'/tracklink/'.base64_encode($this->user->id).'/'.base64_encode($message->id).'/'.base64_encode($redirect_match).'>'.$match.'</a>', $messageText);
+                    }
+                }
+
+                $message->message = $messageText;
+                $message->save();
+            }
+
+            // prepend the read receipt callback webhook to the message
             $full_body = $message->message.'<img src="'.env('DOMAIN').'/track/'.base64_encode($this->user->id).'/'.base64_encode($message->id).'" alt="tracker" title="tracker" style="display:block" width="1" height="1">';
 
             // use swift mailer to build the mime
@@ -228,6 +249,18 @@ class ActionController extends Controller
             $mail->setTo([$message->recipient]);
             $mail->setBody($full_body, 'text/html');
             $mail->setSubject($message->subject);
+
+            Log::info('findme1');
+            Log::info($request->_files);
+            Log::info('findme2');
+            if($request->_files[0] != null)
+            {
+                foreach($request->_files as $file)
+                {
+                    $mail->attach(\Swift_Attachment::fromPath($file)->setFilename($file->getClientOriginalName()));
+                }
+            }
+
             if($message->send_to_salesforce)
             {
                 // if they selected the 'send to salesforce' button for the email...
@@ -278,6 +311,7 @@ class ActionController extends Controller
 
         return redirect('/email/'.base64_encode($email->id));
     }
+
     // save the settings page
     public function saveSettings(Request $request)
     {
@@ -295,11 +329,21 @@ class ActionController extends Controller
         {
             $this->user->track_email = NULL;
         }
+
+        if($request->track_links == 'yes')
+        {
+            $this->user->track_links = 'yes';
+        }
+        else
+        {
+            $this->user->track_links = NULL;
+        }
         
         $this->user->save();
 
         return 'success';
     }
+
     // upgrade the user to a paid account (and send out invites to users if need be)
     public function doUpgrade(Request $request)
     {
@@ -726,8 +770,18 @@ class ActionController extends Controller
         // decrypt the ids
         $this->user_id = base64_decode($e_user_id);
         $message_id = base64_decode($e_message_id);
+
         // get the message id and make the DB update
         $message = Message::find($message_id);
+
+        $event = new Event;
+        $event->user_id = $this->user_id;
+        $event->message_id = $message_id;
+        $event->event_type = "message_open";
+        $event->timestamp = time();
+        $event->event_message = $message->recipient." opened  ".$message->subject;
+        $event->save();
+
         if($message->status != 'read')
         {
             $user = Auth::loginUsingId($this->user_id);
@@ -751,6 +805,42 @@ class ActionController extends Controller
         $response->header('Content-Type', 'image/png');
         return $response;
     }
+
+    // webhook for links clicked by the recipients (read receipts) and returns an image to fool the email
+    // we'll also need the user id since this webhook is stateless and the redirect to make the link work
+    public function doTrackLink($e_user_id, $e_message_id, $e_redirect)
+    {
+        // decrypt the ids
+        $this->user_id = base64_decode($e_user_id);
+        $message_id = base64_decode($e_message_id);
+        $e_redirect = base64_decode($e_redirect);
+
+        // get the message id and make the DB update
+        $message = Message::find($message_id);
+
+        $user = Auth::loginUsingId($this->user_id);
+        $event = new Event;
+        $event->user_id = $this->user_id;
+        $event->message_id = $message_id;
+        $event->event_type = "link_open";
+        $event->timestamp = time();
+        $event->event_message = $message->recipient." clicked through the link to ".$e_redirect." in the email ".$message->subject;
+        $event->save();
+
+        if($this->user->track_links = 'yes')
+        {
+                date_default_timezone_set($this->user->timezone);
+
+                // send a notification email
+                $subject = $message->recipient.' clicked through a link of your Mailsy email!';
+                $body = 'We\'re writing to let you know that '.$message->recipient.' opened the link '. $e_redirect .' on '.date('D, M d, Y', $event->timestamp).' at '.date('g:ia',$event->timestamp).' EST.';
+
+                Utils::sendEmail($this->user->email,$subject,$body);
+        }
+
+        return redirect($e_redirect);
+    }
+
 
     public function doArchiveTemplate($eid)
     {
@@ -779,7 +869,7 @@ class ActionController extends Controller
     public function copyTemplate(Request $request)
     {
         // save the email template
-        Email::makeNewEmail($this->user, $request);
+        Email::makeNewEmail($this->user, $request, false);
 
         Email::find($request->_email_id)->copies++;
         Email::find($request->_email_id)->save();
@@ -851,18 +941,68 @@ class ActionController extends Controller
     public function doSendOneEmail(Request $request)
     {
 
-        $to = $request->_recipient;
-        $subject = $request->_subject;
-        $body = $request->_email_template;
+        $messageText = $request->_email_template;
 
-       // if they're not a paid user, make sure they don't send more than 10 emails per day
+        // trim the <p> tags off the messageText
+        $messageText = substr($messageText,0,-4);
+        $messageText = substr($messageText,3);
+
+        // make a message to throw into the DB
+        $message = new Message;
+        $message->user_id = $this->user->id;
+        $message->email_id = 0;
+        $message->recipient = $request->_recipient;
+        $message->subject = $request->_subject;
+        // $message->files = $request->_files;
+        $message->sent_with_csv = 'no';
+
+        if($request->_signature == 'on')
+        {
+            $message->message = $messageText.'<br><br>'.$user->signature;
+        }else
+        {
+            $message->message = $messageText;
+        }
+        if($request->_send_to_salesforce == 'on')
+        {
+            $message->send_to_salesforce = 'yes';
+        }
+
+        $message->created_at = time();
+        $message->save();
+
+        //Begin replacement
+        if($this->user->track_links == 'yes')
+        {
+            preg_match_all('#[-a-zA-Z0-9@:%_\+.~\#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~\#?&//=]*)?#si', $messageText, $matches);
+            if($matches)
+            {
+                foreach($matches[0] as $match)
+                {
+                    if(preg_match("/(http|https):\/\/(.*?)$/i", $match, $holder) == 0)
+                    {
+                        $redirect_match = 'http://'.$match;
+                    } else
+                    {
+                        $redirect_match = $match;                   
+                    }
+
+                    $matcher = '@'.$match.'@';
+                    $messageText = preg_replace($matcher, '<a href='.env('DOMAIN').'/tracklink/'.base64_encode($this->user->id).'/'.base64_encode($message->id).'/'.base64_encode($redirect_match).'>'.$match.'</a>', $messageText);
+                }
+            }
+
+            $message->message = $messageText;
+            $message->save();
+        }
+
+
+        // send out the email
+
+        // if they're not a paid user, make sure they don't send more than 10 emails per day
         $emailsLeft = User::howManyEmailsLeft();
         if($emailsLeft > 0)
         {
-
-            // set the message up
-            $message = $body;
-            // prepend the read receipt callback webhook to the message
 
             $full_body = $message->message.'<img src="'.env('DOMAIN').'/track/'.base64_encode($this->user->id).'/'.base64_encode($message->id).'" alt="tracker" title="tracker" style="display:block" width="1" height="1">';
 
@@ -872,6 +1012,15 @@ class ActionController extends Controller
             $mail->setTo([$message->recipient]);
             $mail->setBody($full_body, 'text/html');
             $mail->setSubject($message->subject);
+
+            if($request->_files[0] != null)
+            {
+                foreach($request->_files as $file)
+                {
+                    $mail->attach(\Swift_Attachment::fromPath($file)->setFilename($file->getClientOriginalName()));
+                }
+            }
+
             if($message->send_to_salesforce)
             {
                 // if they selected the 'send to salesforce' button for the email...
@@ -920,7 +1069,7 @@ class ActionController extends Controller
             Message::where('id',$email->id)->update(['deleted_at' => time()]);
         }
 
-        return redirect('/sendone?message=emailSent');
+    return redirect('/sendone?message=emailSent');
 
     }
 

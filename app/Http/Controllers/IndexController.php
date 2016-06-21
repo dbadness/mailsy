@@ -29,6 +29,13 @@ class IndexController extends Controller
         return view('layouts.index');
     }
 
+    // show the home page
+    // public function showIndex()
+    // {
+
+    //     return redirect('https://www.lucolo.com/mailsy');
+    // }
+
     // show the signup page
     public function showSignup($license = null, $companyDomain = null)
     {
@@ -132,9 +139,6 @@ class IndexController extends Controller
             return redirect('/signup');
         }
 
-        // $processedAccessToken = json_decode($accessToken, true);
-        // $processedAcessToken["refresh_token"] = $existingUser->refresh_token;
-
         $client->setAccessToken($accessToken);
 
         // return the google user's name and email for our DB
@@ -146,9 +150,8 @@ class IndexController extends Controller
         // don't let them sign up twice
         $existingUser = User::where('email',$email)->first();
 
+        $processedAccessToken = json_decode($accessToken, true);
         $refreshExists = preg_match('/refresh_token/', $accessToken);
-
-        // $existingUser->refresh_token = $processedAccessToken["refresh_token"];
 
         // if this is a duplicate, just sign them in (don't sign them up again)
         if($existingUser && $refreshExists)
@@ -161,6 +164,8 @@ class IndexController extends Controller
         }
         elseif($existingUser && !$refreshExists)
         {
+            $processedAcessToken["refresh_token"] = $existingUser->refresh_token;
+
             // log the user in and send them to the home page
             $success = Auth::loginUsingId($existingUser->id);
 
@@ -183,8 +188,13 @@ class IndexController extends Controller
 
             $existingUser->name = $name;
             $existingUser->last_login = time();
+            $existingUser->second_last_login = $existingUser->last_login;
             $existingUser->gmail_user = 1;
             $existingUser->save();
+
+            // $processedAccessToken["refresh_token"] = $existingUser->refresh_token;
+            // $client->setAccessToken(json_encode($processedAccessToken));
+            $client->refreshToken($existingUser->refresh_token);
 
             // send them to the dashboard
             return redirect('/home');
@@ -207,6 +217,7 @@ class IndexController extends Controller
 
             // now log the user in
             $user = Auth::loginUsingId($user->id);
+            $user->refresh_token = $processedAccessToken["refresh_token"];
             $user->gmail_user = 1;
             $user->save();
 
@@ -274,4 +285,45 @@ class IndexController extends Controller
     {
         return view('testing.smtp-tester');
     }
+
+    // send a test email when the user sets up their smtp settings
+    public function doSmtpTester(Request $request)
+    {
+        // Create the Transport
+        try
+        {
+
+            $to = $request->_to;
+            $from = $request->_from;
+
+            $transport = \Swift_SmtpTransport::newInstance($request->smtp_server, $request->smtp_port, $request->smtp_protocol)->setUsername($request->smtp_uname)->setPassword($request->smtp_password);
+
+            $mailer = \Swift_Mailer::newInstance($transport);
+
+            $mail = new \Swift_Message;
+
+            // Create a message
+            $subject = 'Test email from Mailsy.';
+
+            $body = 'Hi there,<br><br>Looks like your SMTP server is compatible! If you\'ve already signed up, you can now <a href="'.env('DOMAIN').'/smtp-setup">save your email settings on Mailsy</a> and start sending out emails en masse!<br><br>- The Mailsy Team';
+
+            $mail->setFrom(array($from));
+            $mail->setTo([$to => $to]);
+            $mail->setBody($body, 'text/html');
+            $mail->setSubject($subject);
+            $mail->attach(\Swift_Attachment::fromPath('my-document.pdf'));
+
+            $result = $mailer->send($mail);
+        }
+        catch(\Swift_TransportException $e)
+        {
+            return $e->getMessage();
+            die;
+        }
+
+        // if we made it this far, return success
+        return 'success';
+
+    }
+
 }

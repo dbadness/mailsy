@@ -15,6 +15,14 @@ class Message extends Model
     // don't automitically add timestamps to new/updated records
     public $timestamps = false;
 
+    // create new message
+    public static function createNewMessage()
+    {
+        // auth the user
+        $user = Auth::user();
+    }
+
+
     // given a message id, update the message statuses (sent, read, replied to, not delievered)
     public static function updateMessageStatus($id)
     {

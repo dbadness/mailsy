@@ -60,7 +60,6 @@
 
 			@if($messages != '[]')
 				@foreach($messages as $message)
-					<!-- Make a modal for team handling -->
 					<!-- Modal -->
 					<div id="messageModal{{$message->id}}" class="modal fade" role="dialog">
 						<div class="modal-dialog">

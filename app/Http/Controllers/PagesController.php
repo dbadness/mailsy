@@ -12,6 +12,7 @@ use App\User;
 use App\Email;
 use App\Message;
 use App\Customer;
+use App\Event;
 use Log;
 use View;
 
@@ -30,7 +31,7 @@ class PagesController extends Controller
     public function showTemplates()
     {
         //return their emails and it's metadata if not archived
-        $emails = Email::where('user_id',$this->user->id)->whereNull('deleted_at')->paginate(9);
+        $emails = Email::where('user_id',$this->user->id)->whereNull('one_off')->whereNull('deleted_at')->paginate(9);
 
         // if there are emails to show, update their message statuses so the reply rates are accurate
         if($emails != '[]')
@@ -332,22 +333,34 @@ class PagesController extends Controller
     public function showOutbox()
     {
 
-        return view('pages.outbox', []);
+        $messages = Message::where('user_id',$this->user->id)->orderBy('created_at', 'desc')->paginate(20);
+
+        return view('pages.outbox', ['messages' => $messages]);
     }
 
     // show ephemeral template page
     public function showHome()
     {
 
-        return view('pages.home', []);
+        $events = Event::where('user_id', $this->user->id)->where('timestamp', '>', $this->user->second_last_login)->orderBy('timestamp', 'desc')->paginate(100);
+
+        return view('pages.home', ['events' => $events]);
     }
 
     // show ephemeral template page
     public function showSendOne()
     {
 
-
         return view('pages.sendOne', []);
+    }
+
+    // show ephemeral template page
+    public function showEvents()
+    {
+
+        $events = Event::where('user_id', $this->user->id)->orderBy('timestamp', 'desc')->paginate(20);
+
+        return view('pages.events', ['events' => $events]);
     }
 
 

@@ -26,6 +26,7 @@ Route::get('/admin', ['as' => 'admin', 'uses' => 'PagesController@showAdmin']);
 
 Route::get('/join/{customer}', ['as' => 'join', 'uses' =>'IndexController@showCompanyPage']);
 Route::get('/track/{e_user_id}/{e_message_id}', ['as' => 'track', 'uses' => 'ActionController@doTrack']); // processes a read receipt when a recipient opens an email
+Route::get('/tracklink/{e_user_id}/{e_link_id}/{e_redirect}', ['as' => 'trackLink', 'uses' => 'ActionController@doTrackLink']); // processes a read receipt when a recipient opens a link
 
 Route::get('/signup/{license?}/{domain?}', ['as' => 'signup', 'uses' => 'IndexController@showSignup']);
 Route::post('/signup/{license?}', ['as' => 'signupPost', 'uses' => 'IndexController@doSignup']);
@@ -55,15 +56,17 @@ Route::group(['middleware' => 'auth'], function(){
 	Route::get('/send', ['as' => 'send', 'uses' => 'PagesController@showSend']);
 	Route::get('/outbox', ['as' => 'outbox', 'uses' => 'PagesController@showOutbox']);
 	Route::get('/sendone', ['as' => 'sendone', 'uses' => 'PagesController@showSendOne']);
+	Route::get('/events', ['as' => 'events', 'uses' => 'PagesController@showEvents']);
 });
 
 // testing
 Route::get('/smtp-tester', ['as' => 'smtpTesterGet', 'uses' => 'IndexController@showSmtpTester']);
 
 // actions
-Route::post('/smtp-tester', ['as' => 'smtpTesterPost', 'uses' => 'ActionController@doSmtpTester']);
+Route::post('/smtp-tester', ['as' => 'smtpTesterPost', 'uses' => 'IndexController@doSmtpTester']);
 Route::post('/smtp-save', ['as' => 'smtpSave', 'uses' => 'ActionController@doSmtpSave']);
 Route::post('/returnFields', ['as' => 'returnFields', 'uses' => 'ActionController@returnFields']);
+Route::post('/returnFieldsOneOff', ['as' => 'returnFieldsOneOff', 'uses' => 'ActionController@returnFieldsOneOff']);
 Route::post('/createTemplate', ['as' => 'createTemplate', 'uses' => 'ActionController@createTemplate']);
 Route::post('/makePreviews', ['as' => 'makePreviews', 'uses' => 'ActionController@makePreviews']);
 Route::post('/updatePreviews', ['as' => 'updatePreviews', 'uses' => 'ActionController@updatePreviews']);
@@ -91,7 +94,7 @@ Route::post('/membership/cancel','ActionController@doCancelMembership');
 Route::get('/sendFirstEmail','ActionController@doSendFirstEmail');
 Route::get('/getReplyRate/{email_id}','ActionController@doReturnReplyRate');
 Route::get('/smtp-auth-check/{e_password}','ActionController@doSmtpAuthCheck');
-Route::get('/sendEmail/{email_id}/{message_id}/{password?}', 'ActionController@sendEmail');
+Route::post('/sendEmail/{email_id}/{message_id}/{password?}', 'ActionController@sendEmail');
 Route::post('/saveSettings', 'ActionController@saveSettings');
 
 // webhooks

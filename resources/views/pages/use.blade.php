@@ -71,6 +71,7 @@
 		<div class="well">
 			{!! $email->template !!}
 		</div>
+
 		<div id='checkHolders'>
 			<div class='checkHolder' id='sfHolder'>
 				<p>Send to Salesforce: <input type='checkbox' name='_send_to_salesforce' @if($user->sf_address) checked="checked" @endif></p>

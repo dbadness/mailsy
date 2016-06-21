@@ -22,7 +22,7 @@ $(document).ready(function()
 				$('#status'+id.value).html(response);
 			},
 			error: function(){
-				alert('Something went wrong.');
+				// alert('Something went wrong.');
 			}
 		});
 	});

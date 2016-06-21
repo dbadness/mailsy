@@ -11,6 +11,11 @@
 		@endif
 	@endif
 
+	<div class="alert alert-danger hidden" id="notAnEmail" role="alert">
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				Your email is invalid!
+	</div>
+
 	<form method='post' action="{{ route('sendOneEmail') }}" id='sendOneEmail' enctype="multipart/form-data">
 		{!! Form::token() !!}
 
@@ -25,7 +30,12 @@
 			<input type="text" id='subject' class="form-control" aria-describedby="basic-addon4" name="_subject">
 		</div>
 		<br>
-		<div id="emailTemplate" name="_email_template"></div>
+		<div id="emailTemplate"></div>
+
+		<div>
+			File Upload
+			<input type="file" name="_files[]" id="fileToUpload" multiple>
+		</div>
 
 		<div id='checkHolders'>
 			<div class='checkHolder' id='sfHolder'>
@@ -44,8 +54,8 @@
 		<br>
 
 		<button class="btn btn-primary" id="sendOneEmailBtn">Send!</button>
-<!-- 		<textarea name='_email_template' id='emailTemplateHolder'></textarea>
- -->
+		<textarea name='_email_template' id='emailTemplateHolder'></textarea>
+
 	</form>
 
 @endsection
