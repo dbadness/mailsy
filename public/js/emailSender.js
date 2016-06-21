@@ -36,6 +36,8 @@ $(document).ready(function()
 
 				// increment the progress bar
 				total += increment;
+				$('.preflight').addClass('hidden');
+				$('.estimate').removeClass('hidden');
 				$('.progress-bar').css('width',total.toFixed(0)+'%');
 				$('#progressText').html(total.toFixed(0)+'% Complete');
 

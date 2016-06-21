@@ -161,6 +161,8 @@
                                     </li>
                                     <li><a href="{{ route('tutorial1') }}">Template Tutorial</a>
                                     </li>
+                                    <li><a href="{{ route('featuretutorial') }}">Feature Tutorial</a>
+                                    </li>
                                     <li role="separator" class="divider"></li>
                                     <li>
                                         @if(!$user->paid)

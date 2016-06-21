@@ -123,7 +123,8 @@
 					<div class="progress">
 						<div class="progress-bar" style="width:0%;"></div>
 					</div>
-					<strong>Estimated Time: <span class='timerMinu'></span> Minutes and <span class='timerSecu'></span> Seconds</strong>
+					<span class="preflight"><strong>Preparing to send (this can take a while, especially with lots of files!)</strong></span>
+					<span class="estimate hidden"><strong>Estimated Time: <span class='timerMinu'></span> Minutes and <span class='timerSecu'></span> Seconds</strong></span>
 				</div>
 				<div class="modal-footer" id='closeEmailModal' style='display:none;'>
 					<button type="button" class="btn btn-default" data-dismiss="modal" id='closeEmailModalButton'>Close</button>

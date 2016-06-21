@@ -11,12 +11,12 @@
 
 	@foreach($messages as $message)
 		@if($message->read_at)
-			<a href="#" class="list-group-item list-group-item-success" data-toggle="modal" data-target="#messageModal{{$message->id}}">Email to {{$message->recipient}} <span class="pull-right">Opened at <span class="unixToConvert">{{$message->read_at}}</span></span></a>
+			<a href="#" class="list-group-item list-group-item-success" data-toggle="modal" data-target="#messageModal{{$message->id}}">{{$message->subject}} to {{$message->recipient}} <span class="pull-right">Opened at <span class="unixToConvert">{{$message->read_at}}</span></span></a>
 		@elseif($message->sent_at)
-			<a href="#" class="list-group-item list-group-item-warning" data-toggle="modal" data-target="#messageModal{{$message->id}}">Email to {{$message->recipient}} <span class="pull-right">Sent at <span class="unixToConvert">{{$message->sent_at}}</span></span></a>
+			<a href="#" class="list-group-item list-group-item-warning" data-toggle="modal" data-target="#messageModal{{$message->id}}">{{$message->subject}} to {{$message->recipient}} <span class="pull-right">Sent at <span class="unixToConvert">{{$message->sent_at}}</span></span></a>
 		@else
-			<a href="mailto:support@mailsy.co" class="list-group-item list-group-item-danger">Email to {{$message->recipient}} <span class="pull-right">Error</span></a>
-		@endif
+<!-- 			<a href="mailto:support@mailsy.co" class="list-group-item list-group-item-danger">{{$message->subject}} to {{$message->recipient}} <span class="pull-right">Error</span></a>
+ -->		@endif
 
 		<!-- Modal -->
 		<div id="messageModal{{$message->id}}" class="modal fade" role="dialog">
@@ -28,9 +28,26 @@
 							<h4 class="modal-title">Message to {!! $message->recipient !!}</h4>
 						</div>
 						<div class="modal-body">
-							<h6>{{ $message->subject }}</h6>
+							<div class="input-group">
+								<span class="input-group-addon" id="basic-addon4">Subject</span>
+								<input type="text" id='subject' class="form-control" aria-describedby="basic-addon4" disabled value="{!! $message->subject !!}">
+							</div>
 							<hr>
-							{{ $message->message }}
+							<span class="input-group-addon" id="basic-addon4">Body</span>
+							<div class="well">
+								{!! $message->message !!}
+							</div>
+							<hr>
+
+							@if($message->files == 'yes')
+								<div>
+									Files Attached (see them here coming soon!)
+								</div>
+							@else
+								<div>
+									No Files Attached
+								</div>
+							@endif
 						</div>
 						<br>
 						<br>

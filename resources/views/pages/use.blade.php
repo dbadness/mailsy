@@ -57,6 +57,8 @@
 		<a href='/edit/{!! base64_encode($email->id) !!}'>Edit Template</a>
 	</div>
 
+	<p><b>Files will be attached on the previews page</b></p>
+
 	<form method='post' action='/makePreviews' id='makePreviews' enctype="multipart/form-data">
 		{!! Form::token() !!}
 		{!! Form::hidden('_email_template', $email->template) !!}

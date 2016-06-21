@@ -363,5 +363,10 @@ class PagesController extends Controller
         return view('pages.events', ['events' => $events]);
     }
 
+    // show nav/stie tutorial
+    public function showSiteTut()
+    {
 
+        return view('pages.sitetut', []);
+    }
 }

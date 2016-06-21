@@ -65,6 +65,9 @@
 			</ul>
 			<p><b>*Please Note* You can't have two different fields with the same name like "Today is @@day and tomorrow is @@day".</b></p>
 			<p>Check out the <a href='/faq'>quick start guide</a> if you'd like to see an example with templates!</p>
+			<br>
+			<p><b>Files will be attached on the previews page</b></p>
+
 		</div>
 
 	<form method='post' action='/makePreviews' id='makePreviews' enctype="multipart/form-data">

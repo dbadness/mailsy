@@ -198,12 +198,6 @@ class ActionController extends Controller
         $email = Email::find($email_id);
         Email::deleteTempFieldList($email_id);
 
-        // send out the email
-// Content-Disposition: form-data; name="_files[]"; filename="1.jpg"
-// Content-Type: image/jpeg
-// Content-Disposition: form-data; name="_files[]"; filename="1.jpg"
-// Content-Type: image/jpeg
-
         // if they're not a paid user, make sure they don't send more than 10 emails per day
         $emailsLeft = User::howManyEmailsLeft();
         if($emailsLeft > 0)
@@ -250,11 +244,10 @@ class ActionController extends Controller
             $mail->setBody($full_body, 'text/html');
             $mail->setSubject($message->subject);
 
-            Log::info('findme1');
-            Log::info($request->_files);
-            Log::info('findme2');
             if($request->_files[0] != null)
             {
+                $message->files = 'yes';
+                $message->save();
                 foreach($request->_files as $file)
                 {
                     $mail->attach(\Swift_Attachment::fromPath($file)->setFilename($file->getClientOriginalName()));
@@ -953,7 +946,6 @@ class ActionController extends Controller
         $message->email_id = 0;
         $message->recipient = $request->_recipient;
         $message->subject = $request->_subject;
-        // $message->files = $request->_files;
         $message->sent_with_csv = 'no';
 
         if($request->_signature == 'on')
@@ -1015,6 +1007,8 @@ class ActionController extends Controller
 
             if($request->_files[0] != null)
             {
+                $message->files = 'yes';
+                $message->save();
                 foreach($request->_files as $file)
                 {
                     $mail->attach(\Swift_Attachment::fromPath($file)->setFilename($file->getClientOriginalName()));
