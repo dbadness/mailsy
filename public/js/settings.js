@@ -20,6 +20,7 @@ $(document).ready(function()
 				'sf_address' : $('input[name=sf_address]').val(),
 				'signature' : $('#signature').code(),
 				'track_email' : $('#trackEmail').val(),
+				'track_links' : $('#trackLinks').val(),
 				'timezone' : $('#timezone').val()
 			},
 			error: function()
