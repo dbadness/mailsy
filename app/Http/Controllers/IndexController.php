@@ -9,9 +9,13 @@ use App\Http\Controllers\Controller;
 
 use App\User;
 use App\Customer;
+use App\Message;
 use App\Utils;
+use App\Event;
 use Auth;
 use Log;
+use Response;
+use File;
 
 use \Sendinblue\Mailin as Mailin;
 
@@ -331,6 +335,50 @@ class IndexController extends Controller
         // if we made it this far, return success
         return 'success';
 
+    }
+
+    // webhook for emails opened by the recipients (read receipts) and returns an image to fool the email
+    // we'll also need the user id since this webhook is stateless
+    public function doTrack($e_user_id, $e_message_id)
+    {
+
+        // decrypt the ids
+        $user_id = base64_decode(quoted_printable_decode($e_user_id));
+        $message_id = base64_decode(quoted_printable_decode($e_message_id));
+
+        // get the message id and make the DB update
+        $message = Message::find($message_id);
+
+        $event = new Event;
+        $event->user_id = $user_id;
+        $event->message_id = $message_id;
+        $event->event_type = "message_open";
+        $event->timestamp = time();
+        $event->event_message = $message->subject." opened";
+        $event->save();
+
+        if($message->status != 'read')
+        {
+            $user = Auth::loginUsingId($user_id);
+            $message->status = 'read';
+            $message->read_at = time();
+            $message->save();
+            if($user->track_email)
+            {
+                // set the timezone
+                date_default_timezone_set($user->timezone);
+
+                // send a notification email
+                $subject = 'Mailsy email '.$message->subject.' opened!';
+                $body = 'We\'re writing to let you know that someone opened your email '. $message->subject .' on '.date('D, M d, Y', $message->read_at).' at '.date('g:ia',$message->read_at).' EST.';
+
+                Utils::sendEmail($user->email,$subject,$body);
+            }
+        }
+
+        $response = Response::make(File::get("images/email-tracker.png"));
+        $response->header('Content-Type', 'image/png');
+        return $response;
     }
 
 }
