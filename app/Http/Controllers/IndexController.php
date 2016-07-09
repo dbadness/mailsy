@@ -381,4 +381,40 @@ class IndexController extends Controller
         return $response;
     }
 
+
+    // webhook for links clicked by the recipients (read receipts) and returns an image to fool the email
+    // we'll also need the user id since this webhook is stateless and the redirect to make the link work
+    public function doTrackLink($e_user_id, $e_message_id, $e_redirect)
+    {
+        // decrypt the ids
+        $user_id = base64_decode($e_user_id);
+        $message_id = base64_decode($e_message_id);
+        $e_redirect = base64_decode($e_redirect);
+
+        // get the message id and make the DB update
+        $message = Message::find($message_id);
+
+        $user = Auth::loginUsingId($user_id);
+        $event = new Event;
+        $event->user_id = $user_id;
+        $event->message_id = $message_id;
+        $event->event_type = "link_open";
+        $event->timestamp = time();
+        $event->event_message = "Someone clicked through the link to ".$e_redirect." in the email ".$message->subject;
+        $event->save();
+
+        if($user->track_links = 'yes')
+        {
+                date_default_timezone_set($user->timezone);
+
+                // send a notification email
+                $subject = 'Mailsy email link clicked through!!';
+                $body = 'We\'re writing to let you know that someone opened the link '. $e_redirect .' on '.date('D, M d, Y', $event->timestamp).' at '.date('g:ia',$event->timestamp).' EST.';
+
+                Utils::sendEmail($user->email,$subject,$body);
+        }
+
+        return redirect($e_redirect);
+    }
+
 }
