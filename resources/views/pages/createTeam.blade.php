@@ -29,7 +29,7 @@
 				<br>
 				<p>Custom Mailsy URL:</p>
 				<div class="input-group" style='width:100%;'>
-				  	<input type="text" class="form-control" value='https://www.mailsy.co/team/{!! $domain !!}' disabled>
+				  	<input type="text" class="form-control" value="{{ env('DOMAIN') }}/team/{!! $domain !!}" disabled>
 				</div>
 				<br>
 				<p>Number of Users:</p>

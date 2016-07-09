@@ -2,6 +2,13 @@
 
 @section('content')
 
+<?php
+	function is_serialized($data)
+	{
+		return (@unserialize($data) !== false);
+	}
+?>
+
 <div class="list-group">
 
 	@if(count($messages) == 0)
@@ -10,13 +17,39 @@
 	@endif
 
 	@foreach($messages as $message)
+		<?php
+			if(is_serialized($message->recipient))
+			{
+				$riter = unserialize($message->recipient);
+				$citer = unserialize($message->cc);
+				$biter = unserialize($message->bcc);
+
+				$rout = '';
+				$cout = '';
+				$bout = '';
+
+				for($i = 0; $i < count($riter); $i++){
+					$rout = $rout.$riter[$i].', ';
+				}
+				for($i = 0; $i < count($citer); $i++){
+					$cout = $cout.$citer[$i].', ';
+				}
+				for($i = 0; $i < count($biter); $i++){
+					$bout = $bout.$biter[$i].', ';
+				}
+
+			} else{
+				$rout = $message->recipient.',';
+			}
+		?>
+
 		@if($message->read_at)
-			<a href="#" class="list-group-item list-group-item-success" data-toggle="modal" data-target="#messageModal{{$message->id}}">{{$message->subject}} to {{$message->recipient}} <span class="pull-right">Opened at <span class="unixToConvert">{{$message->read_at}}</span></span></a>
+			<a href="#" class="list-group-item list-group-item-success" data-toggle="modal" data-target="#messageModal{{$message->id}}">{{$message->subject}} to {{$rout}} <span class="pull-right">Opened at <span class="unixToConvert">{{$message->read_at}}</span></span></a>
 		@elseif($message->sent_at)
-			<a href="#" class="list-group-item list-group-item-warning" data-toggle="modal" data-target="#messageModal{{$message->id}}">{{$message->subject}} to {{$message->recipient}} <span class="pull-right">Sent at <span class="unixToConvert">{{$message->sent_at}}</span></span></a>
+			<a href="#" class="list-group-item list-group-item-warning" data-toggle="modal" data-target="#messageModal{{$message->id}}">{{$message->subject}} to {{$rout}} <span class="pull-right">Sent at <span class="unixToConvert">{{$message->sent_at}}</span></span></a>
 		@else
-<!-- 			<a href="mailto:support@mailsy.co" class="list-group-item list-group-item-danger">{{$message->subject}} to {{$message->recipient}} <span class="pull-right">Error</span></a>
- -->		@endif
+		<!-- put errors here -->
+		@endif
 
 		<!-- Modal -->
 		<div id="messageModal{{$message->id}}" class="modal fade" role="dialog">
@@ -25,7 +58,13 @@
 					<div class="modal-content">
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal">&times;</button>
-							<h4 class="modal-title">Message to {!! $message->recipient !!}</h4>
+							<h4 class="modal-title">Message to {!! $rout !!}</h4>
+							@if($message->cc)
+								<div class="modal-title">CC to {!! $cout !!}</div>
+							@endif
+							@if($message->bcc)
+								<div class="modal-title">BCC to {!! $bout !!}</div>
+							@endif
 						</div>
 						<div class="modal-body">
 							<div class="input-group">

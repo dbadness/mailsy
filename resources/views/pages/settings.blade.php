@@ -30,7 +30,7 @@
 
 				<div class="alert alert-success alert-dismissible" role="alert">
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					You've successfully created your team! You can send people to www.mailsy.co/join/{!! $company->domain !!} to have them signup for their paid versions of Mailsy.
+					You've successfully created your team! You can send people to {{ env('DOMAIN') }}/join/{!! $company->domain !!} to have them signup for their paid versions of Mailsy.
 				</div>
 
 			@elseif($_GET['message'] == 'downgradeSuccess')

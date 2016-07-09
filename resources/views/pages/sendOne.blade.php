@@ -2,6 +2,8 @@
 
 @section('content')
 
+<script src="{!! asset('/js/sendone.js') !!}"></script>
+
 	@if($_GET)
 		@if($_GET['message'] == 'emailSent')
 			<div class="alert alert-success alert-dismissible" role="alert">
@@ -13,16 +15,66 @@
 
 	<div class="alert alert-danger hidden" id="notAnEmail" role="alert">
 		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				Your email is invalid!
+				There's no valid 'to' email!
 	</div>
 
 	<form method='post' action="{{ route('sendOneEmail') }}" id='sendOneEmail' enctype="multipart/form-data">
 		{!! Form::token() !!}
 
+		@if(!$user->gmail_user)
+
+			<!-- Flag for the email sending logic -->
+			<input type='hidden' name='gmail_user' value='0'>
+
+			<!-- Enter Password Field -->
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon4">Email Password</span>
+				<input type="password" id='password' class="form-control" aria-describedby="basic-addon4" name="_password">
+
+			</div>
+			<br>
+		@else
+
+			<!-- Flag for the email sending logic -->
+			<input type='hidden' name='gmail_user' value='1'>
+
+		@endif
+
+		@if($feedback == 1)
 		<div class="input-group">
-			<span class="input-group-addon" id="basic-addon4">Recipient</span>
-			<input type="text" id='email' class="form-control" aria-describedby="basic-addon4" name="_recipient">
+			<span class="input-group-addon" id="basic-addon4">To</span>
+<!-- 			<input type="text" id='email' class="form-control" aria-describedby="basic-addon4" name="_recipient">
+ -->
+			<ul id="recipientTags" class="form-control">
+			    <!-- Existing list items will be pre-added to the tags -->
+			    <li>{{ env('SUPPORT_EMAIL') }}</li>
+			</ul>
 		</div>
+
+		@else
+		<div class="input-group">
+			<span class="input-group-addon" id="basic-addon4">To</span>
+<!-- 			<input type="text" id='email' class="form-control" aria-describedby="basic-addon4" name="_recipient">
+ -->
+			<ul id="recipientTags" class="form-control">
+			    <!-- Existing list items will be pre-added to the tags -->
+			</ul>
+		</div>
+
+		<div class="input-group">
+			<span class="input-group-addon" id="basic-addon4">CC</span>
+			<ul id="CCTags" class="form-control">
+			    <!-- Existing list items will be pre-added to the tags -->
+			</ul>
+		</div>
+
+		<div class="input-group">
+			<span class="input-group-addon" id="basic-addon4">BCC</span>
+			<ul id="BCCTags" class="form-control">
+			    <!-- Existing list items will be pre-added to the tags -->
+			</ul>
+		</div>
+		@endif
 		<br>
 
 		<div class="input-group">
@@ -33,7 +85,7 @@
 		<div id="emailTemplate"></div>
 
 		<div>
-			File Upload
+			Add Attachment
 			<input type="file" name="_files[]" id="fileToUpload" multiple>
 		</div>
 

@@ -100,7 +100,7 @@
 
 		<!-- Trigger the modal with a button -->
 		<span class="btn btn-primary" role="button" id="sendListStep1">
-			Generate Fields
+			Add Contacts
 		</span>
 		<br>
 		<br>

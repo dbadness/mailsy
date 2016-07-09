@@ -4082,6 +4082,7 @@ return array(
     'SessionHandlerInterface' => $vendorDir . '/symfony/http-foundation/Resources/stubs/SessionHandlerInterface.php',
     'TestCase' => $baseDir . '/tests/TestCase.php',
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/src/Template.php',
+    'UpdateMessagesForMultipleSends' => $baseDir . '/database/migrations/2016_07_09_004214_update_messages_for_multipleSends.php',
     'UpdateUsersForLastLogin' => $baseDir . '/database/migrations/2016_04_21_022532_update_users_for_last_login.php',
     'UpdateUsersForRefreshToken' => $baseDir . '/database/migrations/2016_05_25_134821_update_users_for_refresh_token.php',
     'UpdateUsersForTeams' => $baseDir . '/database/migrations/2016_05_02_194755_update_users_for_teams.php',

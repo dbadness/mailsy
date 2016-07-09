@@ -27,16 +27,19 @@
 	@endif
 
 	<div class="page-header">
-		<h1>Welcome to Mailsy! <small>(You're about to become an email magician.)</h1>
+		<h1>Welcome to Mailsy!
+		<br>
+		<small>(You're about to become an email magician.)</h1>
 	</div>
-	<p class='lead'>
+
+<!-- 	<p class='lead'>
 		Mailsy enables you to engage with prospective and existing customers more effectively. You can sign up for Mailsy one of two ways: either with your Google account if you use Google Apps for Work or with an email and password if you don't. Don't worry, if you use a company we'll walk you through what you'll need to get Mailsy up and running.
-	</p>
+	</p> -->
 
 	<div class='signupOptions'>
 
 		<div class="row">
-			<div class="col-sm-4 col-md-6">
+			<div>
 				<div class="thumbnail">
 					<div class="caption">
 						<h3>Use Mailsy with Google Account</h3>
@@ -48,7 +51,7 @@
 				</div>
 			</div>
 
-			<div class="col-sm-6 col-md-6">
+			<div>
 				<div class="thumbnail">
 					<div class="caption">
 						<h3>Use Mailsy with Company Email</h3>

@@ -348,10 +348,10 @@ class PagesController extends Controller
     }
 
     // show ephemeral template page
-    public function showSendOne()
+    public function showSendOne($feedback = null)
     {
 
-        return view('pages.sendOne', []);
+        return view('pages.sendOne', ['feedback' => $feedback]);
     }
 
     // show ephemeral template page

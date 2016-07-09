@@ -9,6 +9,7 @@
         <title>Mailsy - Spend your time selling, not emailing</title>
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.8.23/jquery-ui.min.js" integrity="sha256-sEFM2aY87nr5kcE4F+RtMBkKxBqHEc2ueHGNptOA5XI=" crossorigin="anonymous"></script>
         <!-- Bootstrap -->
         <link href="/css/bootstrap.min.css" rel="stylesheet">
         <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -19,10 +20,17 @@
         <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
         @yield('PageJS')
 
-        <link href="/css/summernote.css" rel="stylesheet">
-        <script src="/js/summernote.js"></script>
+        <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css">
+        <link href="/css/jquery.tagit.css" rel="stylesheet">
+        <script src="{!! asset('/js/tag-it.min.js') !!}"></script>
 
         <link href="https://bootswatch.com/readable/bootstrap.min.css" rel="stylesheet">
+
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+        <link href="/css/summernote.css" rel="stylesheet">
+        <script src="/js/summernote.js"></script>
 
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -82,7 +90,7 @@
                 </button>
                 <ul class="nav navbar-nav">
                     <li>
-                        <a class="navbar-brand topnav" href="{{ route('home') }}"><img src='/images/logo.png' alt='Mailsy' width='80px'></a>
+                        <a class="" href="{{ route('home') }}"><img src='/images/logo.png' alt='Mailsy' width='80px'></a>
                     </li>
                 </ul>
             </div>
@@ -91,13 +99,13 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li>
-                        <a href="{{ route('sendone') }}">Send Email</a>
+                        <a href="{{ route('sendone') }}">Send Single Email</a>
                     </li>
                     <li>
                         <a href="{{ route('send') }}">Send Email to List</a>
                     </li>
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Templates <span class="caret"></span></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Send Template Email <span class="caret"></span></a>
                                 <ul class="dropdown-menu">
                                     <li>
                                         <a href="{{ route('create') }}">New Template</a>
@@ -107,6 +115,8 @@
                                     </li>
                                 </ul>
                             </li>
+                                    <li><a href="{{ route('outbox') }}">Sent</a>
+                                    </li>
 
 <!--
                     @if($user->paid)
@@ -151,8 +161,6 @@
                                 <ul class="dropdown-menu">
                                     <li>
                                         <a href="{{ route('home') }}">Dashboard</a>
-                                    </li>
-                                    <li><a href="{{ route('outbox') }}">Outbox</a>
                                     </li>
                                     <li><a href="{{ route('events') }}">Events</a>
                                     </li>
@@ -216,6 +224,50 @@
             @yield('content')
         </div>
         <div style="height:100px;"></div>
+        <div class="navbar navbar-fixed-bottom">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a class="btn btn-warning" href="{{ route('sendone') }}/1">Go To<br> Send <br>Feedback</a>
+                </li>
+            </ul>
+        </div>
+
+        <div id="feedbackModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Feedback or Error Report</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="basic-addon4">To</span>
+                                <input type="text" id='supportEmail' class="form-control" aria-describedby="basic-addon4" value="{{ env('SUPPORT_EMAIL') }}" disabled>
+                            </div>
+                            <hr>
+
+                            <div class="input-group">
+                                <span class="input-group-addon" id="basic-addon4">Subject</span>
+                                <input type="text" id='supportSubject' class="form-control" aria-describedby="basic-addon4" value="Support or Feedback">
+                            </div>
+                            <hr>
+
+                            <span class="input-group-addon" id="basic-addon4">Body</span>
+                            <textarea id="feedbackText" style="width: 100%; height: 200px;" placeholder="We're sorry your experience wasn't perfect. Tell us about it and we'll get on it as soon as possible!"></textarea>
+                            <br>
+                        <button type="button" class="btn btn-default pull-right" data-dismiss="modal" id="sendFeedback">Send!</button>
+
+                    </div>
+                    <br>
+                    <br>
+                    <div class="modal-footer">
+                        <img id='subModalLoader' style='display:none;' src='/images/loader.gif'>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id='closeSubModalButton'>Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </body>
 

@@ -17,7 +17,7 @@
 
 	<form method='post' action="{{ route('sendOneEmail') }}" id='sendOneEmail' enctype="multipart/form-data">
 		{!! Form::token() !!}
-		File Upload (These Will Be Attached to EVERY Email!)
+		Add Attachment (These Will Be Attached to EVERY Email!)
 		<input type="file" name="_files[]" id="fileToUpload" multiple>
 	</form>
 	<br>

@@ -26,7 +26,7 @@
 		<p><b>Copy</b> allows you to create another template starting from the one that already exists. It's good if you want to have two versions, A/B test, that sort of thing.</p>
 		<p><b>Archive</b> removes the template from list and puts into the archives (which can be accessed from the templates page). It's good for making sure your list of templates doesn't become overcrowded.</p>
 
-		<h2 style="text-align: center;"><b>Don't understand anything? <a href="mailto:support@mailsy.co">Contact us</a> at support@mailsy.co!</b></h2>
+		<h2 style="text-align: center;"><b>Don't understand anything? <a href="mailto:{{ env('SUPPORT_EMAIL') }}">Contact us</a> at {{ env('SUPPORT_EMAIL') }}!</b></h2>
 
 	</div>
 

@@ -164,7 +164,8 @@ class IndexController extends Controller
         }
         elseif($existingUser && !$refreshExists)
         {
-            $processedAcessToken["refresh_token"] = $existingUser->refresh_token;
+            //need to handle refresh token better
+            // $processedAcessToken["refresh_token"] = $existingUser->refresh_token;
 
             // log the user in and send them to the home page
             $success = Auth::loginUsingId($existingUser->id);
@@ -194,10 +195,10 @@ class IndexController extends Controller
 
             // $processedAccessToken["refresh_token"] = $existingUser->refresh_token;
             // $client->setAccessToken(json_encode($processedAccessToken));
-            $client->refreshToken($existingUser->refresh_token);
+            // $client->refreshToken($existingUser->refresh_token);
 
             // send them to the dashboard
-            return redirect('/home');
+            return redirect('/sendone');
         }
         elseif(!$existingUser && $refreshExists)
         {
@@ -293,8 +294,14 @@ class IndexController extends Controller
         try
         {
 
-            $to = $request->_to;
-            $from = $request->_from;
+            if(Auth::user()){
+                $user = Auth::user();
+                $to = $user->email;
+                $from = $user->email;
+            } else{
+                $to = $request->_to;
+                $from = $request->_from;
+            }
 
             $transport = \Swift_SmtpTransport::newInstance($request->smtp_server, $request->smtp_port, $request->smtp_protocol)->setUsername($request->smtp_uname)->setPassword($request->smtp_password);
 
@@ -311,7 +318,7 @@ class IndexController extends Controller
             $mail->setTo([$to => $to]);
             $mail->setBody($body, 'text/html');
             $mail->setSubject($subject);
-            $mail->attach(\Swift_Attachment::fromPath('my-document.pdf'));
+            // $mail->attach(\Swift_Attachment::fromPath('my-document.pdf'));
 
             $result = $mailer->send($mail);
         }

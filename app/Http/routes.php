@@ -60,7 +60,7 @@ Route::group(['middleware' => 'auth'], function(){
 	Route::get('/view/{id}', ['as' => 'view', 'uses' => 'PagesController@showView']);
 	Route::get('/send', ['as' => 'send', 'uses' => 'PagesController@showSend']);
 	Route::get('/outbox', ['as' => 'outbox', 'uses' => 'PagesController@showOutbox']);
-	Route::get('/sendone', ['as' => 'sendone', 'uses' => 'PagesController@showSendOne']);
+	Route::get('/sendone/{feedback?}', ['as' => 'sendone', 'uses' => 'PagesController@showSendOne']);
 	Route::get('/events', ['as' => 'events', 'uses' => 'PagesController@showEvents']);
 	Route::get('/featuretutorial', ['as' => 'featuretutorial', 'uses' => 'PagesController@showSiteTut']);
 });

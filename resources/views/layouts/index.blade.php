@@ -428,7 +428,7 @@
                         </li>
                         <li class="footer-menu-divider">&sdot;</li>
                         <li>
-                            <a href="mailto:hello@mailsy.co">Contact</a>
+                            <a href="mailto:{{ env('SUPPORT_EMAIL') }}">Contact</a>
                         </li>
                         <li class="footer-menu-divider">&sdot;</li>
                         <li class="footer-menu-divider">&sdot;</li>

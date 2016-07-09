@@ -239,6 +239,7 @@ class ActionController extends Controller
 
             // use swift mailer to build the mime
             $mail = new \Swift_Message;
+            $mail->setEncoder(\Swift_Encoding::getBase64Encoding());
             $mail->setFrom(array($this->user->email => $this->user->name));
             $mail->setTo([$message->recipient]);
             $mail->setBody($full_body, 'text/html');
@@ -732,6 +733,7 @@ class ActionController extends Controller
 
         // use swift mailer to build the mime
         $mail = new \Swift_Message;
+        $mail->setEncoder(\Swift_Encoding::getBase64Encoding());
         $mail->setTo([$this->user->email]);
         $mail->setBody($body, 'text/html');
         $mail->setSubject($subject);
@@ -760,9 +762,11 @@ class ActionController extends Controller
     // we'll also need the user id since this webhook is stateless
     public function doTrack($e_user_id, $e_message_id)
     {
+
+        //fix that weird 3D error
         // decrypt the ids
-        $this->user_id = base64_decode($e_user_id);
-        $message_id = base64_decode($e_message_id);
+        $this->user_id = base64_decode(quoted_printable_decode($e_user_id));
+        $message_id = base64_decode(quoted_printable_decode($e_message_id));
 
         // get the message id and make the DB update
         $message = Message::find($message_id);
@@ -772,7 +776,7 @@ class ActionController extends Controller
         $event->message_id = $message_id;
         $event->event_type = "message_open";
         $event->timestamp = time();
-        $event->event_message = $message->recipient." opened  ".$message->subject;
+        $event->event_message = $message->subject." opened";
         $event->save();
 
         if($message->status != 'read')
@@ -787,8 +791,8 @@ class ActionController extends Controller
                 date_default_timezone_set($this->user->timezone);
 
                 // send a notification email
-                $subject = $message->recipient.' opened your Mailsy email!';
-                $body = 'We\'re writing to let you know that '.$message->recipient.' opened your email on '.date('D, M d, Y', $message->read_at).' at '.date('g:ia',$message->read_at).' EST.';
+                $subject = 'Mailsy email '.$message->subject.' opened!';
+                $body = 'We\'re writing to let you know that someone opened your email '. $message->subject .' on '.date('D, M d, Y', $message->read_at).' at '.date('g:ia',$message->read_at).' EST.';
 
                 Utils::sendEmail($this->user->email,$subject,$body);
             }
@@ -944,7 +948,16 @@ class ActionController extends Controller
         $message = new Message;
         $message->user_id = $this->user->id;
         $message->email_id = 0;
-        $message->recipient = $request->_recipient;
+        $message->recipient = serialize($request->_recipient);
+
+        if($request->_cc != null){
+            $message->cc = serialize($request->_cc);
+        }
+
+        if($request->_bcc != null){
+            $message->bcc = serialize($request->_bcc);
+        }
+
         $message->subject = $request->_subject;
         $message->sent_with_csv = 'no';
 
@@ -1000,10 +1013,19 @@ class ActionController extends Controller
 
             // use swift mailer to build the mime
             $mail = new \Swift_Message;
+            $mail->setEncoder(\Swift_Encoding::getBase64Encoding());
             $mail->setFrom(array($this->user->email => $this->user->name));
-            $mail->setTo([$message->recipient]);
+            $mail->setTo($request->_recipient);
             $mail->setBody($full_body, 'text/html');
             $mail->setSubject($message->subject);
+
+            if($request->_cc != null){
+                $mail->setCc($request->_cc);
+            }
+
+            if($request->_bcc != null){
+                $mail->setBcc($request->_bcc);
+            }
 
             if($request->_files[0] != null)
             {
@@ -1042,7 +1064,7 @@ class ActionController extends Controller
             else // if they're using their own companies SMTP server...
             {
                 // decrypt and assign the password
-                $password = base64_decode($password);
+                $password = $request->_password;
 
                 // build the mailer
                 $mailer = Utils::buildSmtpMailer($this->user,$password);

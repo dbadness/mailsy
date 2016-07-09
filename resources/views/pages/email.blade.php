@@ -32,7 +32,7 @@
 				<td class='emailListRight'><b>Message</b></td>
 				<td class='emailListRight'><b>Sent</b></td>
 				<td class='emailListRight'><b>Status</b></td>
-				<td class='emailListRight'><b>Read</b></td>
+				<td class='emailListRight'><b>First Read</b></td>
 			</tr>
 			@if($messages != '[]')
 				@foreach($messages as $message)
