@@ -81,7 +81,7 @@ $(document).ready(function() {
 							else if(response == 'authed')
 							{
 								document.getElementById("sendOneEmail").submit();
-								return true;
+								// return true;
 								// // with everything good to go, send the emails
 								// $('#passwordModal').modal('hide');
 
