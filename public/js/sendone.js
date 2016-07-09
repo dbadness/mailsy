@@ -71,6 +71,63 @@ $(document).ready(function() {
 	$("#sendOneEmailBtn").click(function(){
 		$('#emailTemplateHolder').val($('#emailTemplate').code());
 
+
+			$('form').submit(function() {
+				var penguin = $('#password').val();
+
+				// validate the password field
+				if(penguin ==  '')
+				{
+					toastr.error('No password entered');
+					return false;
+				}
+				else
+				{
+					$('#noPenguin').hide();
+					penguin = window.btoa(penguin);
+
+					// check to see if the password is correct
+					$.ajax({
+						url: '/smtp-auth-check/'+penguin,
+						type: 'get',
+						beforeSend: function()
+						{
+							// $('#checkingAuth').show();
+						},
+						success: function(response)
+						{
+							if(response == 'not_authed')
+							{
+								toastr.error('Incorrect Password');
+								return false;
+							}
+							else if(response == 'authed')
+							{
+								// // with everything good to go, send the emails
+								// $('#passwordModal').modal('hide');
+
+								// // open the sending modal
+								// $('.timerMinu').text(String(minutes));
+								// $('.timerSecu').text(String(seconds));
+								// $('#emailModal').modal('show');
+
+								// // go through each mesage and send that email
+								// $.each(messages, function(i,id)
+								// {
+								// 	sendEmails(id.value,penguin);
+								// });
+							}
+						},
+						error: function()
+						{
+							toastr.error('Something went wrong! Please let us know by emailing support@lucolo.com');
+							return false;
+						}
+					});
+				}
+   			return false;
+			});
+
 		var prTags = [];
 		var pcTags = [];
 		var pbTags = [];
