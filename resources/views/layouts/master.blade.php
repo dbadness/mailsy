@@ -20,7 +20,7 @@
         <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
         @yield('PageJS')
 
-        <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css">
+        <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css">
         <link href="/css/jquery.tagit.css" rel="stylesheet">
         <script src="{!! asset('/js/tag-it.min.js') !!}"></script>
 

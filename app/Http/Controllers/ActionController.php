@@ -239,7 +239,6 @@ class ActionController extends Controller
 
             // use swift mailer to build the mime
             $mail = new \Swift_Message;
-            $mail->setEncoder(\Swift_Encoding::getBase64Encoding());
             $mail->setFrom(array($this->user->email => $this->user->name));
             $mail->setTo([$message->recipient]);
             $mail->setBody($full_body, 'text/html');
@@ -733,7 +732,6 @@ class ActionController extends Controller
 
         // use swift mailer to build the mime
         $mail = new \Swift_Message;
-        $mail->setEncoder(\Swift_Encoding::getBase64Encoding());
         $mail->setTo([$this->user->email]);
         $mail->setBody($body, 'text/html');
         $mail->setSubject($subject);
@@ -1013,7 +1011,6 @@ class ActionController extends Controller
 
             // use swift mailer to build the mime
             $mail = new \Swift_Message;
-            $mail->setEncoder(\Swift_Encoding::getBase64Encoding());
             $mail->setFrom(array($this->user->email => $this->user->name));
             $mail->setTo($request->_recipient);
             $mail->setBody($full_body, 'text/html');
