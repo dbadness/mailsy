@@ -1007,7 +1007,7 @@ class ActionController extends Controller
         if($emailsLeft > 0)
         {
 
-            $full_body = $message->message.'<img src="'.env('DOMAIN').'/track/'.base64_encode($this->user->id).'/'.base64_encode($message->id).'.jpg'.'" alt="tracker" title="tracker" style="display:block" width="1" height="1">';
+            $full_body = $message->message.'<img src="'.env('DOMAIN').'/track/'.base64_encode($this->user->id).'/'.base64_encode($message->id).'" alt="tracker" title="tracker" style="display:block" width="1" height="1">';
 
             // use swift mailer to build the mime
             $mail = new \Swift_Message;
