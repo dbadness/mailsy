@@ -1,31 +1,5 @@
 $(document).ready(function() {
 
-	// $('#sendOneEmailBtn').click(function()
-	// {
-	// 	//Check if email complaint with RFC 2822, 3.6.2.
-	// 	function check(email) {
-	// 		var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
- //    		return re.test(email);
-	// 	}
-
-	// 	var mail = $('#email').val();
-
-	// 	if(check(mail))
-	// 	{
-	// 		$('#emailTemplateHolder').val($('#emailTemplate').code());
-	// 		return true;
-	// 	} else
-	// 	{
-	// 		$('#notAnEmail').removeClass('hidden');
-	// 		return false;
-	// 	}
-
-	// });
-
-	// $('#sendFeedback').click(function(){
-	// 	toastr.success('Feedback sent!');
-	// });
-
 	function validateEmail(email) {
 		var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		return re.test(email);
@@ -81,9 +55,12 @@ $(document).ready(function() {
 					toastr.error('No password entered');
 					return false;
 				}
+				else if(penguin == undefined)
+				{
+
+				}
 				else
 				{
-					$('#noPenguin').hide();
 					penguin = window.btoa(penguin);
 
 					// check to see if the password is correct
@@ -103,6 +80,8 @@ $(document).ready(function() {
 							}
 							else if(response == 'authed')
 							{
+								document.getElementById("sendOneEmail").submit();
+								return true;
 								// // with everything good to go, send the emails
 								// $('#passwordModal').modal('hide');
 
@@ -124,8 +103,8 @@ $(document).ready(function() {
 							return false;
 						}
 					});
+					return false;
 				}
-   			return false;
 			});
 
 		var prTags = [];
