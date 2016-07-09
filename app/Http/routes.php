@@ -30,7 +30,7 @@ Route::get('/logout', function(){
 Route::get('/admin', ['as' => 'admin', 'uses' => 'PagesController@showAdmin']);
 
 Route::get('/join/{customer}', ['as' => 'join', 'uses' =>'IndexController@showCompanyPage']);
-Route::get('/track/{e_user_id}/{e_message_id}', ['as' => 'track', 'uses' => 'ActionController@doTrack']); // processes a read receipt when a recipient opens an email
+Route::get('/track/{e_user_id}/{e_message_id}.jpg', ['as' => 'track', 'uses' => 'ActionController@doTrack']); // processes a read receipt when a recipient opens an email
 Route::get('/tracklink/{e_user_id}/{e_link_id}/{e_redirect}', ['as' => 'trackLink', 'uses' => 'ActionController@doTrackLink']); // processes a read receipt when a recipient opens a link
 
 Route::get('/signup/{license?}/{domain?}', ['as' => 'signup', 'uses' => 'IndexController@showSignup']);
