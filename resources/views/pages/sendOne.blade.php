@@ -61,21 +61,25 @@
 			</ul>
 		</div>
 
-		<div class="input-group">
-			<span class="input-group-addon" id="basic-addon4">CC</span>
-			<ul id="CCTags" class="form-control">
-			    <!-- Existing list items will be pre-added to the tags -->
-			</ul>
+		<div id="CCShower">
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon4">CC</span>
+				<ul id="CCTags" class="form-control">
+			    	<!-- Existing list items will be pre-added to the tags -->
+				</ul>
+			</div>
+
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon4">BCC</span>
+				<ul id="BCCTags" class="form-control">
+				    <!-- Existing list items will be pre-added to the tags -->
+				</ul>
+			</div>
+			<br>
 		</div>
 
-		<div class="input-group">
-			<span class="input-group-addon" id="basic-addon4">BCC</span>
-			<ul id="BCCTags" class="form-control">
-			    <!-- Existing list items will be pre-added to the tags -->
-			</ul>
-		</div>
 		@endif
-		<br>
+		<hr>
 
 		<div class="input-group">
 			<span class="input-group-addon" id="basic-addon4">Subject</span>
