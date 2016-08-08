@@ -59,7 +59,7 @@
         <meta name="msapplication-TileImage" content="/favicons/mstile-144x144.png">
         <meta name="theme-color" content="#ffffff">
 
-        <script src="/js/googletracking.js"></script>
+        <script src="/js/masterGoogleTracking.js"></script>
     </head>
 
 <body>

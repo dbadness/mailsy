@@ -333,7 +333,7 @@ class PagesController extends Controller
     public function showOutbox()
     {
 
-        $messages = Message::where('user_id',$this->user->id)->orderBy('created_at', 'desc')->paginate(20);
+        $messages = Message::where('user_id',$this->user->id)->whereNotNull('sent_at')->orderBy('created_at', 'desc')->paginate(20);
 
         return view('pages.outbox', ['messages' => $messages]);
     }

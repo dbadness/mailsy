@@ -765,7 +765,7 @@ class ActionController extends Controller
         $email->deleted_at = time();
         $email->save();
 
-        return redirect('/home');
+        return redirect('/templates');
     }
 
     public function doDearchiveTemplate($eid)
@@ -858,8 +858,8 @@ class ActionController extends Controller
         $messageText = $request->_email_template;
 
         // trim the <p> tags off the messageText
-        $messageText = substr($messageText,0,-4);
-        $messageText = substr($messageText,3);
+        // $messageText = substr($messageText,0,-4);
+        // $messageText = substr($messageText,3);
 
         // make a message to throw into the DB
         $message = new Message;
