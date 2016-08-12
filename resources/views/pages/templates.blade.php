@@ -60,7 +60,9 @@
 							</div>
 
 							<div style="height:100px;">
-								{!! str_limit($email->template, $limit = 325, $end = '...') !!}
+								{!!
+									App\Utils::truncateHtml($email->template, $length = 175)
+								!!}
 							</div>
 
 							<!-- action buttons -->

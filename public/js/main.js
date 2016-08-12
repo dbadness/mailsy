@@ -12,7 +12,6 @@ $(document).ready(function(){
 		return this;
 	};
 
-
 	//Universal toastr settings
 	toastr.options.closeButton = true;
 	toastr.options.preventDuplicates = true;

@@ -13,6 +13,7 @@ use App\Email;
 use App\Message;
 use App\Customer;
 use App\Event;
+use App\Utils;
 use Log;
 use View;
 
