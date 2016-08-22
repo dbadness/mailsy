@@ -9,22 +9,28 @@
         <title>Mailsy - Spend your time selling, not emailing</title>
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.8.23/jquery-ui.min.js" integrity="sha256-sEFM2aY87nr5kcE4F+RtMBkKxBqHEc2ueHGNptOA5XI=" crossorigin="anonymous"></script>
         <!-- Bootstrap -->
         <link href="/css/bootstrap.min.css" rel="stylesheet">
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="{!! asset('/css/main.css') !!}">
+        <script src="{!! asset('/js/main.js') !!}"></script>
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+        <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        @yield('PageJS')
+
+        <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css">
+        <link href="/css/jquery.tagit.css" rel="stylesheet">
+        <script src="{!! asset('/js/tag-it.min.js') !!}"></script>
+
+        <link href="https://bootswatch.com/readable/bootstrap.min.css" rel="stylesheet">
 
         <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
-        <link rel="stylesheet" href="{!! asset('/css/main.css') !!}">
-        <script src="{!! asset('/js/main.js') !!}"></script>
-        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
-        <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"> @yield('PageJS')
-
         <link href="/css/summernote.css" rel="stylesheet">
         <script src="/js/summernote.js"></script>
-        <link href="https://bootswatch.com/readable/bootstrap.min.css" rel="stylesheet">
 
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -53,65 +59,17 @@
         <meta name="msapplication-TileImage" content="/favicons/mstile-144x144.png">
         <meta name="theme-color" content="#ffffff">
 
-        <script>
-            (function(i, s, o, g, r, a, m) {
-                i['GoogleAnalyticsObject'] = r;
-                i[r] = i[r] || function() {
-                    (i[r].q = i[r].q || []).push(arguments)
-                }, i[r].l = 1 * new Date();
-                a = s.createElement(o),
-                    m = s.getElementsByTagName(o)[0];
-                a.async = 1;
-                a.src = g;
-                m.parentNode.insertBefore(a, m)
-            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-
-            ga('create', 'UA-71709833-1', 'auto');
-            ga('send', 'pageview');
-        </script>
+        <script src="/js/masterGoogleTracking.js"></script>
     </head>
 
     <body>
-        <nav class="navbar navbar-default">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand topnav" href="{{ route('index') }}"><img src='/images/logo.png' alt='Mailsy' width='80px'></a>
-                </div>
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                    @if(isset($user))
-                        <ul class="nav navbar-nav navbar-right">
-                            <ul class="nav navbar-nav">
-                                <li>
-                                    <a href="{{ route('home') }}">Go to Your Dashboard</a>
-                                </li>
-                            </ul>
-                        </ul>
-                    @else
-                        <ul class="nav navbar-nav navbar-right">
-                            <ul class="nav navbar-nav">
-                                <li>
-                                    <a href="{{ route('signup') }}">Sign Up</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('login') }}">Log In</a>
-                                </li>
-                            </ul>
-                        </ul>
-                    @endif
-                </div>
-            </div>
-        </nav>
-        <div style="margin:20px 0 0 0;"></div>
         <div class="container">
+            <br>
             @yield('content')
+            <br>
+            <br>
+            <br>
         </div>
-        <div style="height:100px;"></div>
-        <nav class="navbar navbar-default navbar-fixed-bottom">
-            <div class="container" style="text-align:center;">
-                <p class="navbar-text" style="float:none;">Copyright &copy;
-                    <?php echo date( 'Y');?> Mailsy by Lucolo, Inc. Questions? Feedback? Movie recommendations? Send an email to <a href="mailto:{{ env('SUPPORT_EMAIL') }}">{{ env('SUPPORT_EMAIL') }}</a> or reach out on <a href="https://www.twitter.com/mailsyapp" target="_blank">Twitter</a>.</p>
-            </div>
-        </nav>
     </body>
 
 </html>

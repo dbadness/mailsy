@@ -182,12 +182,11 @@ class ActionController extends Controller
         }
         catch(\Swift_TransportException $e)
         {
-            return 'not_authed';
+            // return 'not_authed';
+            return $e;
         }
 
-        return 'authed';
-
-        
+        return 'authed';        
     }
     
     // send the emails

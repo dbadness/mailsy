@@ -73,7 +73,7 @@ $(document).ready(function() {
 						},
 						success: function(response)
 						{
-							if(response == 'not_authed')
+							if(response != 'authed')
 							{
 								toastr.error('Incorrect Password');
 								return false;

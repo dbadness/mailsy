@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.smtp')
 
 @section('content')
 
@@ -108,5 +108,15 @@
 
 	  </div>
 	</div>
+
+<script>
+	var pass = true;
+	$("#saveSmtpSettingsButton").click(function(){
+		pass = false;
+	})
+	$(window).bind("beforeunload",function(event) {
+    	if(pass) return "Please don't navigate away without saving your settings!";
+	});
+</script>
 
 @endsection
