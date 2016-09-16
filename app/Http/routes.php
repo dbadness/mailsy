@@ -30,8 +30,8 @@ Route::get('/logout', function(){
 Route::get('/admin', ['as' => 'admin', 'uses' => 'PagesController@showAdmin']);
 
 Route::get('/join/{customer}', ['as' => 'join', 'uses' =>'IndexController@showCompanyPage']);
-Route::get('/track/{e_user_id}/{e_message_id}', ['as' => 'track', 'uses' => 'ActionController@doTrack']); // processes a read receipt when a recipient opens an email
-Route::get('/tracklink/{e_user_id}/{e_link_id}/{e_redirect}', ['as' => 'trackLink', 'uses' => 'ActionController@doTrackLink']); // processes a read receipt when a recipient opens a link
+Route::get('/track/{e_user_id}/{e_message_id}', ['as' => 'track', 'uses' => 'IndexController@doTrack']); // processes a read receipt when a recipient opens an email
+Route::get('/tracklink/{e_user_id}/{e_link_id}/{e_redirect}', ['as' => 'trackLink', 'uses' => 'IndexController@doTrackLink']); // processes a read receipt when a recipient opens a link
 
 Route::get('/signup/{license?}/{domain?}', ['as' => 'signup', 'uses' => 'IndexController@showSignup']);
 Route::post('/signup/{license?}', ['as' => 'signupPost', 'uses' => 'IndexController@doSignup']);
@@ -60,7 +60,7 @@ Route::group(['middleware' => 'auth'], function(){
 	Route::get('/view/{id}', ['as' => 'view', 'uses' => 'PagesController@showView']);
 	Route::get('/send', ['as' => 'send', 'uses' => 'PagesController@showSend']);
 	Route::get('/outbox', ['as' => 'outbox', 'uses' => 'PagesController@showOutbox']);
-	Route::get('/sendone', ['as' => 'sendone', 'uses' => 'PagesController@showSendOne']);
+	Route::get('/sendone/{feedback?}', ['as' => 'sendone', 'uses' => 'PagesController@showSendOne']);
 	Route::get('/events', ['as' => 'events', 'uses' => 'PagesController@showEvents']);
 	Route::get('/featuretutorial', ['as' => 'featuretutorial', 'uses' => 'PagesController@showSiteTut']);
 });

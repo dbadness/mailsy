@@ -13,6 +13,7 @@ use App\Email;
 use App\Message;
 use App\Customer;
 use App\Event;
+use App\Utils;
 use Log;
 use View;
 
@@ -333,7 +334,7 @@ class PagesController extends Controller
     public function showOutbox()
     {
 
-        $messages = Message::where('user_id',$this->user->id)->orderBy('created_at', 'desc')->paginate(20);
+        $messages = Message::where('user_id',$this->user->id)->whereNotNull('sent_at')->orderBy('created_at', 'desc')->paginate(20);
 
         return view('pages.outbox', ['messages' => $messages]);
     }
@@ -348,10 +349,10 @@ class PagesController extends Controller
     }
 
     // show ephemeral template page
-    public function showSendOne()
+    public function showSendOne($feedback = null)
     {
 
-        return view('pages.sendOne', []);
+        return view('pages.sendOne', ['feedback' => $feedback]);
     }
 
     // show ephemeral template page

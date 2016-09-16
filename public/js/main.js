@@ -1,6 +1,23 @@
 
 $(document).ready(function(){
 
+
+	Array.prototype.clean = function(deleteValue) {
+		for (var i = 0; i < this.length; i++) {
+			if(this[i] == deleteValue) {         
+	    			this.splice(i, 1);
+		    		i--;
+	    		}
+			}
+		return this;
+	};
+
+	//Universal toastr settings
+	toastr.options.closeButton = true;
+	toastr.options.preventDuplicates = true;
+	toastr.options.progressBar = true;
+
+
 	/**
 	*
 	* Signup and login pages
@@ -318,28 +335,6 @@ $(document).ready(function(){
 		$('#uploadData').toggle();
 		$('#uploadCSV').toggle();
 		$('csvFileUpload').val(null);
-	});
-
-	$('#sendOneEmailBtn').click(function()
-	{
-		//Check if email complaint with RFC 2822, 3.6.2.
-		function check(email) {
-			var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    		return re.test(email);
-		}
-
-		var mail = $('#email').val();
-
-		if(check(mail))
-		{
-			$('#emailTemplateHolder').val($('#emailTemplate').code());
-			return true;
-		} else
-		{
-			$('#notAnEmail').removeClass('hidden');
-			return false;
-		}
-
 	});
 
 	$('#sendListStep1').click(function()

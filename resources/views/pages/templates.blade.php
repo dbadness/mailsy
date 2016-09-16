@@ -60,7 +60,9 @@
 							</div>
 
 							<div style="height:100px;">
-								{!! str_limit($email->template, $limit = 325, $end = '...') !!}
+								{!!
+									App\Utils::truncateHtml($email->template, $length = 175)
+								!!}
 							</div>
 
 							<!-- action buttons -->
@@ -70,7 +72,6 @@
 									<a class="btn btn-primary" href="{!! route('use', array( base64_encode($email->id) )) !!}" style="width: 100%;">use</a>
 								</li>
 								<li>
-									<ul class="nav nav-pills" style="text-align: center;">
 										<li>
 											<a class="btn btn-info" href="{!! route('email', array( base64_encode($email->id) )) !!}">messages</a>
 										</li>
@@ -80,7 +81,6 @@
 										<li>
 											<a class="btn btn-info" href="{!! route('copy', array( base64_encode($email->id) )) !!}">copy</a>
 										</li>
-									</ul>
 								</li>
 								<li>
 									<a class="btn btn-danger" href="{!! route('archive', array( base64_encode($email->id) )) !!}" style="width: 100%">archive</a>

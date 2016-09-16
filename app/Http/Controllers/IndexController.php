@@ -9,9 +9,13 @@ use App\Http\Controllers\Controller;
 
 use App\User;
 use App\Customer;
+use App\Message;
 use App\Utils;
+use App\Event;
 use Auth;
 use Log;
+use Response;
+use File;
 
 use \Sendinblue\Mailin as Mailin;
 
@@ -159,7 +163,8 @@ class IndexController extends Controller
         }
         elseif($existingUser && !$refreshExists)
         {
-            $processedAcessToken["refresh_token"] = $existingUser->refresh_token;
+            //need to handle refresh token better
+            // $processedAcessToken["refresh_token"] = $existingUser->refresh_token;
 
             // log the user in and send them to the home page
             $success = Auth::loginUsingId($existingUser->id);
@@ -189,10 +194,10 @@ class IndexController extends Controller
 
             // $processedAccessToken["refresh_token"] = $existingUser->refresh_token;
             // $client->setAccessToken(json_encode($processedAccessToken));
-            $client->refreshToken($existingUser->refresh_token);
+            // $client->refreshToken($existingUser->refresh_token);
 
             // send them to the dashboard
-            return redirect('/home');
+            return redirect('/sendone');
         }
         elseif(!$existingUser && $refreshExists)
         {
@@ -288,8 +293,14 @@ class IndexController extends Controller
         try
         {
 
-            $to = $request->_to;
-            $from = $request->_from;
+            if(Auth::user()){
+                $user = Auth::user();
+                $to = $user->email;
+                $from = $user->email;
+            } else{
+                $to = $request->_to;
+                $from = $request->_from;
+            }
 
             $transport = \Swift_SmtpTransport::newInstance($request->smtp_server, $request->smtp_port, $request->smtp_protocol)->setUsername($request->smtp_uname)->setPassword($request->smtp_password);
 
@@ -306,7 +317,7 @@ class IndexController extends Controller
             $mail->setTo([$to => $to]);
             $mail->setBody($body, 'text/html');
             $mail->setSubject($subject);
-            $mail->attach(\Swift_Attachment::fromPath('my-document.pdf'));
+            // $mail->attach(\Swift_Attachment::fromPath('my-document.pdf'));
 
             $result = $mailer->send($mail);
         }
@@ -319,6 +330,86 @@ class IndexController extends Controller
         // if we made it this far, return success
         return 'success';
 
+    }
+
+    // webhook for emails opened by the recipients (read receipts) and returns an image to fool the email
+    // we'll also need the user id since this webhook is stateless
+    public function doTrack($e_user_id, $e_message_id)
+    {
+
+        // decrypt the ids
+        $user_id = base64_decode(quoted_printable_decode($e_user_id));
+        $message_id = base64_decode(quoted_printable_decode($e_message_id));
+
+        // get the message id and make the DB update
+        $message = Message::find($message_id);
+
+        $event = new Event;
+        $event->user_id = $user_id;
+        $event->message_id = $message_id;
+        $event->event_type = "message_open";
+        $event->timestamp = time();
+        $event->event_message = $message->subject." opened";
+        $event->save();
+
+        if($message->status != 'read')
+        {
+            $user = Auth::loginUsingId($user_id);
+            $message->status = 'read';
+            $message->read_at = time();
+            $message->save();
+            if($user->track_email)
+            {
+                // set the timezone
+                date_default_timezone_set($user->timezone);
+
+                // send a notification email
+                $subject = 'Mailsy email '.$message->subject.' opened!';
+                $body = 'We\'re writing to let you know that someone opened your email '. $message->subject .' on '.date('D, M d, Y', $message->read_at).' at '.date('g:ia',$message->read_at).' EST.';
+
+                Utils::sendEmail($user->email,$subject,$body);
+            }
+        }
+
+        $response = Response::make(File::get("images/email-tracker.png"));
+        $response->header('Content-Type', 'image/png');
+        return $response;
+    }
+
+
+    // webhook for links clicked by the recipients (read receipts) and returns an image to fool the email
+    // we'll also need the user id since this webhook is stateless and the redirect to make the link work
+    public function doTrackLink($e_user_id, $e_message_id, $e_redirect)
+    {
+        // decrypt the ids
+        $user_id = base64_decode($e_user_id);
+        $message_id = base64_decode($e_message_id);
+        $e_redirect = base64_decode($e_redirect);
+
+        // get the message id and make the DB update
+        $message = Message::find($message_id);
+
+        $user = Auth::loginUsingId($user_id);
+        $event = new Event;
+        $event->user_id = $user_id;
+        $event->message_id = $message_id;
+        $event->event_type = "link_open";
+        $event->timestamp = time();
+        $event->event_message = "Someone clicked through the link to ".$e_redirect." in the email ".$message->subject;
+        $event->save();
+
+        if($user->track_links = 'yes')
+        {
+                date_default_timezone_set($user->timezone);
+
+                // send a notification email
+                $subject = 'Mailsy email link clicked through!!';
+                $body = 'We\'re writing to let you know that someone opened the link '. $e_redirect .' on '.date('D, M d, Y', $event->timestamp).' at '.date('g:ia',$event->timestamp).' EST.';
+
+                Utils::sendEmail($user->email,$subject,$body);
+        }
+
+        return redirect($e_redirect);
     }
 
 }

@@ -1,3 +1,18 @@
+#feedBackButton {
+    position: fixed;
+    bottom: 10px;
+    right: 10px; 
+}
+
+.notAllowed {
+  cursor: not-allowed;
+}
+
+.input-group-addon {
+    min-width:200px;
+    text-align:left;
+}
+
 /*
 Font stuff
 */

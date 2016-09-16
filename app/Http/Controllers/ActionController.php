@@ -182,12 +182,11 @@ class ActionController extends Controller
         }
         catch(\Swift_TransportException $e)
         {
-            return 'not_authed';
+            // return 'not_authed';
+            return $e;
         }
 
-        return 'authed';
-
-        
+        return 'authed';        
     }
     
     // send the emails
@@ -755,85 +754,6 @@ class ActionController extends Controller
         Session::flash('flash_message', 'Task successfully deleted!');
         return redirect()->route('tasks.index');
     }
-    
-    // webhook for emails opened by the recipients (read receipts) and returns an image to fool the email
-    // we'll also need the user id since this webhook is stateless
-    public function doTrack($e_user_id, $e_message_id)
-    {
-        // decrypt the ids
-        $this->user_id = base64_decode($e_user_id);
-        $message_id = base64_decode($e_message_id);
-
-        // get the message id and make the DB update
-        $message = Message::find($message_id);
-
-        $event = new Event;
-        $event->user_id = $this->user_id;
-        $event->message_id = $message_id;
-        $event->event_type = "message_open";
-        $event->timestamp = time();
-        $event->event_message = $message->recipient." opened  ".$message->subject;
-        $event->save();
-
-        if($message->status != 'read')
-        {
-            $user = Auth::loginUsingId($this->user_id);
-            $message->status = 'read';
-            $message->read_at = time();
-            $message->save();
-            if($this->user->track_email)
-            {
-                // set the timezone
-                date_default_timezone_set($this->user->timezone);
-
-                // send a notification email
-                $subject = $message->recipient.' opened your Mailsy email!';
-                $body = 'We\'re writing to let you know that '.$message->recipient.' opened your email on '.date('D, M d, Y', $message->read_at).' at '.date('g:ia',$message->read_at).' EST.';
-
-                Utils::sendEmail($this->user->email,$subject,$body);
-            }
-        }
-
-        $response = Response::make(File::get("images/email-tracker.png"));
-        $response->header('Content-Type', 'image/png');
-        return $response;
-    }
-
-    // webhook for links clicked by the recipients (read receipts) and returns an image to fool the email
-    // we'll also need the user id since this webhook is stateless and the redirect to make the link work
-    public function doTrackLink($e_user_id, $e_message_id, $e_redirect)
-    {
-        // decrypt the ids
-        $this->user_id = base64_decode($e_user_id);
-        $message_id = base64_decode($e_message_id);
-        $e_redirect = base64_decode($e_redirect);
-
-        // get the message id and make the DB update
-        $message = Message::find($message_id);
-
-        $user = Auth::loginUsingId($this->user_id);
-        $event = new Event;
-        $event->user_id = $this->user_id;
-        $event->message_id = $message_id;
-        $event->event_type = "link_open";
-        $event->timestamp = time();
-        $event->event_message = $message->recipient." clicked through the link to ".$e_redirect." in the email ".$message->subject;
-        $event->save();
-
-        if($this->user->track_links = 'yes')
-        {
-                date_default_timezone_set($this->user->timezone);
-
-                // send a notification email
-                $subject = $message->recipient.' clicked through a link of your Mailsy email!';
-                $body = 'We\'re writing to let you know that '.$message->recipient.' opened the link '. $e_redirect .' on '.date('D, M d, Y', $event->timestamp).' at '.date('g:ia',$event->timestamp).' EST.';
-
-                Utils::sendEmail($this->user->email,$subject,$body);
-        }
-
-        return redirect($e_redirect);
-    }
-
 
     public function doArchiveTemplate($eid)
     {
@@ -844,7 +764,7 @@ class ActionController extends Controller
         $email->deleted_at = time();
         $email->save();
 
-        return redirect('/home');
+        return redirect('/templates');
     }
 
     public function doDearchiveTemplate($eid)
@@ -937,14 +857,23 @@ class ActionController extends Controller
         $messageText = $request->_email_template;
 
         // trim the <p> tags off the messageText
-        $messageText = substr($messageText,0,-4);
-        $messageText = substr($messageText,3);
+        // $messageText = substr($messageText,0,-4);
+        // $messageText = substr($messageText,3);
 
         // make a message to throw into the DB
         $message = new Message;
         $message->user_id = $this->user->id;
         $message->email_id = 0;
-        $message->recipient = $request->_recipient;
+        $message->recipient = serialize($request->_recipient);
+
+        if($request->_cc != null){
+            $message->cc = serialize($request->_cc);
+        }
+
+        if($request->_bcc != null){
+            $message->bcc = serialize($request->_bcc);
+        }
+
         $message->subject = $request->_subject;
         $message->sent_with_csv = 'no';
 
@@ -1001,9 +930,17 @@ class ActionController extends Controller
             // use swift mailer to build the mime
             $mail = new \Swift_Message;
             $mail->setFrom(array($this->user->email => $this->user->name));
-            $mail->setTo([$message->recipient]);
+            $mail->setTo($request->_recipient);
             $mail->setBody($full_body, 'text/html');
             $mail->setSubject($message->subject);
+
+            if($request->_cc != null){
+                $mail->setCc($request->_cc);
+            }
+
+            if($request->_bcc != null){
+                $mail->setBcc($request->_bcc);
+            }
 
             if($request->_files[0] != null)
             {
@@ -1042,7 +979,7 @@ class ActionController extends Controller
             else // if they're using their own companies SMTP server...
             {
                 // decrypt and assign the password
-                $password = base64_decode($password);
+                $password = $request->_password;
 
                 // build the mailer
                 $mailer = Utils::buildSmtpMailer($this->user,$password);

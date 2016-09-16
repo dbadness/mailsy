@@ -23,7 +23,7 @@
 			You can either become an individual paid member or, if you're a leader on your team, you can sign your entire team up all at once making
 			billing and membership administration very easy. Don't worry, you can always change these settings later!</p>
 			<p>If you have any questions about billing, membership administration, or anything else, please visit the <a href='/faq'>FAQ page</a>
-			or send an email to <a href="mailto:hello@mailsy.co">hello@mailsy.co</a> and you'll get a speedy response.</p> 
+			or send an email to <a href="mailto:{{ env('SUPPORT_EMAIL') }}">{{ env('SUPPORT_EMAIL') }}</a> and you'll get a speedy response.</p> 
 		</div>
 		<div class="panel-body">
 			<div class="row">
@@ -50,7 +50,7 @@
 					<div class="thumbnail">
 						<div class="caption">
 							<h3><i class='fa fa-users'></i> Team Signup</h3>
-							<p>If your a team leader, use this option to pick the number of users on your team and be billed in a single monthly payment to make your life easy as pie. With the Team Signup process, we'll create a simple url for you like "www.mailsy.co/join/myCompany" where your company can easily signup for the Mailsy licences that you purchased.</p>
+							<p>If your a team leader, use this option to pick the number of users on your team and be billed in a single monthly payment to make your life easy as pie. With the Team Signup process, we'll create a simple url for you like "{{ env('DOMAIN') }}/join/myCompany" where your company can easily signup for the Mailsy licences that you purchased.</p>
 							<br>
 							@if(!$user->admin)
 								<p><a href='/upgrade/createTeam'><button class="btn btn-success" role="button">Create a Team</button></a></p>

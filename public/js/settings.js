@@ -77,7 +77,7 @@ $(document).ready(function()
 					},
 					error: function()
 					{
-						alert('Something went wrong. Please contact hello@mailsy.co to update your information');
+						alert('Something went wrong. Please contact support@lucolo.com to update your information');
 					}
 				});
 			}
@@ -96,7 +96,7 @@ $(document).ready(function()
 			},
 			error: function()
 			{
-				alert('Something went wrong. Please try again later or email hello@mailsy.co for help.');
+				alert('Something went wrong. Please try again later or email support@lucolo.com for help.');
 			},
 			success: function()
 			{
@@ -195,7 +195,7 @@ $(document).ready(function()
 					},
 					error : function(response) {
 						console.log(response.responseText);
-						alert('Something went wrong. Please email hello@mailsy.co for help.');
+						alert('Something went wrong. Please email support@lucolo.com for help.');
 					}
 				});
 			}

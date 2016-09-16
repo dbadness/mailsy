@@ -45,7 +45,7 @@ $(document).ready(function()
 				$('#closeEmailModal').show();
 			},
 			error: function(){
-				alert('Something went wrong. Please log out of Mailsy, log back in, and try again. If something\'s really broken, email us a support@mailsy.co and we\'d be happy to help.');
+				alert('Something went wrong. Please log out of Mailsy, log back in, and try again. If something\'s really broken, email us at support@lucolo.com and we\'d be happy to help.');
 			}
 		});
 	}
@@ -106,7 +106,7 @@ $(document).ready(function()
 						},
 						error: function()
 						{
-							alert('Something went wrong! Please let us know by emailing support@mailsy.co.');
+							alert('Something went wrong! Please let us know by emailing support@lucolo.com');
 						}
 					});
 				}

@@ -19,6 +19,8 @@
     <link href="/css/whhg.css" rel="stylesheet">
     <link href="/css/main.css" rel="stylesheet">
 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
     <!-- Custom Fonts -->
     <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -428,7 +430,7 @@
                         </li>
                         <li class="footer-menu-divider">&sdot;</li>
                         <li>
-                            <a href="mailto:hello@mailsy.co">Contact</a>
+                            <a href="mailto:{{ env('SUPPORT_EMAIL') }}">Contact</a>
                         </li>
                         <li class="footer-menu-divider">&sdot;</li>
                         <li class="footer-menu-divider">&sdot;</li>

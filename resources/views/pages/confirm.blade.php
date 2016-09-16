@@ -42,7 +42,7 @@
 					$('#cancelationLoader').show();
 				},
 				error : function(){
-					alert('Something went wrong... please email hello@mailsy.co for help');
+					alert('Something went wrong... please email '.{{ env('SUPPORT_EMAIL') }}.' for help');
 				}
 			});
 		});

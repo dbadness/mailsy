@@ -29,7 +29,7 @@
 	<div class='signupOptions'>
 
 		<div class="row">
-			<div class="col-sm-4 col-md-6">
+			<div>
 				<div class="thumbnail">
 					<div class="caption">
 						<h3>Log In with Google</h3>
@@ -40,7 +40,7 @@
 				</div>
 			</div>
 
-			<div class="col-sm-6 col-md-6">
+			<div>
 				<div class="thumbnail">
 					<div class="caption">
 						<h3>Login with Email/Password:</h3>
