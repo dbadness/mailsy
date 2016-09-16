@@ -21,20 +21,15 @@ class IndexController extends Controller
     public function showIndex()
     {
         // set cookie to track signup referals
-        // if(isset($_SERVER['HTTP_REFERER']))
-        // {
-        //     setcookie('mailsy_referer', $_SERVER['HTTP_REFERER'], time() + (86400 * 30), '/'); // 86400 = 1 day
-        // }
+        if(isset($_SERVER['HTTP_REFERER']))
+        {
+            setcookie('mailsy_referer', $_SERVER['HTTP_REFERER'], time() + (86400 * 30), '/'); // 86400 = 1 day
+        }
 
-        return redirect('https://www.lucolo.com/mailsy');
+        $user = Auth::user();
+
+        return view('pages.index', ['user' => $user]);
     }
-
-    // show the home page
-    // public function showIndex()
-    // {
-
-    //     return redirect('https://www.lucolo.com/mailsy');
-    // }
 
     // show the signup page
     public function showSignup($license = null, $companyDomain = null)

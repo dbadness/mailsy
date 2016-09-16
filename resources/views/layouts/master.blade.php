@@ -108,20 +108,7 @@
                                 </ul>
                             </li>
 
-<!--
-                    @if($user->paid)
-                        <li>
-                            <a href="/publictemplates">Public Templates</a>
-                        </li>
-                    @endif
--->
-                    @if($user->paid && ($user->belongs_to || $user->has_users))
-<!--                         <li>
-                            <a href="/privatetemplates">Private Templates</a>
-                        </li>
- -->
-                    @endif
-                    @if($user->admin == 'yes')
+                    @if($user && ($user->admin == 'yes'))
                         <li>
                             <a href="{{ route('admin') }}">Team Admin</a>
                         </li>
@@ -137,14 +124,7 @@
                             <li>
                                 @if(!$user->paid)
                                     <a href="{{ route('upgrade') }}">({!! App\User::howManyEmailsLeft() !!} emails left today)</a>
-                                @else
-<!--                                     <a href="{{ route('settings') }}">
-                                        Upgraded Account!
-                                        @if($user->expires)
-                                            (until {!! date('m-d-Y',$user->expires) !!})
-                                        @endif
-                                    </a> 
- -->                                @endif
+                                @endif
                             </li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">More <span class="caret"></span></a>

@@ -13,12 +13,13 @@
         <link href="/css/bootstrap.min.css" rel="stylesheet">
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="/js/bootstrap.min.js"></script>
-        <link rel="stylesheet" href="{!! asset('/css/main.css') !!}">
-        <script src="{!! asset('/js/main.js') !!}"></script>
+        <link rel="stylesheet" href="/css/main.css">
+        <script src="/js/main.js"></script>
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
         <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"> @yield('PageJS')
 
         <link href="/css/summernote.css" rel="stylesheet">
+        <link href="/css/mailsy-page.css" rel="stylesheet">
         <script src="/js/summernote.js"></script>
         <link href="https://bootswatch.com/readable/bootstrap.min.css" rel="stylesheet">
 
@@ -68,34 +69,26 @@
     </head>
 
     <body>
-        <nav class="navbar navbar-default">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand topnav" href="{{ route('index') }}"><img src='/images/logo.png' alt='Mailsy' width='80px'></a>
-                </div>
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                    @if(isset($user))
-                        <ul class="nav navbar-nav navbar-right">
-                            <ul class="nav navbar-nav">
-                                <li>
-                                    <a href="{{ route('home') }}">Go to Your Dashboard</a>
-                                </li>
-                            </ul>
-                        </ul>
-                    @else
-                        <ul class="nav navbar-nav navbar-right">
-                            <ul class="nav navbar-nav">
-                                <li>
-                                    <a href="{{ route('signup') }}">Sign Up</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('login') }}">Log In</a>
-                                </li>
-                            </ul>
-                        </ul>
-                    @endif
-                </div>
+        <nav class="navbar navbar-default navbar-fixed-top">
+          <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <a class="navbar-brand topnav" href="/"><img src='/images/logo.png' alt='Mailsy' width='130px'></a>
             </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">            
+              <ul class="nav navbar-nav navbar-right">
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#use-cases">Use Cases</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="/signup">Sign Up</a></li>
+                <li><a href="/login">Log In</a></li>
+              </ul>
+            </div><!-- /.navbar-collapse -->
+          </div><!-- /.container-fluid -->
         </nav>
         <div style="margin:20px 0 0 0;"></div>
         <div class="container">
@@ -105,7 +98,7 @@
         <nav class="navbar navbar-default navbar-fixed-bottom">
             <div class="container" style="text-align:center;">
                 <p class="navbar-text" style="float:none;">Copyright &copy;
-                    <?php echo date( 'Y');?> Mailsy by Lucolo, Inc. Questions? Feedback? Movie recommendations? Send an email to <a href="mailto:hello@mailsy.co">hello@mailsy.co</a> or reach out on <a href="https://www.twitter.com/mailsyapp" target="_blank">Twitter</a>.</p>
+                    <?php echo date( 'Y');?> Mailsy by Lucolo, Inc. Questions? Feedback? Movie recommendations? Send an email to <a href="mailto:contact@lucolo.com">contact@lucolo.com</a>.</p>
             </div>
         </nav>
     </body>
