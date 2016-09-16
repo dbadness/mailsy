@@ -1,9 +1,5 @@
 @extends('layouts.anon-master')
 
-@section('PageJS')
-
-@endsection
-
 @section('content')
 
 	@if($_GET)

@@ -82,18 +82,18 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">            
               <ul class="nav navbar-nav navbar-right">
-                <li><a href="#overview">Overview</a></li>
-                <li><a href="#use-cases">Use Cases</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#pricing">Pricing</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="/#overview">Overview</a></li>
+                <li><a href="/#use-cases">Use Cases</a></li>
+                <li><a href="/#features">Features</a></li>
+                <li><a href="/#pricing">Pricing</a></li>
+                <li><a href="/#contact">Contact</a></li>
                 <li><a href="/signup">Sign Up</a></li>
                 <li><a href="/login">Log In</a></li>
               </ul>
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container-fluid -->
         </nav>
-        <div style="margin:20px 0 0 0;"></div>
+        <div style="margin:100px 0 0 0;"></div>
         <div class="container">
             @yield('content')
         </div>
